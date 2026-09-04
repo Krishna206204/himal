@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pet Owner Dashboard - Himal Vet Care</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: sans-serif; background: #1e1e2d; color: #fff; padding: 20px; }
+        .pet-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-bottom: 10px; }
+        a.btn-logout { color: #ff6a00; text-decoration: none; float: right; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <a href="{% url 'logout' %}" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    <h2><i class="fa-solid fa-paw"></i> Pet Owner Dashboard</h2>
+    <p>Welcome, {{ request.user.username }}</p>
+    <hr style="border-color: #3f3f5a; margin: 15px 0;">
+
+    <h3>My Pets</h3>
+    {% for animal in my_animals %}
+        <div class="pet-card">
+            <strong>{{ animal.name }}</strong> - {{ animal.species|default:"Pet" }}
+        </div>
+    {% empty %}
+        <p>No pets registered yet.</p>
+    {% endfor %}
+</body>
+</html>

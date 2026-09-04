@@ -53,15 +53,15 @@
     <div>
         <h3><i class="fa-solid fa-paw"></i> Vet Care</h3>
         <ul>
-            {% if user.role == "ADMIN" %}
-                <li><a href="{% url 'admin_dashboard' %}"><i class="fa-solid fa-chart-line"></i> Admin Dashboard</a></li>
+            {% if user.role == "ADMIN" or user.is_superuser %}
+                <li><a href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> Admin Dashboard</a></li>
                 <li><a href="#"><i class="fa-solid fa-users"></i> Manage Users</a></li>
             {% elif user.role == "VETERINARIAN" %}
-                <li><a href="{% url 'vet_dashboard' %}"><i class="fa-solid fa-user-doctor"></i> Vet Dashboard</a></li>
+                <li><a href="{% url 'dashboard' %}"><i class="fa-solid fa-user-doctor"></i> Vet Dashboard</a></li>
                 <li><a href="#"><i class="fa-solid fa-calendar-check"></i> Appointments</a></li>
                 <li><a href="#"><i class="fa-solid fa-file-medical"></i> Medical Records</a></li>
             {% else %}
-                <li><a href="{% url 'pet_owner_dashboard' %}"><i class="fa-solid fa-house"></i> My Dashboard</a></li>
+                <li><a href="{% url 'dashboard' %}"><i class="fa-solid fa-house"></i> My Dashboard</a></li>
                 <li><a href="#"><i class="fa-solid fa-dog"></i> My Pets</a></li>
                 <li><a href="#"><i class="fa-solid fa-calendar-plus"></i> Book Appointment</a></li>
             {% endif %}
@@ -70,7 +70,7 @@
 
     <div class="sidebar-footer">
         <a href="{% url 'logout' %}" class="logout-btn">
-            <i class="fa-solid fa-right-from-bracket"></i> Log
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
         </a>
     </div>
 </div>
