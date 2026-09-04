@@ -1,56 +1,35 @@
 from django.db import models
-from account.models import User
-from animal.models import Animal  # Updated import
-
+from django.conf import settings
+from animal.models import Animal
 
 class Appointment(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('CONFIRMED', 'Confirmed'),
+        ('COMPLETED', 'Completed'),
+        ('CANCELLED', 'Cancelled'),
+    ]
 
-    STATUS_CHOICES = (
-        ("PENDING", "Pending"),
-        ("CONFIRMED", "Confirmed"),
-        ("COMPLETED", "Completed"),
-        ("CANCELLED", "Cancelled"),
-    )
-
-    animal = models.ForeignKey(
-        Animal,  # Updated model reference
+    pet_owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="appointments"
+        related_name='appointments_as_owner'
     )
-
     veterinarian = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="vet_appointments",
-        limit_choices_to={"role": User.VETERINARIAN}
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='appointments_as_vet',
+        limit_choices_to={'role': 'VETERINARIAN'}
     )
-
-    appointment_date = models.DateField()
-
-    appointment_time = models.TimeField()
-
+    animal = models.ForeignKey(
+        Animal,
+        on_delete=models.CASCADE,
+        related_name='appointments'
+    )
+    appointment_date = models.DateTimeField()
     reason = models.TextField()
-
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default="PENDING"
-    )
-
-    notes = models.TextField(
-        blank=True,
-        null=True
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.animal} - {self.appointment_date} {self.appointment_time}"
+        return f"Appointment for {self.animal.name} with Dr. {self.veterinarian.username} on {self.appointment_date.strftime('%Y-%m-%d %H:%M')}"

@@ -3,44 +3,51 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Appointment
 from .forms import AppointmentForm
+from account.models import User
 
 
 @login_required
 def appointment_list(request):
-    """Filter appointments based on user roles."""
-    if request.user.role == request.user.PET_OWNER:
-        appointments = Appointment.objects.filter(animal__owner__user=request.user)
-    elif request.user.role == request.user.VETERINARIAN:
-        appointments = Appointment.objects.filter(veterinarian=request.user)
-    else:
-        appointments = Appointment.objects.all()
+    user = request.user
+    role_str = str(user.role).upper() if user.role else ""
 
-    return render(request, "base.html", {"appointments": appointments})
+    if role_str == User.ADMIN or user.is_superuser or user.is_staff:
+        appointments = Appointment.objects.all().order_by('-appointment_date')
+    elif role_str == User.VETERINARIAN:
+        appointments = Appointment.objects.filter(veterinarian=user).order_by('-appointment_date')
+    else:
+        # Pet Owner
+        appointments = Appointment.objects.filter(pet_owner=user).order_by('-appointment_date')
+
+    return render(request, 'appointment/appointment_list.html', {'appointments': appointments})
 
 
 @login_required
-def book_appointment(request):
-    """Handle booking an appointment."""
-    if request.method == "POST":
-        form = AppointmentForm(request.POST)
+def create_appointment(request):
+    if request.method == 'POST':
+        form = AppointmentForm(request.POST, user=request.user)
         if form.is_valid():
-            appointment = form.save()
-            messages.success(request, f"Appointment booked for {appointment.animal.name}!")
-            return redirect("appointment_list")
-        else:
-            messages.error(request, "Please correct the errors below.")
+            appointment = form.save(commit=False)
+            appointment.pet_owner = request.user
+            appointment.save()
+            messages.success(request, "Appointment requested successfully!")
+            return redirect('appointment_list')
     else:
-        form = AppointmentForm()
+        form = AppointmentForm(user=request.user)
 
-    return render(request, "base.html", {"form": form})
+    return render(request, 'appointment/appointment_form.html', {'form': form})
 
 
 @login_required
 def update_appointment_status(request, pk, status):
-    """Allow Vets/Admins to quickly update appointment status."""
     appointment = get_object_or_404(Appointment, pk=pk)
-    if request.user.role in [request.user.VETERINARIAN, request.user.ADMIN]:
+
+    # Restrict status changes to assigned Vet or Admin
+    if request.user == appointment.veterinarian or request.user.is_superuser:
         appointment.status = status
         appointment.save()
         messages.success(request, f"Appointment status changed to {status}.")
-    return redirect("appointment_list")
+    else:
+        messages.error(request, "You are not authorized to update this appointment.")
+
+    return redirect('appointment_list')
