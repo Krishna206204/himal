@@ -3,127 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <title>Register - Himal Vet Care</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #5a88b5;
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            background: url("https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=1920") no-repeat center;
+            background-size: cover;
+            position: relative;
+            padding: 30px 0;
         }
 
-        /* ===== Registration Card ===== */
-        .register-card {
-            background: #fff;
-            padding: 40px 30px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            width: 350px;
-            text-align: center;
+        body::before {
+            content: "";
+            position: absolute;
+            width: 100%; height: 100%;
+            background: linear-gradient(to top, #2b1055, #7597de);
+            opacity: 0.7;
+            z-index: 0;
         }
 
-        h2 {
-            margin-bottom: 15px;
-            font-size: 24px;
-            color: #111;
+        .container { 
+            position: relative; 
+            z-index: 1; 
+            width: 100%; 
+            max-width: 450px; 
+            padding: 20px; 
         }
 
-        p.subtitle {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 25px;
-        }
-
-        /* ===== Input Fields ===== */
-        .register-card input[type="text"],
-        .register-card input[type="password"] {
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        .register-card input:focus {
-            border-color: #6200ea;
-            box-shadow: 0 0 6px rgba(98,0,234,0.3);
-        }
-
-        /* ===== Button ===== */
-        .register-card button {
-            width: 100%;
-            padding: 12px;
-            background: #6200ea;
-            border: none;
-            border-radius: 6px;
+        .register-box {
+            width: 100%; 
+            padding: 35px 30px; 
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center; 
             color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
+            box-shadow: 0 0 30px rgba(0,0,0,0.4);
         }
 
-        .register-card button:hover {
-            background: #3700b3;
+        .register-box h2 { 
+            margin-bottom: 20px; 
+            font-size: 26px; 
+            font-weight: 600; 
         }
 
-        /* ===== Footer Link ===== */
-        .register-card .login-link {
+        .alert-messages { list-style: none; margin-bottom: 15px; padding: 0; }
+        .alert-messages li {
+            background: rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(239, 68, 68, 0.6);
+            color: #ffcaca; padding: 8px; border-radius: 6px; font-size: 13px;
+        }
+
+        .input-box { position: relative; margin: 18px 0; }
+        
+        .input-box input, .input-box select {
+            width: 100%; 
+            padding: 12px 40px 12px 15px;
+            border-radius: 30px; 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            outline: none; 
+            background: rgba(255,255,255,0.1);
+            color: white; 
+            font-size: 14px;
+        }
+
+        .input-box select option {
+            background: #2b1055;
+            color: white;
+        }
+
+        .input-box label {
+            position: absolute; 
+            top: 50%; left: 15px; 
+            transform: translateY(-50%);
+            color: #ddd; 
+            pointer-events: none; 
+            transition: 0.3s; 
+            font-size: 14px;
+        }
+
+        /* Floating label effect */
+        .input-box input:focus ~ label,
+        .input-box input:not(:placeholder-shown) ~ label,
+        .input-box select:focus ~ label,
+        .input-box select:valid ~ label {
+            top: -8px; 
+            left: 10px; 
+            font-size: 11px; 
+            color: #fff;
+            background: rgba(43, 16, 85, 0.7); 
+            padding: 2px 8px; 
+            border-radius: 10px;
+        }
+
+        .input-box i { 
+            position: absolute; 
+            right: 15px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            color: #fff; 
+        }
+
+        .vet-fields {
+            display: none;
+            border-top: 1px dashed rgba(255, 255, 255, 0.3);
             margin-top: 15px;
-            font-size: 13px;
-            color: #555;
+            padding-top: 10px;
         }
 
-        .register-card .login-link a {
-            color: #6200ea;
-            text-decoration: none;
+        .btn {
+            width: 100%; 
+            padding: 12px; 
+            border-radius: 30px; 
+            border: none;
+            background: white; 
+            color: #333; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s;
+            margin-top: 10px;
         }
 
-        .register-card .login-link a:hover {
-            text-decoration: underline;
-        }
+        .btn:hover { background: #ff6a00; color: white; }
 
-        /* ===== Optional Logo ===== */
-        .logo {
-            margin-top: 30px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #111;
-        }
-
-        .logo span {
-            color: #e91e63;
-            font-family: cursive;
-            font-weight: normal;
-        }
+        p { margin-top: 15px; font-size: 14px; }
+        p a { color: #ffd700; text-decoration: none; }
+        p a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-    <div class="register-card">
-        <h2>Register</h2>
-        <p class="subtitle"> fill in this form to register.</p>
 
+<div class="container">
+    <div class="register-box">
+        <h2>Create Account</h2>
 
-        <form method="POST">
+        {% if messages %}
+            <ul class="alert-messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="POST" action="{% url 'register' %}">
             {% csrf_token %}
-            <input type="text" name="username" placeholder="Enter username" required>
-            <input type="text" name="email" placeholder="Enter email" required>
-            <input type="password" name="password" placeholder="Enter password" required>
-            <input type="password" name="confirm_password" placeholder="Repeat password" required>
 
-            <button type="submit">Register</button>
+            <!-- Username -->
+            <div class="input-box">
+                <input type="text" name="username" placeholder=" " required autocomplete="off">
+                <label>Username</label>
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <!-- Email -->
+            <div class="input-box">
+                <input type="email" name="email" placeholder=" " required>
+                <label>Email</label>
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="input-box">
+                <select name="role" id="roleSelect" required onchange="toggleVetFields()">
+                    <option value="PET_OWNER" selected>Pet Owner</option>
+                    <option value="VETERINARIAN">Veterinarian</option>
+                </select>
+                <label>Account Type</label>
+                <i class="fa-solid fa-user-tag"></i>
+            </div>
+
+            <!-- Phone -->
+            <div class="input-box">
+                <input type="text" name="phone" placeholder=" ">
+                <label>Phone Number</label>
+                <i class="fa-solid fa-phone"></i>
+            </div>
+
+            <!-- Dynamic Veterinarian Fields -->
+            <div id="vetFields" class="vet-fields">
+                <div class="input-box">
+                    <input type="text" name="license_number" id="licenseInput" placeholder=" ">
+                    <label>License Number</label>
+                    <i class="fa-solid fa-id-card"></i>
+                </div>
+
+                <div class="input-box">
+                    <input type="text" name="specialization" placeholder=" ">
+                    <label>Specialization (e.g. Surgery, Dogs)</label>
+                    <i class="fa-solid fa-stethoscope"></i>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="input-box">
+                <input type="password" name="password" placeholder=" " required>
+                <label>Password</label>
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="input-box">
+                <input type="password" name="confirm_password" placeholder=" " required>
+                <label>Confirm Password</label>
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <button type="submit" class="btn">Register</button>
+
+            <p>Already have an account? 
+                <a href="{% url 'login' %}">Login</a>
+            </p>
         </form>
-
-        <p class="login-link">Already have an account? <a href="{% url 'login' %}">Log in.</a></p>
     </div>
+</div>
+
+<script>
+    function toggleVetFields() {
+        const role = document.getElementById("roleSelect").value;
+        const vetFields = document.getElementById("vetFields");
+        const licenseInput = document.getElementById("licenseInput");
+
+        if (role === "VETERINARIAN") {
+            vetFields.style.display = "block";
+            licenseInput.required = true;
+        } else {
+            vetFields.style.display = "none";
+            licenseInput.required = false;
+        }
+    }
+</script>
+
 </body>
 </html>
