@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - Himal Vet Care</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: sans-serif; background: #1e1e2d; color: #fff; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .card { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; text-align: center; }
+        .card h3 { font-size: 28px; color: #ff6a00; }
+        a.btn-logout { color: #ff6a00; text-decoration: none; float: right; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <a href="{% url 'logout' %}" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    <h2><i class="fa-solid fa-user-shield"></i> Admin Control Panel</h2>
+    <p>Welcome, {{ request.user.username }}</p>
+    <hr style="border-color: #3f3f5a; margin: 15px 0;">
+
+    <div class="grid">
+        <div class="card">
+            <h3>{{ total_users }}</h3>
+            <p>Total Users</p>
+        </div>
+        <div class="card">
+            <h3>{{ total_vets }}</h3>
+            <p>Veterinarians</p>
+        </div>
+        <div class="card">
+            <h3>{{ total_owners }}</h3>
+            <p>Pet Owners</p>
+        </div>
+        <div class="card">
+            <h3>{{ total_animals }}</h3>
+            <p>Registered Pets</p>
+        </div>
+    </div>
+</body>
+</html>

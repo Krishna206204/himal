@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Himal Vet Care</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url("https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=1920") no-repeat center;
+            background-size: cover;
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: absolute;
+            width: 100%; height: 100%;
+            background: linear-gradient(to top, #2b1055, #7597de);
+            opacity: 0.7;
+            z-index: 0;
+        }
+        .container { position: relative; z-index: 1; width: 100%; max-width: 380px; padding: 20px; }
+        .login-box {
+            width: 100%; padding: 40px 30px; border-radius: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center; color: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.4);
+        }
+        .login-box h2 { margin-bottom: 25px; font-size: 28px; font-weight: 600; }
+        .alert-messages { list-style: none; margin-bottom: 15px; padding: 0; }
+        .alert-messages li {
+            background: rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(239, 68, 68, 0.6);
+            color: #ffcaca; padding: 8px; border-radius: 6px; font-size: 13px;
+        }
+        .input-box { position: relative; margin: 20px 0; }
+        .input-box input {
+            width: 100%; padding: 12px 40px 12px 15px;
+            border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.3);
+            outline: none; background: rgba(255,255,255,0.1);
+            color: white; font-size: 14px;
+        }
+        .input-box label {
+            position: absolute; top: 50%; left: 15px; transform: translateY(-50%);
+            color: #ddd; pointer-events: none; transition: 0.3s; font-size: 14px;
+        }
+        .input-box input:focus ~ label,
+        .input-box input:not(:placeholder-shown) ~ label {
+            top: -8px; left: 10px; font-size: 11px; color: #fff;
+            background: rgba(43, 16, 85, 0.6); padding: 2px 8px; border-radius: 10px;
+        }
+        .input-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #fff; }
+        .options { display: flex; justify-content: space-between; font-size: 13px; margin: 10px 0 20px; }
+        .options a { color: #fff; text-decoration: none; }
+        .options a:hover { text-decoration: underline; }
+        .btn {
+            width: 100%; padding: 12px; border-radius: 30px; border: none;
+            background: white; color: #333; font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .btn:hover { background: #ff6a00; color: white; }
+        p { margin-top: 15px; font-size: 14px; }
+        p a { color: #ffd700; text-decoration: none; }
+        p a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="login-box">
+        <h2>Login</h2>
+
+        {% if messages %}
+            <ul class="alert-messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <div class="input-box">
+                <input type="text" name="username" placeholder=" " required autocomplete="off">
+                <label>Username</label>
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div class="input-box">
+                <input type="password" name="password" placeholder=" " required>
+                <label>Password</label>
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <div class="options">
+                <label><input type="checkbox" name="remember_me"> Remember me</label>
+                <a href="{% url 'forgot_password' %}">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn">Login</button>
+
+            <p>Don't have an account? 
+                <a href="{% url 'register' %}">Register</a>
+            </p>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

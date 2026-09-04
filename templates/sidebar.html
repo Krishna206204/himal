@@ -1,0 +1,76 @@
+<style>
+    .sidebar {
+        width: 250px;
+        min-height: 100vh;
+        background: #1e1e2d;
+        color: #fff;
+        padding: 20px 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .sidebar h3 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #ff6a00;
+    }
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+    .sidebar ul li {
+        margin-bottom: 10px;
+    }
+    .sidebar ul li a {
+        color: #a2a3b7;
+        text-decoration: none;
+        padding: 12px 15px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-radius: 8px;
+        transition: 0.3s;
+    }
+    .sidebar ul li a:hover, .sidebar ul li a.active {
+        background: #2b2b40;
+        color: #fff;
+    }
+    .sidebar-footer {
+        padding: 10px;
+        border-top: 1px solid #2b2b40;
+    }
+    .logout-btn {
+        color: #ff6b6b;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+    }
+</style>
+
+<div class="sidebar">
+    <div>
+        <h3><i class="fa-solid fa-paw"></i> Vet Care</h3>
+        <ul>
+            {% if user.role == "ADMIN" or user.is_superuser %}
+                <li><a href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> Admin Dashboard</a></li>
+                <li><a href="#"><i class="fa-solid fa-users"></i> Manage Users</a></li>
+            {% elif user.role == "VETERINARIAN" %}
+                <li><a href="{% url 'dashboard' %}"><i class="fa-solid fa-user-doctor"></i> Vet Dashboard</a></li>
+                <li><a href="#"><i class="fa-solid fa-calendar-check"></i> Appointments</a></li>
+                <li><a href="#"><i class="fa-solid fa-file-medical"></i> Medical Records</a></li>
+            {% else %}
+                <li><a href="{% url 'dashboard' %}"><i class="fa-solid fa-house"></i> My Dashboard</a></li>
+                <li><a href="#"><i class="fa-solid fa-dog"></i> My Pets</a></li>
+                <li><a href="#"><i class="fa-solid fa-calendar-plus"></i> Book Appointment</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="sidebar-footer">
+        <a href="{% url 'logout' %}" class="logout-btn">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+    </div>
+</div>

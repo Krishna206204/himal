@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from django.http import HttpResponse
 
-# Create your views here.
+def pet_list(request):
+    return HttpResponse("Pet List Page")
+
+def add_pet(request):
+    return HttpResponse("Add Pet Page")
+
+def pet_detail(request, pk):
+    return HttpResponse(f"Pet Detail Page for ID: {pk}")

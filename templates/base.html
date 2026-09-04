@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vet Management System{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; display: flex; margin: 0; background-color: #f4f6f9; }
+        .main-content { flex: 1; padding: 20px; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Include root sidebar template -->
+    {% if user.is_authenticated %}
+        {% include 'sidebar.html' %}
+    {% endif %}
+
+    <div class="main-content">
+        {% block content %}
+            <h2>Welcome, {{ request.user.get_full_name|default:request.user.username }}</h2>
+            <p>Role: {{ request.user.get_role_display }}</p>
+        {% endblock %}
+    </div>
+
+</body>
+</html>

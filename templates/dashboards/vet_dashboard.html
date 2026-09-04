@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vet Dashboard - Himal Vet Care</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: sans-serif; background: #1e1e2d; color: #fff; padding: 20px; }
+        .info-card { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        a.btn-logout { color: #ff6a00; text-decoration: none; float: right; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <a href="{% url 'logout' %}" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    <h2><i class="fa-solid fa-stethoscope"></i> Veterinarian Dashboard</h2>
+    <p>Welcome, Dr. {{ request.user.username }}</p>
+    <hr style="border-color: #3f3f5a; margin: 15px 0;">
+
+    <div class="info-card">
+        <h4>Profile Details</h4>
+        <p><strong>License No:</strong> {{ vet_profile.license_number|default:"N/A" }}</p>
+        <p><strong>Specialization:</strong> {{ vet_profile.specialization|default:"General Practice" }}</p>
+    </div>
+
+    <h3>Upcoming Appointments</h3>
+    <ul>
+        {% for appt in appointments %}
+            <li>{{ appt.appointment_date }} - {{ appt.animal }}</li>
+        {% empty %}
+            <li>No upcoming appointments.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

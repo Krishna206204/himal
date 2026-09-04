@@ -1,6 +1,7 @@
 from django.db import models
 from account.models import User
-from animal.models import Animal
+from animal.models import Animal  # Updated import
+
 
 class Appointment(models.Model):
 
@@ -12,8 +13,9 @@ class Appointment(models.Model):
     )
 
     animal = models.ForeignKey(
-        Animal,
+        Animal,  # Updated model reference
         on_delete=models.CASCADE,
+        related_name="appointments"
     )
 
     veterinarian = models.ForeignKey(
@@ -21,6 +23,8 @@ class Appointment(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        related_name="vet_appointments",
+        limit_choices_to={"role": User.VETERINARIAN}
     )
 
     appointment_date = models.DateField()
