@@ -20,9 +20,9 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # Redirect root '/' straight to '/login/'
     path('', RedirectView.as_view(url='/login/', permanent=False)),
-    # Connect app URLs
     path('', include('account.urls')),
     path('animals/', include('animal.urls')),
+    path('appointments/', include('appointment.urls')),
+    path('medical/', include('medical.urls')),
 ]
