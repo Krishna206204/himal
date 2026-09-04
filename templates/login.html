@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Login</title>
+
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Background Image */
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url("https://i.ibb.co/6bQ8bqF/mountain-night.jpg") no-repeat center;
+            background-size: cover;
+            position: relative;
+        }
+
+        /* Dark overlay */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, #2b1055, #7597de);
+            opacity: 0.7;
+            z-index: 0;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Glass Login Box */
+        .login-box {
+            width: 350px;
+            padding: 40px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.3);
+            text-align: center;
+            color: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.4);
+        }
+
+        /* Title */
+        .login-box h2 {
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+
+        /* Input Box */
+        .input-box {
+            position: relative;
+            margin: 20px 0;
+        }
+
+        /* Input */
+        .input-box input {
+            width: 100%;
+            padding: 12px 40px 12px 10px;
+            border-radius: 30px;
+            border: none;
+            outline: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        /* Label */
+        .input-box label {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #ddd;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        /* Floating effect */
+        .input-box input:focus ~ label,
+        .input-box input:valid ~ label {
+            top: -8px;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        /* Icons */
+        .input-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Options */
+        .options {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin: 10px 0 20px;
+        }
+
+        .options a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .options a:hover {
+            text-decoration: underline;
+        }
+
+        /* Button */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 30px;
+            border: none;
+            background: white;
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #ff6a00;
+            color: white;
+        }
+
+        /* Register text */
+        p {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        p a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="login-box">
+        <h2>Login</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="input-box">
+                <input type="text" name="username" required>
+                <label>Username</label>
+            </div>
+
+            <div class="input-box">
+                <input type="password" name="password" required>
+                <label>Password</label>
+            </div>
+
+            <div class="options">
+                <label><input type="checkbox"> Remember me</label>
+                <a href="{% url 'forgotpassword' %}">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn">Login</button>
+            <p>Don't have an account? 
+                <a href="{% url 'register' %}">Register</a>
+            </p>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+
+
+
