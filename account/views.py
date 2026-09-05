@@ -10,10 +10,6 @@ from appointment.models import Appointment
 from medical.models import MedicalRecord
 
 
-# -----------------------------------------------------------------------------
-# Authentication Views
-# -----------------------------------------------------------------------------
-
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
@@ -102,10 +98,6 @@ def register_view(request):
 def forgot_password_view(request):
     return render(request, 'forgot_password.html')
 
-
-# -----------------------------------------------------------------------------
-# Dynamic Dashboard Routing
-# -----------------------------------------------------------------------------
 
 @login_required
 def dashboard(request):

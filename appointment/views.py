@@ -20,7 +20,6 @@ def appointment_list(request):
 
 @login_required
 def book_appointment(request):
-    """Handle booking an appointment."""
     if request.method == "POST":
         form = AppointmentForm(request.POST)
         if form.is_valid():
