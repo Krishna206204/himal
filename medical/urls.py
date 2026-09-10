@@ -1,5 +1,25 @@
 from django.urls import path
 from . import views
 
+
 urlpatterns = [
+
+    path(
+        "medical-records/",
+        views.owner_medical_records,
+        name="owner-medical-records"
+    ),
+
+    path(
+        "medical-records/<int:id>/",
+        views.owner_medical_record_detail,
+        name="owner-medical-detail"
+    ),
+
+    path(
+        "medical-records/<int:id>/download/",
+        views.download_medical_report,
+        name="download-medical-report"
+    ),
+
 ]
