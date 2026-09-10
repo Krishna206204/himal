@@ -1,0 +1,639 @@
+{% extends "ownerbase.html" %}
+
+{% block title %}
+    My Appointments | Himal Vet Care
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row
+                sm:items-center
+                sm:justify-between
+                gap-4 mb-6">
+
+        <div>
+
+            <div class="flex items-center gap-3">
+
+                <div class="w-12 h-12
+                            rounded-xl
+                            bg-pink-100
+                            text-pink-500
+                            flex items-center justify-center">
+
+                    <i class="fa-solid fa-calendar-days text-xl"></i>
+
+                </div>
+
+                <div>
+
+                    <h1 class="text-2xl font-bold text-slate-900">
+                        My Appointments
+                    </h1>
+
+                    <p class="text-sm text-slate-500 mt-1">
+                        View and track your pet's appointments.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <a href="{% url 'book-appointment' %}"
+           class="inline-flex items-center
+                  justify-center
+                  px-5 py-3
+                  rounded-xl
+                  bg-pink-500
+                  text-white
+                  font-medium
+                  hover:bg-pink-600">
+
+            <i class="fa-solid fa-plus mr-2"></i>
+
+            Book Appointment
+
+        </a>
+
+    </div>
+
+
+    {% if appointments %}
+
+        <!-- Desktop Table -->
+        <div class="hidden md:block
+                    bg-white
+                    rounded-2xl
+                    border border-slate-200
+                    shadow-sm
+                    overflow-hidden">
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full">
+
+                    <thead class="bg-slate-50
+                                  border-b border-slate-200">
+
+                        <tr>
+
+                            <th class="text-left
+                                       px-6 py-4
+                                       text-xs font-semibold
+                                       text-slate-500
+                                       uppercase">
+
+                                Pet
+
+                            </th>
+
+                            <th class="text-left
+                                       px-6 py-4
+                                       text-xs font-semibold
+                                       text-slate-500
+                                       uppercase">
+
+                                Veterinarian
+
+                            </th>
+
+                            <th class="text-left
+                                       px-6 py-4
+                                       text-xs font-semibold
+                                       text-slate-500
+                                       uppercase">
+
+                                Date
+
+                            </th>
+
+                            <th class="text-left
+                                       px-6 py-4
+                                       text-xs font-semibold
+                                       text-slate-500
+                                       uppercase">
+
+                                Time
+
+                            </th>
+
+                            <th class="text-left
+                                       px-6 py-4
+                                       text-xs font-semibold
+                                       text-slate-500
+                                       uppercase">
+
+                                Reason
+
+                            </th>
+
+                            <th class="text-left
+                                       px-6 py-4
+                                       text-xs font-semibold
+                                       text-slate-500
+                                       uppercase">
+
+                                Status
+
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody class="divide-y divide-slate-100">
+
+                        {% for appointment in appointments %}
+
+                            <tr class="hover:bg-slate-50">
+
+                                <!-- Pet -->
+                                <td class="px-6 py-5">
+
+                                    <div class="flex items-center gap-3">
+
+                                        <div class="w-10 h-10
+                                                    rounded-lg
+                                                    bg-pink-100
+                                                    text-pink-500
+                                                    flex items-center justify-center">
+
+                                            <i class="fa-solid fa-paw"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <p class="font-semibold
+                                                      text-slate-900">
+
+                                                {{ appointment.animal.name }}
+
+                                            </p>
+
+                                            <p class="text-xs
+                                                      text-slate-500">
+
+                                                {{ appointment.animal.species }}
+
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- Veterinarian -->
+                                <td class="px-6 py-5">
+
+                                    {% if appointment.veterinarian %}
+
+                                        <div class="flex items-center gap-2">
+
+                                            <i class="fa-solid fa-user-doctor
+                                                      text-slate-400"></i>
+
+                                            <span class="text-sm
+                                                         text-slate-700">
+
+                                                {{ appointment.veterinarian.get_full_name|default:appointment.veterinarian.username }}
+
+                                            </span>
+
+                                        </div>
+
+                                    {% else %}
+
+                                        <span class="text-sm text-slate-400">
+
+                                            Not assigned
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- Date -->
+                                <td class="px-6 py-5">
+
+                                    <div class="flex items-center gap-2">
+
+                                        <i class="fa-solid fa-calendar
+                                                  text-slate-400"></i>
+
+                                        <span class="text-sm
+                                                     text-slate-700">
+
+                                            {{ appointment.appointment_date|date:"M d, Y" }}
+
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- Time -->
+                                <td class="px-6 py-5">
+
+                                    <div class="flex items-center gap-2">
+
+                                        <i class="fa-solid fa-clock
+                                                  text-slate-400"></i>
+
+                                        <span class="text-sm
+                                                     text-slate-700">
+
+                                            {{ appointment.appointment_time|time:"g:i A" }}
+
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- Reason -->
+                                <td class="px-6 py-5 max-w-xs">
+
+                                    <p class="text-sm
+                                              text-slate-600
+                                              truncate">
+
+                                        {{ appointment.reason }}
+
+                                    </p>
+
+                                </td>
+
+
+                                <!-- Status -->
+                                <td class="px-6 py-5">
+
+                                    {% if appointment.status == "PENDING" %}
+
+                                        <span class="inline-flex
+                                                     items-center
+                                                     px-3 py-1
+                                                     rounded-full
+                                                     text-xs font-semibold
+                                                     bg-amber-100
+                                                     text-amber-700">
+
+                                            <i class="fa-solid fa-clock mr-1"></i>
+                                            Pending
+
+                                        </span>
+
+                                    {% elif appointment.status == "CONFIRMED" %}
+
+                                        <span class="inline-flex
+                                                     items-center
+                                                     px-3 py-1
+                                                     rounded-full
+                                                     text-xs font-semibold
+                                                     bg-blue-100
+                                                     text-blue-700">
+
+                                            <i class="fa-solid fa-check mr-1"></i>
+                                            Confirmed
+
+                                        </span>
+
+                                    {% elif appointment.status == "COMPLETED" %}
+
+                                        <span class="inline-flex
+                                                     items-center
+                                                     px-3 py-1
+                                                     rounded-full
+                                                     text-xs font-semibold
+                                                     bg-green-100
+                                                     text-green-700">
+
+                                            <i class="fa-solid fa-check-double mr-1"></i>
+                                            Completed
+
+                                        </span>
+
+                                    {% elif appointment.status == "CANCELLED" %}
+
+                                        <span class="inline-flex
+                                                     items-center
+                                                     px-3 py-1
+                                                     rounded-full
+                                                     text-xs font-semibold
+                                                     bg-red-100
+                                                     text-red-700">
+
+                                            <i class="fa-solid fa-xmark mr-1"></i>
+                                            Cancelled
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- Mobile Cards -->
+        <div class="md:hidden space-y-4">
+
+            {% for appointment in appointments %}
+
+                <div class="bg-white
+                            rounded-2xl
+                            border border-slate-200
+                            shadow-sm
+                            p-5">
+
+                    <!-- Pet -->
+                    <div class="flex items-center
+                                justify-between
+                                gap-3">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="w-11 h-11
+                                        rounded-xl
+                                        bg-pink-100
+                                        text-pink-500
+                                        flex items-center justify-center">
+
+                                <i class="fa-solid fa-paw"></i>
+
+                            </div>
+
+                            <div>
+
+                                <h2 class="font-bold
+                                           text-slate-900">
+
+                                    {{ appointment.animal.name }}
+
+                                </h2>
+
+                                <p class="text-xs
+                                          text-slate-500">
+
+                                    {{ appointment.animal.species }}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        {% if appointment.status == "PENDING" %}
+
+                            <span class="px-3 py-1
+                                         rounded-full
+                                         text-xs font-semibold
+                                         bg-amber-100
+                                         text-amber-700">
+
+                                Pending
+
+                            </span>
+
+                        {% elif appointment.status == "CONFIRMED" %}
+
+                            <span class="px-3 py-1
+                                         rounded-full
+                                         text-xs font-semibold
+                                         bg-blue-100
+                                         text-blue-700">
+
+                                Confirmed
+
+                            </span>
+
+                        {% elif appointment.status == "COMPLETED" %}
+
+                            <span class="px-3 py-1
+                                         rounded-full
+                                         text-xs font-semibold
+                                         bg-green-100
+                                         text-green-700">
+
+                                Completed
+
+                            </span>
+
+                        {% elif appointment.status == "CANCELLED" %}
+
+                            <span class="px-3 py-1
+                                         rounded-full
+                                         text-xs font-semibold
+                                         bg-red-100
+                                         text-red-700">
+
+                                Cancelled
+
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="border-t
+                                border-slate-100
+                                my-4"></div>
+
+
+                    <!-- Date and Time -->
+                    <div class="grid grid-cols-2 gap-4">
+
+                        <div>
+
+                            <p class="text-xs
+                                      text-slate-400
+                                      mb-1">
+
+                                Date
+
+                            </p>
+
+                            <p class="text-sm
+                                      font-medium
+                                      text-slate-700">
+
+                                <i class="fa-solid fa-calendar
+                                          text-slate-400 mr-1"></i>
+
+                                {{ appointment.appointment_date|date:"M d, Y" }}
+
+                            </p>
+
+                        </div>
+
+
+                        <div>
+
+                            <p class="text-xs
+                                      text-slate-400
+                                      mb-1">
+
+                                Time
+
+                            </p>
+
+                            <p class="text-sm
+                                      font-medium
+                                      text-slate-700">
+
+                                <i class="fa-solid fa-clock
+                                          text-slate-400 mr-1"></i>
+
+                                {{ appointment.appointment_time|time:"g:i A" }}
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Veterinarian -->
+                    <div class="mt-4">
+
+                        <p class="text-xs
+                                  text-slate-400
+                                  mb-1">
+
+                            Veterinarian
+
+                        </p>
+
+                        <p class="text-sm
+                                  font-medium
+                                  text-slate-700">
+
+                            <i class="fa-solid fa-user-doctor
+                                      text-slate-400 mr-1"></i>
+
+                            {% if appointment.veterinarian %}
+
+                                {{ appointment.veterinarian.get_full_name|default:appointment.veterinarian.username }}
+
+                            {% else %}
+
+                                Not assigned
+
+                            {% endif %}
+
+                        </p>
+
+                    </div>
+
+
+                    <!-- Reason -->
+                    <div class="mt-4">
+
+                        <p class="text-xs
+                                  text-slate-400
+                                  mb-1">
+
+                            Reason
+
+                        </p>
+
+                        <p class="text-sm
+                                  text-slate-600">
+
+                            {{ appointment.reason }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <!-- Empty State -->
+        <div class="bg-white
+                    rounded-2xl
+                    border border-slate-200
+                    shadow-sm
+                    p-10
+                    text-center">
+
+            <div class="w-20 h-20
+                        mx-auto
+                        rounded-full
+                        bg-pink-100
+                        text-pink-500
+                        flex items-center justify-center">
+
+                <i class="fa-solid fa-calendar-xmark text-3xl"></i>
+
+            </div>
+
+            <h2 class="text-xl font-bold
+                       text-slate-900 mt-5">
+
+                No Appointments Yet
+
+            </h2>
+
+            <p class="text-sm
+                      text-slate-500
+                      mt-2 max-w-md mx-auto">
+
+                You haven't booked any veterinary appointments
+                for your pets yet.
+
+            </p>
+
+            <a href="{% url 'book-appointment' %}"
+               class="inline-flex items-center
+                      mt-6
+                      px-5 py-3
+                      rounded-xl
+                      bg-pink-500
+                      text-white
+                      font-medium
+                      hover:bg-pink-600">
+
+                <i class="fa-solid fa-calendar-plus mr-2"></i>
+
+                Book Your First Appointment
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

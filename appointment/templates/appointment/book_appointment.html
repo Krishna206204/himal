@@ -1,0 +1,403 @@
+{% extends "ownerbase.html" %}
+
+{% block title %}
+    Book Appointment | Himal Vet Care
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+
+    <!-- Header -->
+    <div class="mb-6">
+
+        <div class="flex items-center gap-3">
+
+            <div class="w-12 h-12
+                        rounded-xl
+                        bg-pink-100
+                        text-pink-500
+                        flex items-center justify-center">
+
+                <i class="fa-solid fa-calendar-plus text-xl"></i>
+
+            </div>
+
+            <div>
+
+                <h1 class="text-2xl font-bold text-slate-900">
+                    Book Appointment
+                </h1>
+
+                <p class="text-sm text-slate-500 mt-1">
+                    Schedule a veterinary appointment for your pet.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Form Card -->
+    <div class="bg-white rounded-2xl
+                border border-slate-200
+                shadow-sm p-6 sm:p-8">
+
+        {% if not animals %}
+
+            <div class="text-center py-10">
+
+                <div class="w-16 h-16
+                            mx-auto
+                            rounded-full
+                            bg-pink-100
+                            text-pink-500
+                            flex items-center justify-center">
+
+                    <i class="fa-solid fa-paw text-2xl"></i>
+
+                </div>
+
+                <h2 class="text-lg font-semibold
+                           text-slate-900 mt-4">
+
+                    No pets found
+
+                </h2>
+
+                <p class="text-sm text-slate-500 mt-2">
+
+                    You need to add a pet before booking
+                    an appointment.
+
+                </p>
+
+                <a href="{% url 'add_animal' %}"
+                   class="inline-flex items-center
+                          mt-5 px-5 py-3
+                          rounded-xl
+                          bg-pink-500
+                          text-white
+                          font-medium
+                          hover:bg-pink-600">
+
+                    <i class="fa-solid fa-plus mr-2"></i>
+
+                    Add Pet
+
+                </a>
+
+            </div>
+
+        {% else %}
+
+            <form method="POST"
+                  action="{% url 'book-appointment' %}"
+                  class="space-y-6">
+
+                {% csrf_token %}
+
+
+                <!-- Pet -->
+                <div>
+
+                    <label
+                        class="block text-sm font-medium
+                               text-slate-700 mb-2">
+
+                        Select Pet
+
+                    </label>
+
+                    <div class="relative">
+
+                        <i class="fa-solid fa-paw
+                                  absolute left-4 top-1/2
+                                  -translate-y-1/2
+                                  text-slate-400"></i>
+
+                        <select
+                            name="animal"
+                            required
+                            class="w-full rounded-xl
+                                   border border-slate-300
+                                   pl-11 pr-4 py-3
+                                   bg-white
+                                   text-slate-800
+                                   focus:outline-none
+                                   focus:ring-2
+                                   focus:ring-pink-400">
+
+                            <option value="">
+                                Select your pet
+                            </option>
+
+                            {% for animal in animals %}
+
+                                <option value="{{ animal.id }}">
+
+                                    {{ animal.name }}
+                                    -
+                                    {{ animal.species }}
+
+                                    {% if animal.breed %}
+                                        ({{ animal.breed }})
+                                    {% endif %}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Veterinarian -->
+                <div>
+
+                    <label
+                        class="block text-sm font-medium
+                               text-slate-700 mb-2">
+
+                        Veterinarian
+
+                    </label>
+
+                    <div class="relative">
+
+                        <i class="fa-solid fa-user-doctor
+                                  absolute left-4 top-1/2
+                                  -translate-y-1/2
+                                  text-slate-400"></i>
+
+                        <select
+                            name="veterinarian"
+                            class="w-full rounded-xl
+                                   border border-slate-300
+                                   pl-11 pr-4 py-3
+                                   bg-white
+                                   text-slate-800
+                                   focus:outline-none
+                                   focus:ring-2
+                                   focus:ring-pink-400">
+
+                            <option value="">
+                                Any available veterinarian
+                            </option>
+
+                            {% for veterinarian in veterinarians %}
+
+                                <option value="{{ veterinarian.id }}">
+
+                                    {% if veterinarian.get_full_name %}
+                                        {{ veterinarian.get_full_name }}
+                                    {% else %}
+                                        {{ veterinarian.username }}
+                                    {% endif %}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <p class="text-xs text-slate-400 mt-2">
+                        You can leave this blank if you do not have
+                        a preferred veterinarian.
+                    </p>
+
+                </div>
+
+
+                <!-- Date -->
+                <div>
+
+                    <label
+                        class="block text-sm font-medium
+                               text-slate-700 mb-2">
+
+                        Appointment Date
+
+                    </label>
+
+                    <div class="relative">
+
+                        <i class="fa-solid fa-calendar
+                                  absolute left-4 top-1/2
+                                  -translate-y-1/2
+                                  text-slate-400"></i>
+
+                        <input
+                            type="date"
+                            name="appointment_date"
+                            required
+                            min="{% now 'Y-m-d' %}"
+                            class="w-full rounded-xl
+                                   border border-slate-300
+                                   pl-11 pr-4 py-3
+                                   focus:outline-none
+                                   focus:ring-2
+                                   focus:ring-pink-400">
+
+                    </div>
+
+                </div>
+
+
+                <!-- Time -->
+                <div>
+
+                    <label
+                        class="block text-sm font-medium
+                               text-slate-700 mb-2">
+
+                        Appointment Time
+
+                    </label>
+
+                    <div class="relative">
+
+                        <i class="fa-solid fa-clock
+                                  absolute left-4 top-1/2
+                                  -translate-y-1/2
+                                  text-slate-400"></i>
+
+                        <input
+                            type="time"
+                            name="appointment_time"
+                            required
+                            class="w-full rounded-xl
+                                   border border-slate-300
+                                   pl-11 pr-4 py-3
+                                   focus:outline-none
+                                   focus:ring-2
+                                   focus:ring-pink-400">
+
+                    </div>
+
+                </div>
+
+
+                <!-- Reason -->
+                <div>
+
+                    <label
+                        class="block text-sm font-medium
+                               text-slate-700 mb-2">
+
+                        Reason for Visit
+
+                    </label>
+
+                    <textarea
+                        name="reason"
+                        rows="5"
+                        required
+                        placeholder="Describe why your pet needs an appointment..."
+                        class="w-full rounded-xl
+                               border border-slate-300
+                               px-4 py-3
+                               resize-none
+                               focus:outline-none
+                               focus:ring-2
+                               focus:ring-pink-400"></textarea>
+
+                    <p class="text-xs text-slate-400 mt-2">
+                        Example: vaccination, fever, injury,
+                        loss of appetite, regular check-up, etc.
+                    </p>
+
+                </div>
+
+
+                <!-- Information -->
+                <div class="rounded-xl
+                            bg-amber-50
+                            border border-amber-200
+                            p-4">
+
+                    <div class="flex gap-3">
+
+                        <i class="fa-solid fa-circle-info
+                                  text-amber-500 mt-0.5"></i>
+
+                        <div>
+
+                            <p class="text-sm font-medium
+                                      text-amber-800">
+
+                                Appointment Status
+
+                            </p>
+
+                            <p class="text-xs text-amber-700 mt-1">
+
+                                Your appointment will initially be
+                                marked as <strong>Pending</strong>.
+                                The veterinarian or administrator
+                                can confirm it later.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Buttons -->
+                <div class="flex flex-col sm:flex-row
+                            gap-3 pt-2">
+
+                    <a
+                        href="{% url 'owner-appointments' %}"
+                        class="flex-1
+                               text-center
+                               px-5 py-3
+                               rounded-xl
+                               bg-slate-100
+                               text-slate-700
+                               font-medium
+                               hover:bg-slate-200">
+
+                        Cancel
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="flex-1
+                               px-5 py-3
+                               rounded-xl
+                               bg-pink-500
+                               text-white
+                               font-semibold
+                               hover:bg-pink-600
+                               transition">
+
+                        <i class="fa-solid fa-calendar-check mr-2"></i>
+
+                        Book Appointment
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
