@@ -226,17 +226,6 @@ def register_view(request):
         "account/register.html"
     )
 
-# FORGOT PASSWOR
-
-def forgot_password_view(request):
-
-    return render(
-        request,
-        "forgot_password.html"
-    )
-
-# MAIN DASHBOARD REDIREC
-
 @login_required
 def dashboard(request):
 

@@ -17,11 +17,7 @@ urlpatterns = [
         views.register_view,
         name="register"
     ),
-    path(
-        "forgot-password/",
-        views.forgot_password_view,
-        name="forgot-password"
-    ),
+ 
 
     path(
         "dashboard/",
