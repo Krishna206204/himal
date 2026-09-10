@@ -25,16 +25,7 @@ urlpatterns = [
         name="dashboard"
     ),
 
-    path(
-        "admin-dashboard/",
-        views.admin_dashboard,
-        name="admin-dashboard"
-    ),
-    path(
-        "vet-dashboard/",
-        views.vet_dashboard,
-        name="vet-dashboard"
-    ),
+    
     path(
         "owner-dashboard/",
         views.owner_dashboard,
@@ -43,8 +34,22 @@ urlpatterns = [
     
     path(
     "owner-profile/",
-    views.owner_profile,
-    name="owner_profile"
-),
+        views.owner_profile,
+        name="owner_profile"
+    ),
+    
+    path(
+        "vet-login/",
+        views.vet_login,
+        name="vet-login"
+    ),
+
+    # Vet dashboard
+    path(
+        "vet/dashboard/",
+        views.vet_dashboard,
+        name="vet-dashboard"
+    ),
+   
 
 ]

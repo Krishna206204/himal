@@ -1,7 +1,8 @@
 <!-- Overlay -->
 <div id="vet-overlay"
      class="hidden fixed inset-0
-            bg-black/40 z-40 lg:hidden">
+            bg-slate-950/50 backdrop-blur-sm
+            z-40 lg:hidden">
 </div>
 
 
@@ -14,30 +15,44 @@
               flex flex-col
               transform -translate-x-full
               lg:translate-x-0
-              transition-transform duration-300">
+              transition-transform duration-300
+              shadow-2xl">
 
 
     <!-- Logo -->
-    <div class="px-6 py-6 border-b border-white/10">
+    <div class="px-6 py-6
+                border-b border-white/10
+                bg-slate-950">
 
         <div class="flex items-center gap-3">
 
-            <div class="w-11 h-11 rounded-xl
+            <div class="w-11 h-11
+                        rounded-xl
                         bg-emerald-600
-                        flex items-center justify-center">
+                        shadow-lg shadow-emerald-600/20
+                        flex items-center justify-center
+                        shrink-0">
 
                 <i class="fa-solid fa-paw text-xl"></i>
 
             </div>
 
-            <div>
+            <div class="min-w-0">
 
-                <h2 class="font-bold text-lg">
+                <h2 class="font-bold text-lg
+                           text-white
+                           leading-tight">
+
                     Vet Care
+
                 </h2>
 
-                <p class="text-xs text-slate-400">
+                <p class="text-xs
+                          text-slate-400
+                          mt-1">
+
                     Veterinarian Portal
+
                 </p>
 
             </div>
@@ -48,30 +63,13 @@
 
 
     <!-- Veterinarian Profile -->
-    <div class="px-5 py-5 border-b border-white/10">
+    <div class="px-5 py-5
+                border-b border-white/10
+                bg-slate-950">
 
         <div class="flex items-center gap-3">
 
-            <div class="w-11 h-11 rounded-full
-                        bg-emerald-600
-                        flex items-center justify-center">
-
-                <i class="fa-solid fa-user-doctor"></i>
-
-            </div>
-
-            <div class="min-w-0">
-
-                <p class="font-semibold truncate">
-
-                    Dr.
-                    {{ request.user.get_full_name|default:request.user.username }}
-
-                </p>
-
-                <p class="text-xs text-slate-400">
-                    Veterinarian
-                </p>
+            <div class="flex items-center justify-center">
 
             </div>
 
@@ -81,7 +79,12 @@
 
 
     <!-- Navigation -->
-    <nav class="flex-1 overflow-y-auto px-4 py-5">
+    <nav class="flex-1
+                overflow-y-auto
+                px-4 py-5
+                scrollbar-thin
+                scrollbar-thumb-slate-700
+                scrollbar-track-transparent">
 
         <p class="px-3 mb-3
                   text-xs font-semibold
@@ -98,17 +101,29 @@
 
             <li>
 
-                <a href="{% url 'dashboard' %}"
-                   class="flex items-center gap-3
-                          px-4 py-3 rounded-xl
+                <a href="{% url 'vet-dashboard' %}"
+                   class="group
+                          flex items-center gap-3
+                          px-4 py-3
+                          rounded-xl
                           text-slate-300
                           hover:bg-emerald-600
                           hover:text-white
-                          transition">
+                          hover:shadow-lg
+                          hover:shadow-emerald-600/20
+                          transition-all duration-200">
 
-                    <i class="fa-solid fa-house w-5"></i>
+                    <i class="fa-solid fa-house
+                              w-5
+                              text-center
+                              text-slate-400
+                              group-hover:text-white
+                              transition-colors">
+                    </i>
 
-                    <span>Dashboard</span>
+                    <span class="font-medium">
+                        Dashboard
+                    </span>
 
                 </a>
 
@@ -118,16 +133,28 @@
             <li>
 
                 <a href="#"
-                   class="flex items-center gap-3
-                          px-4 py-3 rounded-xl
+                   class="group
+                          flex items-center gap-3
+                          px-4 py-3
+                          rounded-xl
                           text-slate-300
                           hover:bg-emerald-600
                           hover:text-white
-                          transition">
+                          hover:shadow-lg
+                          hover:shadow-emerald-600/20
+                          transition-all duration-200">
 
-                    <i class="fa-solid fa-calendar-check w-5"></i>
+                    <i class="fa-solid fa-calendar-check
+                              w-5
+                              text-center
+                              text-slate-400
+                              group-hover:text-white
+                              transition-colors">
+                    </i>
 
-                    <span>Appointments</span>
+                    <span class="font-medium">
+                        Appointments
+                    </span>
 
                 </a>
 
@@ -137,16 +164,28 @@
             <li>
 
                 <a href="#"
-                   class="flex items-center gap-3
-                          px-4 py-3 rounded-xl
+                   class="group
+                          flex items-center gap-3
+                          px-4 py-3
+                          rounded-xl
                           text-slate-300
                           hover:bg-emerald-600
                           hover:text-white
-                          transition">
+                          hover:shadow-lg
+                          hover:shadow-emerald-600/20
+                          transition-all duration-200">
 
-                    <i class="fa-solid fa-file-medical w-5"></i>
+                    <i class="fa-solid fa-file-medical
+                              w-5
+                              text-center
+                              text-slate-400
+                              group-hover:text-white
+                              transition-colors">
+                    </i>
 
-                    <span>Medical Records</span>
+                    <span class="font-medium">
+                        Medical Records
+                    </span>
 
                 </a>
 
@@ -156,16 +195,28 @@
             <li>
 
                 <a href="#"
-                   class="flex items-center gap-3
-                          px-4 py-3 rounded-xl
+                   class="group
+                          flex items-center gap-3
+                          px-4 py-3
+                          rounded-xl
                           text-slate-300
                           hover:bg-emerald-600
                           hover:text-white
-                          transition">
+                          hover:shadow-lg
+                          hover:shadow-emerald-600/20
+                          transition-all duration-200">
 
-                    <i class="fa-solid fa-paw w-5"></i>
+                    <i class="fa-solid fa-paw
+                              w-5
+                              text-center
+                              text-slate-400
+                              group-hover:text-white
+                              transition-colors">
+                    </i>
 
-                    <span>My Patients</span>
+                    <span class="font-medium">
+                        My Patients
+                    </span>
 
                 </a>
 
@@ -175,20 +226,33 @@
             <li>
 
                 <a href="#"
-                   class="flex items-center gap-3
-                          px-4 py-3 rounded-xl
+                   class="group
+                          flex items-center gap-3
+                          px-4 py-3
+                          rounded-xl
                           text-slate-300
                           hover:bg-emerald-600
                           hover:text-white
-                          transition">
+                          hover:shadow-lg
+                          hover:shadow-emerald-600/20
+                          transition-all duration-200">
 
-                    <i class="fa-solid fa-notes-medical w-5"></i>
+                    <i class="fa-solid fa-notes-medical
+                              w-5
+                              text-center
+                              text-slate-400
+                              group-hover:text-white
+                              transition-colors">
+                    </i>
 
-                    <span>Prescriptions</span>
+                    <span class="font-medium">
+                        Prescriptions
+                    </span>
 
                 </a>
 
             </li>
+
 
         </ul>
 
@@ -196,21 +260,34 @@
 
 
     <!-- Logout -->
-    <div class="p-4 border-t border-white/10">
+    <div class="p-4
+                border-t border-white/10
+                bg-slate-950">
 
         <a href="{% url 'logout' %}"
-           class="flex items-center gap-3
-                  px-4 py-3 rounded-xl
+           class="group
+                  flex items-center gap-3
+                  px-4 py-3
+                  rounded-xl
                   text-red-400
                   hover:bg-red-500/10
-                  transition">
+                  hover:text-red-300
+                  transition-all duration-200">
 
-            <i class="fa-solid fa-right-from-bracket w-5"></i>
+            <i class="fa-solid fa-right-from-bracket
+                      w-5
+                      text-center
+                      group-hover:translate-x-0.5
+                      transition-transform">
+            </i>
 
-            <span>Logout</span>
+            <span class="font-medium">
+                Logout
+            </span>
 
         </a>
 
     </div>
+
 
 </aside>

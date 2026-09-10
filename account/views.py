@@ -226,6 +226,8 @@ def register_view(request):
         "account/register.html"
     )
 
+
+
 @login_required
 def dashboard(request):
 
@@ -250,169 +252,6 @@ def dashboard(request):
     # PET OWNER
 
     return redirect("owner-dashboard")
-
-# ADMIN DASHBOAR
-
-@login_required
-def admin_dashboard(request):
-
-    user = request.user
-
-    # Only admin can access this dashboard
-    if not (
-        user.role == User.ADMIN
-        or user.is_superuser
-        or user.is_staff
-    ):
-
-        messages.error(
-            request,
-            "You are not authorized to access the admin dashboard."
-        )
-
-        return redirect("dashboard")
-
-    # Statistics
-
-    total_users = User.objects.count()
-
-    total_vets = User.objects.filter(
-        role=User.VETERINARIAN
-    ).count()
-
-    total_owners = User.objects.filter(
-        role=User.PET_OWNER
-    ).count()
-
-    total_animals = Animal.objects.count()
-
-    # Recent appointments
-
-    try:
-
-        recent_appointments = (
-            Appointment.objects
-            .all()
-            .order_by("-appointment_date")[:5]
-        )
-
-    except Exception:
-
-        recent_appointments = (
-            Appointment.objects.all()[:5]
-        )
-
-    # Recent medical records
-
-    recent_records = (
-        MedicalRecord.objects
-        .all()
-        .order_by("-id")[:5]
-    )
-
-    context = {
-
-        "total_users": total_users,
-
-        "total_vets": total_vets,
-
-        "total_owners": total_owners,
-
-        "total_animals": total_animals,
-
-        "recent_appointments": recent_appointments,
-
-        "recent_records": recent_records,
-
-        "user_role": "ADMIN",
-    }
-
-    return render(
-        request,
-        "account/dashboard.html",
-        context
-    )
-
-# VETERINARIAN DASHBOAR
-
-@login_required
-def vet_dashboard(request):
-
-    user = request.user
-
-    # Authorization
-
-    if user.role != User.VETERINARIAN:
-
-        messages.error(
-            request,
-            "You are not authorized to access the veterinarian dashboard."
-        )
-
-        return redirect("dashboard")
-
-    # Veterinarian profile
-
-    vet_profile = getattr(
-        user,
-        "veterinarian_profile",
-        None
-    )
-
-    # Appointments
-
-    try:
-
-        appointments = (
-            Appointment.objects
-            .filter(veterinarian=user)
-            .order_by("appointment_date")[:5]
-        )
-
-    except Exception:
-
-        appointments = Appointment.objects.none()
-
-    # Medical records
-
-    if vet_profile:
-
-        try:
-
-            recent_records = (
-                MedicalRecord.objects
-                .filter(veterinarian=vet_profile)
-                .order_by("-id")[:5]
-            )
-
-        except Exception:
-
-            recent_records = MedicalRecord.objects.none()
-
-    else:
-
-        recent_records = MedicalRecord.objects.none()
-
-    total_animals = Animal.objects.count()
-
-    context = {
-
-        "appointments": appointments,
-
-        "recent_records": recent_records,
-
-        "total_animals": total_animals,
-
-        "vet_profile": vet_profile,
-
-        "user_role": "VETERINARIAN",
-    }
-
-    return render(
-        request,
-        "account/dashboard.html",
-        context
-    )
 
 
 @login_required
@@ -507,3 +346,200 @@ def owner_profile(request):
     }
 
     return render(request, "account/owner_profile.html", context)
+
+
+
+
+def vet_login(request):
+
+    # If already logged in
+    if request.user.is_authenticated:
+
+        if request.user.role == User.VETERINARIAN:
+            return redirect("vet-dashboard")
+
+        return redirect("dashboard")
+
+    if request.method == "POST":
+
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "")
+
+        if not username or not password:
+            messages.error(
+                request,
+                "Please enter username and password."
+            )
+
+            return render(
+                request,
+                "account/vet_login.html"
+            )
+
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
+
+        if user is not None:
+
+            # Only Veterinarians can use this login
+            if user.role != User.VETERINARIAN:
+
+                messages.error(
+                    request,
+                    "This login is only for veterinarians."
+                )
+
+                return render(
+                    request,
+                    "account/vet_login.html"
+                )
+
+            login(request, user)
+
+            messages.success(
+                request,
+                "Welcome back, Dr. {}.".format(
+                    user.get_full_name()
+                    if user.get_full_name()
+                    else user.username
+                )
+            )
+
+            return redirect("vet-dashboard")
+
+        messages.error(
+            request,
+            "Invalid username or password."
+        )
+
+    return render(
+        request,
+        "account/vet_login.html"
+    )
+    
+
+
+@login_required
+def vet_dashboard(request):
+
+    user = request.user
+
+    # Only veterinarians can access this dashboard
+    if user.role != User.VETERINARIAN:
+
+        messages.error(
+            request,
+            "You are not authorized to access the veterinarian dashboard."
+        )
+
+        return redirect("dashboard")
+
+    # Veterinarian profile
+    vet_profile = getattr(
+        user,
+        "veterinarian_profile",
+        None
+    )
+
+    # Appointments assigned to this veterinarian
+    appointments = (
+        Appointment.objects
+        .filter(veterinarian=user)
+        .select_related(
+            "animal",
+            "animal__owner"
+        )
+        .order_by(
+            "appointment_date",
+            "appointment_time"
+        )
+    )
+
+    # Medical records created by this veterinarian
+    if vet_profile:
+
+        recent_records = (
+            MedicalRecord.objects
+            .filter(veterinarian=vet_profile)
+            .select_related("animal")
+            .prefetch_related("prescriptions")
+            .order_by(
+                "-record_date",
+                "-id"
+            )[:5]
+        )
+
+    else:
+
+        recent_records = MedicalRecord.objects.none()
+
+    # Statistics
+    total_appointments = (
+        Appointment.objects
+        .filter(veterinarian=user)
+        .count()
+    )
+
+    pending_appointments = (
+        Appointment.objects
+        .filter(
+            veterinarian=user,
+            status="PENDING"
+        )
+        .count()
+    )
+
+    confirmed_appointments = (
+        Appointment.objects
+        .filter(
+            veterinarian=user,
+            status="CONFIRMED"
+        )
+        .count()
+    )
+
+    completed_appointments = (
+        Appointment.objects
+        .filter(
+            veterinarian=user,
+            status="COMPLETED"
+        )
+        .count()
+    )
+
+    # Unique animals treated/booked with this veterinarian
+    total_patients = (
+        Animal.objects
+        .filter(
+            appointments__veterinarian=user
+        )
+        .distinct()
+        .count()
+    )
+
+    context = {
+        "vet_profile": vet_profile,
+
+        "appointments": appointments[:5],
+
+        "recent_records": recent_records,
+
+        "total_appointments": total_appointments,
+
+        "pending_appointments": pending_appointments,
+
+        "confirmed_appointments": confirmed_appointments,
+
+        "completed_appointments": completed_appointments,
+
+        "total_patients": total_patients,
+    }
+
+    return render(
+        request,
+        "account/vet_dashboard.html",
+        context
+    )
