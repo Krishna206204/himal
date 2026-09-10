@@ -181,3 +181,89 @@ def book_appointment(request):
         "appointment/book_appointment.html",
         context
     )
+
+
+@login_required
+def vet_appointment_list(request):
+    """
+    Show appointments assigned to the logged-in veterinarian.
+    """
+
+    # Only veterinarians can access this page
+    if request.user.role != User.VETERINARIAN:
+        messages.error(
+            request,
+            "You are not authorized to view appointments."
+        )
+        return redirect("dashboard")
+
+    appointments = (
+        Appointment.objects
+        .filter(veterinarian=request.user)
+        .select_related(
+            "animal",
+            "animal__owner",
+            "veterinarian"
+        )
+        .order_by(
+            "appointment_date",
+            "appointment_time"
+        )
+    )
+
+    context = {
+        "appointments": appointments,
+    }
+
+    return render(
+        request,
+        "appointment/vet_appointments.html",
+        context
+    )
+
+@login_required
+def vet_update_appointment_status(request, appointment_id):
+    """
+    Allow the assigned veterinarian to update appointment status.
+    """
+
+    # Only veterinarians can access this page
+    if request.user.role != User.VETERINARIAN:
+        messages.error(
+            request,
+            "You are not authorized to update appointments."
+        )
+        return redirect("dashboard")
+
+    # Only allow the veterinarian assigned to this appointment
+    appointment = get_object_or_404(
+        Appointment,
+        id=appointment_id,
+        veterinarian=request.user
+    )
+
+    if request.method == "POST":
+
+        new_status = request.POST.get("status")
+
+        # Make sure submitted status is valid
+        valid_statuses = dict(Appointment.STATUS_CHOICES)
+
+        if new_status not in valid_statuses:
+            messages.error(
+                request,
+                "Invalid appointment status."
+            )
+            return redirect("vet-appointments")
+
+        appointment.status = new_status
+        appointment.save()
+
+        messages.success(
+            request,
+            f"Appointment status updated to {valid_statuses[new_status]}."
+        )
+
+        return redirect("vet-appointments")
+
+    return redirect("vet-appointments")

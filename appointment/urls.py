@@ -15,5 +15,17 @@ urlpatterns = [
         views.book_appointment,
         name="book-appointment"
     ),
+    
+    path(
+        "vet/appointments/",
+        views.vet_appointment_list,
+        name="vet-appointments"
+    ),
+    
+    path(
+        "vet/appointments/<int:appointment_id>/status/",
+        views.vet_update_appointment_status,
+        name="vet-update-appointment-status"
+    ),
 
 ]

@@ -1,0 +1,539 @@
+{% extends "base.html" %}
+
+{% block title %}
+Veterinarian Appointments
+{% endblock %}
+
+{% block content %}
+
+<div class="min-h-screen bg-slate-50 py-6">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Header -->
+        <div class="mb-6">
+
+            <div class="flex flex-col sm:flex-row
+                        sm:items-center sm:justify-between gap-4">
+
+                <!-- Page Heading -->
+                <div>
+
+                    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">
+                        Appointments
+                    </h1>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        View and manage appointment requests from pet owners.
+                    </p>
+
+                </div>
+
+
+                <!-- Total Appointments -->
+                <div class="bg-white border border-slate-200
+                            rounded-xl px-4 py-3 shadow-sm">
+
+                    <p class="text-xs text-slate-500">
+                        Total Appointments
+                    </p>
+
+                    <p class="text-2xl font-bold text-slate-900">
+                        {{ appointments|length }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Appointments -->
+        {% if appointments %}
+
+        <div class="space-y-4">
+
+            {% for appointment in appointments %}
+
+            <div class="bg-white rounded-2xl border border-slate-200
+                        shadow-sm overflow-hidden">
+
+                <div class="p-5">
+
+                    <!-- Top Section -->
+                    <div class="flex flex-col lg:flex-row
+                                lg:items-center lg:justify-between gap-4">
+
+
+                        <!-- Animal Information -->
+                        <div class="flex items-start gap-4">
+
+                            <!-- Pet Icon -->
+                            <div class="w-12 h-12 rounded-xl
+                                        bg-indigo-100 text-indigo-600
+                                        flex items-center justify-center
+                                        flex-shrink-0">
+
+                                <i class="fa-solid fa-paw text-xl"></i>
+
+                            </div>
+
+
+                            <!-- Pet Details -->
+                            <div>
+
+                                <h2 class="text-lg font-bold text-slate-900">
+                                    {{ appointment.animal.name }}
+                                </h2>
+
+                                <p class="text-sm text-slate-500">
+
+                                    Pet owner:
+
+                                    <span class="font-medium text-slate-700">
+
+                                        {{ appointment.animal.owner.get_full_name|default:appointment.animal.owner.username }}
+
+                                    </span>
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Status + Update -->
+                        <div class="flex flex-col sm:flex-row
+                                    items-start sm:items-center gap-3">
+
+
+                            <!-- Current Status -->
+
+                            {% if appointment.status == "PENDING" %}
+
+                                <span class="inline-flex items-center gap-2
+                                             px-3 py-1.5 rounded-full
+                                             text-xs font-semibold
+                                             bg-amber-100 text-amber-700">
+
+                                    <span class="w-2 h-2 rounded-full
+                                                 bg-amber-500"></span>
+
+                                    Pending
+
+                                </span>
+
+
+                            {% elif appointment.status == "CONFIRMED" %}
+
+                                <span class="inline-flex items-center gap-2
+                                             px-3 py-1.5 rounded-full
+                                             text-xs font-semibold
+                                             bg-green-100 text-green-700">
+
+                                    <span class="w-2 h-2 rounded-full
+                                                 bg-green-500"></span>
+
+                                    Confirmed
+
+                                </span>
+
+
+                            {% elif appointment.status == "COMPLETED" %}
+
+                                <span class="inline-flex items-center gap-2
+                                             px-3 py-1.5 rounded-full
+                                             text-xs font-semibold
+                                             bg-blue-100 text-blue-700">
+
+                                    <span class="w-2 h-2 rounded-full
+                                                 bg-blue-500"></span>
+
+                                    Completed
+
+                                </span>
+
+
+                            {% elif appointment.status == "CANCELLED" %}
+
+                                <span class="inline-flex items-center gap-2
+                                             px-3 py-1.5 rounded-full
+                                             text-xs font-semibold
+                                             bg-red-100 text-red-700">
+
+                                    <span class="w-2 h-2 rounded-full
+                                                 bg-red-500"></span>
+
+                                    Cancelled
+
+                                </span>
+
+
+                            {% else %}
+
+                                <span class="inline-flex items-center gap-2
+                                             px-3 py-1.5 rounded-full
+                                             text-xs font-semibold
+                                             bg-slate-100 text-slate-700">
+
+                                    {{ appointment.status }}
+
+                                </span>
+
+                            {% endif %}
+
+
+                            <!-- Update Status Form -->
+
+                            <form
+                                method="POST"
+                                action="{% url 'vet-update-appointment-status' appointment.id %}"
+                                class="flex items-center gap-2"
+                            >
+
+                                {% csrf_token %}
+
+
+                                <!-- Status Dropdown -->
+
+                                <select
+                                    name="status"
+                                    class="rounded-lg border border-slate-300
+                                           bg-white px-3 py-2
+                                           text-sm text-slate-700
+                                           focus:outline-none
+                                           focus:ring-2
+                                           focus:ring-indigo-200
+                                           focus:border-indigo-500"
+                                >
+
+                                    <option value="PENDING"
+                                        {% if appointment.status == "PENDING" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Pending
+                                    </option>
+
+
+                                    <option value="CONFIRMED"
+                                        {% if appointment.status == "CONFIRMED" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Confirmed
+                                    </option>
+
+
+                                    <option value="COMPLETED"
+                                        {% if appointment.status == "COMPLETED" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Completed
+                                    </option>
+
+
+                                    <option value="CANCELLED"
+                                        {% if appointment.status == "CANCELLED" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Cancelled
+                                    </option>
+
+                                </select>
+
+
+                                <!-- Update Button -->
+
+                                <button
+                                    type="submit"
+                                    class="inline-flex items-center gap-2
+                                           rounded-lg
+                                           bg-indigo-600
+                                           px-3 py-2
+                                           text-sm font-semibold
+                                           text-white
+                                           hover:bg-indigo-700
+                                           active:bg-indigo-800
+                                           transition"
+                                >
+
+                                    <i class="fa-solid fa-check"></i>
+
+                                    Update
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Appointment Details -->
+
+                    <div class="mt-5 grid grid-cols-1 md:grid-cols-3
+                                gap-4">
+
+
+                        <!-- Date -->
+
+                        <div class="rounded-xl bg-slate-50
+                                    border border-slate-100 p-4">
+
+                            <div class="flex items-center gap-3">
+
+                                <div class="w-9 h-9 rounded-lg
+                                            bg-blue-100 text-blue-600
+                                            flex items-center justify-center">
+
+                                    <i class="fa-regular fa-calendar"></i>
+
+                                </div>
+
+
+                                <div>
+
+                                    <p class="text-xs text-slate-500">
+                                        Appointment Date
+                                    </p>
+
+                                    <p class="text-sm font-semibold text-slate-800">
+                                        {{ appointment.appointment_date }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Time -->
+
+                        <div class="rounded-xl bg-slate-50
+                                    border border-slate-100 p-4">
+
+                            <div class="flex items-center gap-3">
+
+                                <div class="w-9 h-9 rounded-lg
+                                            bg-purple-100 text-purple-600
+                                            flex items-center justify-center">
+
+                                    <i class="fa-regular fa-clock"></i>
+
+                                </div>
+
+
+                                <div>
+
+                                    <p class="text-xs text-slate-500">
+                                        Appointment Time
+                                    </p>
+
+                                    <p class="text-sm font-semibold text-slate-800">
+                                        {{ appointment.appointment_time }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Veterinarian -->
+
+                        <div class="rounded-xl bg-slate-50
+                                    border border-slate-100 p-4">
+
+                            <div class="flex items-center gap-3">
+
+                                <div class="w-9 h-9 rounded-lg
+                                            bg-green-100 text-green-600
+                                            flex items-center justify-center">
+
+                                    <i class="fa-solid fa-user-doctor"></i>
+
+                                </div>
+
+
+                                <div>
+
+                                    <p class="text-xs text-slate-500">
+                                        Veterinarian
+                                    </p>
+
+                                    <p class="text-sm font-semibold text-slate-800">
+
+                                        {% if appointment.veterinarian %}
+
+                                            {{ appointment.veterinarian.get_full_name|default:appointment.veterinarian.username }}
+
+                                        {% else %}
+
+                                            Not Assigned
+
+                                        {% endif %}
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Reason -->
+
+                    <div class="mt-4">
+
+                        <div class="rounded-xl border border-slate-200
+                                    bg-white p-4">
+
+                            <div class="flex items-start gap-3">
+
+
+                                <!-- Icon -->
+
+                                <div class="w-9 h-9 rounded-lg
+                                            bg-rose-100 text-rose-600
+                                            flex items-center justify-center
+                                            flex-shrink-0">
+
+                                    <i class="fa-solid fa-notes-medical"></i>
+
+                                </div>
+
+
+                                <!-- Reason Text -->
+
+                                <div>
+
+                                    <p class="text-xs font-medium text-slate-500">
+                                        Reason for Appointment
+                                    </p>
+
+                                    <p class="mt-1 text-sm text-slate-700">
+                                        {{ appointment.reason }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Notes -->
+
+                    {% if appointment.notes %}
+
+                    <div class="mt-4">
+
+                        <div class="rounded-xl border border-slate-200
+                                    bg-slate-50 p-4">
+
+                            <div class="flex items-start gap-3">
+
+
+                                <!-- Icon -->
+
+                                <div class="w-9 h-9 rounded-lg
+                                            bg-yellow-100 text-yellow-600
+                                            flex items-center justify-center
+                                            flex-shrink-0">
+
+                                    <i class="fa-solid fa-note-sticky"></i>
+
+                                </div>
+
+
+                                <!-- Notes -->
+
+                                <div>
+
+                                    <p class="text-xs font-medium text-slate-500">
+                                        Notes
+                                    </p>
+
+                                    <p class="mt-1 text-sm text-slate-700">
+                                        {{ appointment.notes }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+        <!-- Empty State -->
+
+        <div class="bg-white border border-slate-200
+                    rounded-2xl shadow-sm">
+
+            <div class="py-16 px-6 text-center">
+
+
+                <!-- Empty Icon -->
+
+                <div class="mx-auto w-16 h-16 rounded-full
+                            bg-slate-100 text-slate-400
+                            flex items-center justify-center">
+
+                    <i class="fa-regular fa-calendar-xmark text-2xl"></i>
+
+                </div>
+
+
+                <h2 class="mt-5 text-lg font-semibold text-slate-800">
+
+                    No appointments found
+
+                </h2>
+
+
+                <p class="mt-2 text-sm text-slate-500">
+
+                    You currently have no appointment requests from
+                    pet owners.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
 
+    
     path(
         "medical-records/",
         views.owner_medical_records,
@@ -21,5 +22,8 @@ urlpatterns = [
         views.download_medical_report,
         name="download-medical-report"
     ),
+
+
+    
 
 ]

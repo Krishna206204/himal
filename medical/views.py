@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 from django.http import HttpResponse
 
-from .models import MedicalRecord
-from account.models import User
+from .models import MedicalRecord, Prescription
+
+from account.models import User, VeterinarianProfile
+from appointment.models import Appointment
 
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
@@ -20,18 +23,20 @@ from reportlab.platypus import (
 )
 
 
+# =========================================================
+# OWNER - MEDICAL RECORD LIST
+# =========================================================
+
 @login_required
 def owner_medical_records(request):
-    """
-    Show medical records belonging only to the
-    logged-in pet owner's animals.
-    """
 
     if request.user.role != User.PET_OWNER:
+
         messages.error(
             request,
             "You are not authorized to view medical reports."
         )
+
         return redirect("dashboard")
 
     medical_records = (
@@ -46,31 +51,29 @@ def owner_medical_records(request):
         .order_by("-record_date", "-id")
     )
 
-    context = {
-        "medical_records": medical_records,
-    }
-
     return render(
         request,
         "medical/owner_medical_records.html",
-        context
+        {
+            "medical_records": medical_records
+        }
     )
 
 
+# =========================================================
+# OWNER - MEDICAL RECORD DETAIL
+# =========================================================
+
 @login_required
 def owner_medical_record_detail(request, id):
-    """
-    Show one medical record.
-
-    The owner can only access a medical record
-    belonging to their own animal.
-    """
 
     if request.user.role != User.PET_OWNER:
+
         messages.error(
             request,
             "You are not authorized to view this medical report."
         )
+
         return redirect("dashboard")
 
     medical_record = get_object_or_404(
@@ -85,38 +88,38 @@ def owner_medical_record_detail(request, id):
         animal__owner=request.user
     )
 
-    context = {
-        "medical_record": medical_record,
-    }
-
     return render(
         request,
         "medical/owner_medical_detail.html",
-        context
+        {
+            "medical_record": medical_record
+        }
     )
 
 
+# =========================================================
+# OWNER - DOWNLOAD PDF
+# =========================================================
+
 @login_required
 def download_medical_report(request, id):
-    """
-    Generate and download a PDF medical report.
-
-    Only the owner of the animal can download
-    the medical report.
-    """
 
     if request.user.role != User.PET_OWNER:
+
         messages.error(
             request,
             "You are not authorized to download this report."
         )
+
         return redirect("dashboard")
 
     medical_record = get_object_or_404(
         MedicalRecord.objects
         .select_related(
             "animal",
+            "animal__owner",
             "veterinarian",
+            "veterinarian__user",
             "appointment"
         )
         .prefetch_related("prescriptions"),
@@ -175,13 +178,6 @@ def download_medical_report(request, id):
         spaceAfter=8,
     )
 
-    normal_style = ParagraphStyle(
-        "NormalText",
-        parent=styles["Normal"],
-        fontSize=10,
-        leading=15,
-    )
-
     small_style = ParagraphStyle(
         "SmallText",
         parent=styles["Normal"],
@@ -191,9 +187,9 @@ def download_medical_report(request, id):
 
     story = []
 
-    # -------------------------------------------------
-    # Header
-    # -------------------------------------------------
+    # -----------------------------------------------------
+    # HEADER
+    # -----------------------------------------------------
 
     story.append(
         Paragraph(
@@ -209,15 +205,20 @@ def download_medical_report(request, id):
         )
     )
 
-    # -------------------------------------------------
-    # Pet Information
-    # -------------------------------------------------
+    # -----------------------------------------------------
+    # PET INFORMATION
+    # -----------------------------------------------------
 
     story.append(
         Paragraph(
             "Pet Information",
             heading_style
         )
+    )
+
+    owner_name = (
+        medical_record.animal.owner.get_full_name()
+        or medical_record.animal.owner.username
     )
 
     pet_data = [
@@ -238,24 +239,27 @@ def download_medical_report(request, id):
         [
             Paragraph("<b>Breed</b>", small_style),
             Paragraph(
-                str(medical_record.animal.breed or "Not specified"),
+                str(
+                    medical_record.animal.breed
+                    or "Not specified"
+                ),
                 small_style
             ),
         ],
         [
             Paragraph("<b>Age</b>", small_style),
             Paragraph(
-                str(medical_record.animal.age or "Not specified"),
+                str(
+                    medical_record.animal.age
+                    or "Not specified"
+                ),
                 small_style
             ),
         ],
         [
             Paragraph("<b>Owner</b>", small_style),
             Paragraph(
-                str(
-                    medical_record.animal.owner.get_full_name()
-                    or medical_record.animal.owner.username
-                ),
+                str(owner_name),
                 small_style
             ),
         ],
@@ -263,7 +267,10 @@ def download_medical_report(request, id):
 
     pet_table = Table(
         pet_data,
-        colWidths=[45 * mm, 125 * mm]
+        colWidths=[
+            45 * mm,
+            125 * mm
+        ]
     )
 
     pet_table.setStyle(
@@ -323,9 +330,9 @@ def download_medical_report(request, id):
 
     story.append(pet_table)
 
-    # -------------------------------------------------
-    # Medical Information
-    # -------------------------------------------------
+    # -----------------------------------------------------
+    # MEDICAL INFORMATION
+    # -----------------------------------------------------
 
     story.append(
         Paragraph(
@@ -370,21 +377,24 @@ def download_medical_report(request, id):
         [
             Paragraph("<b>Symptoms</b>", small_style),
             Paragraph(
-                medical_record.symptoms or "Not provided",
+                medical_record.symptoms
+                or "Not provided",
                 small_style
             ),
         ],
         [
             Paragraph("<b>Treatment</b>", small_style),
             Paragraph(
-                medical_record.treatment or "Not provided",
+                medical_record.treatment
+                or "Not provided",
                 small_style
             ),
         ],
         [
             Paragraph("<b>Notes</b>", small_style),
             Paragraph(
-                medical_record.notes or "No additional notes",
+                medical_record.notes
+                or "No additional notes",
                 small_style
             ),
         ],
@@ -392,7 +402,10 @@ def download_medical_report(request, id):
 
     medical_table = Table(
         medical_data,
-        colWidths=[45 * mm, 125 * mm]
+        colWidths=[
+            45 * mm,
+            125 * mm
+        ]
     )
 
     medical_table.setStyle(
@@ -452,9 +465,9 @@ def download_medical_report(request, id):
 
     story.append(medical_table)
 
-    # -------------------------------------------------
-    # Prescriptions
-    # -------------------------------------------------
+    # -----------------------------------------------------
+    # PRESCRIPTIONS
+    # -----------------------------------------------------
 
     prescriptions = medical_record.prescriptions.all()
 
@@ -497,8 +510,7 @@ def download_medical_report(request, id):
                     small_style
                 ),
                 Paragraph(
-                    prescription.instructions
-                    or "—",
+                    prescription.instructions or "—",
                     small_style
                 ),
             ])
@@ -572,16 +584,16 @@ def download_medical_report(request, id):
 
         story.append(prescription_table)
 
-    # -------------------------------------------------
-    # Footer
-    # -------------------------------------------------
+    # -----------------------------------------------------
+    # FOOTER
+    # -----------------------------------------------------
 
     story.append(Spacer(1, 20))
 
     story.append(
         Paragraph(
-            "This report was generated from the Himal Vet Care "
-            "veterinary management system.",
+            "This report was generated from the "
+            "Himal Vet Care veterinary management system.",
             subtitle_style
         )
     )
@@ -589,3 +601,4 @@ def download_medical_report(request, id):
     document.build(story)
 
     return response
+
