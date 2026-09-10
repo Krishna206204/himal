@@ -1,0 +1,225 @@
+{% extends "ownerbase.html" %}
+
+{% block title %}
+    My Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Page Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">
+                My Profile
+            </h1>
+
+            <p class="text-sm text-slate-500 mt-1">
+                View your pet owner account information
+            </p>
+        </div>
+
+        <a href="{% url 'dashboard' %}"
+           class="px-4 py-2 rounded-lg bg-slate-800 text-white text-sm
+                  hover:bg-slate-700 transition">
+
+            <i class="fa-solid fa-arrow-left mr-2"></i>
+            Dashboard
+
+        </a>
+    </div>
+
+
+    <!-- Profile Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+
+        <!-- Profile Header -->
+        <div class="bg-[#0e1a3a] px-6 py-8">
+
+            <div class="flex items-center gap-5">
+
+                <!-- Profile Icon -->
+                <div class="w-20 h-20 rounded-full bg-amber-400
+                            flex items-center justify-center
+                            text-[#0e1a3a] text-3xl">
+
+                    <i class="fa-solid fa-user"></i>
+
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-bold text-white">
+                        {{ user.get_full_name|default:user.username|title }}
+                    </h2>
+
+                    <p class="text-slate-300 mt-1">
+                        Pet Owner
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Account Information -->
+        <div class="p-6">
+
+            <h3 class="text-lg font-semibold text-slate-800 mb-5">
+                Account Information
+            </h3>
+
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+
+                <!-- Username -->
+                <div class="border border-slate-200 rounded-xl p-4">
+
+                    <p class="text-xs font-medium text-slate-500 uppercase">
+                        Username
+                    </p>
+
+                    <p class="mt-1 text-slate-800 font-medium">
+                        {{ user.username }}
+                    </p>
+
+                </div>
+
+
+                <!-- First Name -->
+                <div class="border border-slate-200 rounded-xl p-4">
+
+                    <p class="text-xs font-medium text-slate-500 uppercase">
+                        First Name
+                    </p>
+
+                    <p class="mt-1 text-slate-800 font-medium">
+                        {{ user.first_name|default:"Not provided" }}
+                    </p>
+
+                </div>
+
+
+                <!-- Last Name -->
+                <div class="border border-slate-200 rounded-xl p-4">
+
+                    <p class="text-xs font-medium text-slate-500 uppercase">
+                        Last Name
+                    </p>
+
+                    <p class="mt-1 text-slate-800 font-medium">
+                        {{ user.last_name|default:"Not provided" }}
+                    </p>
+
+                </div>
+
+
+                <!-- Email -->
+                <div class="border border-slate-200 rounded-xl p-4">
+
+                    <p class="text-xs font-medium text-slate-500 uppercase">
+                        Email
+                    </p>
+
+                    <p class="mt-1 text-slate-800 font-medium break-all">
+                        {{ user.email|default:"Not provided" }}
+                    </p>
+
+                </div>
+
+
+                <!-- Phone -->
+                <div class="border border-slate-200 rounded-xl p-4">
+
+                    <p class="text-xs font-medium text-slate-500 uppercase">
+                        Phone
+                    </p>
+
+                    <p class="mt-1 text-slate-800 font-medium">
+
+                        {% if pet_owner_profile and pet_owner_profile.phone %}
+                            {{ pet_owner_profile.phone }}
+                        {% else %}
+                            Not provided
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+
+                <!-- Address -->
+                <div class="border border-slate-200 rounded-xl p-4">
+
+                    <p class="text-xs font-medium text-slate-500 uppercase">
+                        Address
+                    </p>
+
+                    <p class="mt-1 text-slate-800 font-medium">
+
+                        {% if pet_owner_profile and pet_owner_profile.address %}
+                            {{ pet_owner_profile.address }}
+                        {% else %}
+                            Not provided
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Pet Owner Details -->
+    {% if pet_owner_profile %}
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+
+        <h3 class="text-lg font-semibold text-slate-800 mb-5">
+            Pet Owner Details
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            {% if pet_owner_profile.phone %}
+            <div>
+                <p class="text-sm text-slate-500">
+                    Phone
+                </p>
+
+                <p class="font-medium text-slate-800 mt-1">
+                    {{ pet_owner_profile.phone }}
+                </p>
+            </div>
+            {% endif %}
+
+
+            {% if pet_owner_profile.address %}
+            <div>
+                <p class="text-sm text-slate-500">
+                    Address
+                </p>
+
+                <p class="font-medium text-slate-800 mt-1">
+                    {{ pet_owner_profile.address }}
+                </p>
+            </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}

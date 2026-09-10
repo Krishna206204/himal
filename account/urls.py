@@ -48,5 +48,11 @@ urlpatterns = [
         views.owner_dashboard,
         name="owner-dashboard"
     ),
+    
+    path(
+    "owner-profile/",
+    views.owner_profile,
+    name="owner_profile"
+),
 
 ]

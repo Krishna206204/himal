@@ -5,7 +5,6 @@
 </div>
 
 
-<!-- Sidebar -->
 <aside id="owner-sidebar"
        class="fixed lg:sticky
               top-0 left-0 z-50
@@ -46,35 +45,7 @@
 
 
     <!-- User -->
-    <div class="px-5 py-5 border-b border-white/10">
-
-        <div class="flex items-center gap-3">
-
-            <div class="w-11 h-11 rounded-full
-                        bg-pink-500
-                        flex items-center justify-center">
-
-                <i class="fa-solid fa-user"></i>
-
-            </div>
-
-            <div class="min-w-0">
-
-                <p class="font-semibold truncate">
-
-                    {{ request.user.get_full_name|default:request.user.username }}
-
-                </p>
-
-                <p class="text-xs text-slate-400">
-                    Pet Owner
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
+    
 
 
     <!-- Navigation -->
@@ -190,7 +161,7 @@
 
             <li>
 
-                <a href="#"
+                <a href="{% url 'owner_profile'%}"
                    class="flex items-center gap-3
                           px-4 py-3 rounded-xl
                           text-slate-300

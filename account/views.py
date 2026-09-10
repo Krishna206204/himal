@@ -580,6 +580,30 @@ def owner_dashboard(request):
 
     return render(
         request,
-        "account/dashboard.html",
+        "account/owner_dashboard.html",
         context
     )
+    
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+
+@login_required
+def owner_profile(request):
+    # Only Pet Owners can access this page
+    if request.user.role != request.user.PET_OWNER:
+        messages.error(request, "You are not authorized to view this profile.")
+        return redirect("dashboard")
+
+    user = request.user
+
+    # Get Pet Owner profile if it exists
+    pet_owner_profile = getattr(user, "pet_owner_profile", None)
+
+    context = {
+        "user": user,
+        "pet_owner_profile": pet_owner_profile,
+    }
+
+    return render(request, "account/owner_profile.html", context)
