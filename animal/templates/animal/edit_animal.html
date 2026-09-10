@@ -1,0 +1,204 @@
+{% extends "ownerbase.html" %}
+
+{% block title %}
+    Edit Pet | Vet Care
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+
+    <!-- Page Header -->
+    <div class="mb-6">
+
+        <h1 class="text-2xl font-bold text-slate-900">
+            Edit Pet
+        </h1>
+
+        <p class="text-sm text-slate-500 mt-1">
+            Update {{ animal.name }}'s information.
+        </p>
+
+    </div>
+
+
+    <!-- Form Card -->
+    <div class="bg-white rounded-2xl
+                border border-slate-200
+                shadow-sm p-6 sm:p-8">
+
+        <form method="POST"
+              action="{% url 'edit_animal' animal.id %}"
+              class="space-y-5">
+
+            {% csrf_token %}
+
+
+            <!-- Name -->
+            <div>
+
+                <label class="block text-sm font-medium
+                              text-slate-700 mb-2">
+
+                    Pet Name
+
+                </label>
+
+                <input type="text"
+                       name="name"
+                       value="{{ animal.name }}"
+                       required
+                       placeholder="Enter pet name"
+                       class="w-full rounded-xl
+                              border border-slate-300
+                              px-4 py-3
+                              focus:outline-none
+                              focus:ring-2
+                              focus:ring-pink-400">
+
+            </div>
+
+
+            <!-- Species -->
+            <div>
+
+                <label class="block text-sm font-medium
+                              text-slate-700 mb-2">
+
+                    Species
+
+                </label>
+
+                <input type="text"
+                       name="species"
+                       value="{{ animal.species }}"
+                       required
+                       placeholder="e.g. Dog, Cat"
+                       class="w-full rounded-xl
+                              border border-slate-300
+                              px-4 py-3
+                              focus:outline-none
+                              focus:ring-2
+                              focus:ring-pink-400">
+
+            </div>
+
+
+            <!-- Breed -->
+            <div>
+
+                <label class="block text-sm font-medium
+                              text-slate-700 mb-2">
+
+                    Breed
+
+                </label>
+
+                <input type="text"
+                       name="breed"
+                       value="{{ animal.breed|default:'' }}"
+                       placeholder="Enter breed"
+                       class="w-full rounded-xl
+                              border border-slate-300
+                              px-4 py-3
+                              focus:outline-none
+                              focus:ring-2
+                              focus:ring-pink-400">
+
+            </div>
+
+
+            <!-- Age -->
+            <div>
+
+                <label class="block text-sm font-medium
+                              text-slate-700 mb-2">
+
+                    Age
+
+                </label>
+
+                <input type="number"
+                       name="age"
+                       min="0"
+                       value="{{ animal.age|default:'' }}"
+                       placeholder="Age in years"
+                       class="w-full rounded-xl
+                              border border-slate-300
+                              px-4 py-3
+                              focus:outline-none
+                              focus:ring-2
+                              focus:ring-pink-400">
+
+            </div>
+
+
+            <!-- Problem / Symptoms -->
+            <div>
+
+                <label class="block text-sm font-medium
+                              text-slate-700 mb-2">
+
+                    Problem / Symptoms
+
+                </label>
+
+                <textarea name="symptoms"
+                          rows="4"
+                          placeholder="Describe the problem or symptoms of your pet..."
+                          class="w-full rounded-xl
+                                 border border-slate-300
+                                 px-4 py-3
+                                 resize-none
+                                 focus:outline-none
+                                 focus:ring-2
+                                 focus:ring-pink-400">{{ animal.symptoms|default:'' }}</textarea>
+
+                <p class="text-xs text-slate-400 mt-2">
+                    Describe any illness, injury, unusual behavior,
+                    pain, loss of appetite, fever, or other symptoms.
+                </p>
+
+            </div>
+
+
+            <!-- Buttons -->
+            <div class="flex gap-3 pt-4">
+
+                <!-- Cancel -->
+                <a href="{% url 'animal_list' %}"
+                   class="flex-1 text-center
+                          px-5 py-3 rounded-xl
+                          bg-slate-100 text-slate-700
+                          hover:bg-slate-200
+                          transition">
+
+                    Cancel
+
+                </a>
+
+
+                <!-- Update -->
+                <button type="submit"
+                        class="flex-1 px-5 py-3
+                               rounded-xl
+                               bg-pink-500 text-white
+                               font-medium
+                               hover:bg-pink-600
+                               transition">
+
+                    <i class="fa-solid fa-save mr-2"></i>
+
+                    Update Pet
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

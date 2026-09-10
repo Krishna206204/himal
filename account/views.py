@@ -3,17 +3,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-
 from .models import User, VeterinarianProfile, PetOwnerProfile
-
 from animal.models import Animal
 from appointment.models import Appointment
 from medical.models import MedicalRecord
 
-
-# ============================================================
-# LOGIN
-# ============================================================
+# LOGI
 
 def login_view(request):
 
@@ -57,10 +52,7 @@ def login_view(request):
 
     return render(request, "account/login.html")
 
-
-# ============================================================
-# LOGOUT
-# ============================================================
+# LOGOU
 
 @login_required
 def logout_view(request):
@@ -74,10 +66,7 @@ def logout_view(request):
 
     return redirect("login")
 
-
-# ============================================================
-# REGISTER
-# ============================================================
+# REGISTE
 
 def register_view(request):
 
@@ -103,9 +92,7 @@ def register_view(request):
             ""
         )
 
-        # ----------------------------------------------------
         # Password validation
-        # ----------------------------------------------------
 
         if password != confirm_password:
 
@@ -119,9 +106,7 @@ def register_view(request):
                 "register.html"
             )
 
-        # ----------------------------------------------------
         # Username validation
-        # ----------------------------------------------------
 
         if User.objects.filter(
             username=username
@@ -137,9 +122,7 @@ def register_view(request):
                 "register.html"
             )
 
-        # ----------------------------------------------------
         # Validate role
-        # ----------------------------------------------------
 
         valid_roles = [
             User.ADMIN,
@@ -163,9 +146,7 @@ def register_view(request):
 
             with transaction.atomic():
 
-                # ------------------------------------------------
                 # Create user
-                # ------------------------------------------------
 
                 user = User.objects.create_user(
                     username=username,
@@ -176,9 +157,7 @@ def register_view(request):
                     address=address
                 )
 
-                # ------------------------------------------------
                 # Veterinarian profile
-                # ------------------------------------------------
 
                 if role == User.VETERINARIAN:
 
@@ -211,9 +190,7 @@ def register_view(request):
                         ) or None
                     )
 
-                # ------------------------------------------------
                 # Pet owner profile
-                # ------------------------------------------------
 
                 elif role == User.PET_OWNER:
 
@@ -226,9 +203,7 @@ def register_view(request):
                         )
                     )
 
-                # ------------------------------------------------
                 # Admin
-                # ------------------------------------------------
 
                 # Admin does not require an additional profile.
 
@@ -251,10 +226,7 @@ def register_view(request):
         "account/register.html"
     )
 
-
-# ============================================================
-# FORGOT PASSWORD
-# ============================================================
+# FORGOT PASSWOR
 
 def forgot_password_view(request):
 
@@ -263,19 +235,14 @@ def forgot_password_view(request):
         "forgot_password.html"
     )
 
-
-# ============================================================
-# MAIN DASHBOARD REDIRECT
-# ============================================================
+# MAIN DASHBOARD REDIREC
 
 @login_required
 def dashboard(request):
 
     user = request.user
 
-    # ---------------------------------------------------------
     # ADMIN
-    # ---------------------------------------------------------
 
     if (
         user.role == User.ADMIN
@@ -285,24 +252,17 @@ def dashboard(request):
 
         return redirect("admin-dashboard")
 
-    # ---------------------------------------------------------
     # VETERINARIAN
-    # ---------------------------------------------------------
 
     elif user.role == User.VETERINARIAN:
 
         return redirect("vet-dashboard")
 
-    # ---------------------------------------------------------
     # PET OWNER
-    # ---------------------------------------------------------
 
     return redirect("owner-dashboard")
 
-
-# ============================================================
-# ADMIN DASHBOARD
-# ============================================================
+# ADMIN DASHBOAR
 
 @login_required
 def admin_dashboard(request):
@@ -323,9 +283,7 @@ def admin_dashboard(request):
 
         return redirect("dashboard")
 
-    # ---------------------------------------------------------
     # Statistics
-    # ---------------------------------------------------------
 
     total_users = User.objects.count()
 
@@ -339,9 +297,7 @@ def admin_dashboard(request):
 
     total_animals = Animal.objects.count()
 
-    # ---------------------------------------------------------
     # Recent appointments
-    # ---------------------------------------------------------
 
     try:
 
@@ -357,9 +313,7 @@ def admin_dashboard(request):
             Appointment.objects.all()[:5]
         )
 
-    # ---------------------------------------------------------
     # Recent medical records
-    # ---------------------------------------------------------
 
     recent_records = (
         MedicalRecord.objects
@@ -390,19 +344,14 @@ def admin_dashboard(request):
         context
     )
 
-
-# ============================================================
-# VETERINARIAN DASHBOARD
-# ============================================================
+# VETERINARIAN DASHBOAR
 
 @login_required
 def vet_dashboard(request):
 
     user = request.user
 
-    # ---------------------------------------------------------
     # Authorization
-    # ---------------------------------------------------------
 
     if user.role != User.VETERINARIAN:
 
@@ -413,9 +362,7 @@ def vet_dashboard(request):
 
         return redirect("dashboard")
 
-    # ---------------------------------------------------------
     # Veterinarian profile
-    # ---------------------------------------------------------
 
     vet_profile = getattr(
         user,
@@ -423,9 +370,7 @@ def vet_dashboard(request):
         None
     )
 
-    # ---------------------------------------------------------
     # Appointments
-    # ---------------------------------------------------------
 
     try:
 
@@ -439,9 +384,7 @@ def vet_dashboard(request):
 
         appointments = Appointment.objects.none()
 
-    # ---------------------------------------------------------
     # Medical records
-    # ---------------------------------------------------------
 
     if vet_profile:
 
@@ -460,10 +403,6 @@ def vet_dashboard(request):
     else:
 
         recent_records = MedicalRecord.objects.none()
-
-    # ---------------------------------------------------------
-    # Total animals
-    # ---------------------------------------------------------
 
     total_animals = Animal.objects.count()
 
@@ -487,18 +426,10 @@ def vet_dashboard(request):
     )
 
 
-# ============================================================
-# PET OWNER DASHBOARD
-# ============================================================
-
 @login_required
 def owner_dashboard(request):
 
     user = request.user
-
-    # ---------------------------------------------------------
-    # Authorization
-    # ---------------------------------------------------------
 
     if user.role != User.PET_OWNER:
 
@@ -509,19 +440,11 @@ def owner_dashboard(request):
 
         return redirect("dashboard")
 
-    # ---------------------------------------------------------
-    # Pet owner profile
-    # ---------------------------------------------------------
-
     pet_owner_profile = getattr(
         user,
         "pet_owner_profile",
         None
     )
-
-    # ---------------------------------------------------------
-    # My animals
-    # ---------------------------------------------------------
 
     try:
 
@@ -532,10 +455,6 @@ def owner_dashboard(request):
     except Exception:
 
         my_animals = Animal.objects.none()
-
-    # ---------------------------------------------------------
-    # My appointments
-    # ---------------------------------------------------------
 
     try:
 
@@ -548,10 +467,6 @@ def owner_dashboard(request):
     except Exception:
 
         appointments = Appointment.objects.none()
-
-    # ---------------------------------------------------------
-    # My medical records
-    # ---------------------------------------------------------
 
     try:
 
@@ -577,16 +492,12 @@ def owner_dashboard(request):
 
         "user_role": "PET_OWNER",
     }
-
     return render(
         request,
         "account/owner_dashboard.html",
         context
     )
     
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib import messages
 
 
 @login_required

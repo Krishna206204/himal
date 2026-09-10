@@ -1,0 +1,224 @@
+{% extends "ownerbase.html" %}
+
+{% block title %}
+    My Pets | Vet Care
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row
+                sm:items-center sm:justify-between gap-4">
+
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">
+                My Pets
+            </h1>
+
+            <p class="text-sm text-slate-500 mt-1">
+                Manage your pets and their information.
+            </p>
+        </div>
+
+        <a href="{% url 'add_animal' %}"
+           class="inline-flex items-center justify-center
+                  gap-2 px-5 py-3 rounded-xl
+                  bg-pink-500 text-white font-medium
+                  hover:bg-pink-600 transition">
+
+
+            Add Pet
+
+        </a>
+
+    </div>
+
+
+    <!-- Messages -->
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="rounded-xl px-4 py-3
+                        {% if message.tags == 'success' %}
+                            bg-green-100 text-green-700
+                        {% else %}
+                            bg-red-100 text-red-700
+                        {% endif %}">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- Pets -->
+    {% if animals %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2
+                    lg:grid-cols-3 gap-6">
+
+            {% for animal in animals %}
+
+                <div class="bg-white rounded-2xl
+                            border border-slate-200
+                            shadow-sm overflow-hidden">
+
+                    <!-- Pet Header -->
+                    <div class="bg-pink-500 p-6">
+
+                        <div class="w-16 h-16 rounded-full
+                                    bg-white/20
+                                    flex items-center justify-center
+                                    text-white text-2xl">
+
+                            <i class="fa-solid fa-paw"></i>
+
+                        </div>
+
+                        <h2 class="text-xl font-bold
+                                   text-white mt-4">
+
+                            {{ animal.name }}
+
+                        </h2>
+
+                        <p class="text-pink-100 text-sm">
+                            {{ animal.species }}
+                        </p>
+
+                    </div>
+
+
+                    <!-- Pet Information -->
+                    <div class="p-6 space-y-4">
+
+                        <div>
+                            <p class="text-xs uppercase
+                                      text-slate-400 font-semibold">
+                                Species
+                            </p>
+
+                            <p class="text-slate-800 font-medium">
+                                {{ animal.species }}
+                            </p>
+                        </div>
+
+
+                        <div>
+                            <p class="text-xs uppercase
+                                      text-slate-400 font-semibold">
+                                Breed
+                            </p>
+
+                            <p class="text-slate-800 font-medium">
+                                {{ animal.breed|default:"Not specified" }}
+                            </p>
+                        </div>
+
+
+                        <div>
+                            <p class="text-xs uppercase
+                                      text-slate-400 font-semibold">
+                                Age
+                            </p>
+
+                            <p class="text-slate-800 font-medium">
+                                {% if animal.age %}
+                                    {{ animal.age }} years
+                                {% else %}
+                                    Not specified
+                                {% endif %}
+                            </p>
+                        </div>
+
+
+                        <!-- Actions -->
+                        <div class="pt-4 border-t
+                                    border-slate-100
+                                    flex gap-3">
+
+                            <a href="{% url 'edit_animal' animal.id %}"
+                               class="flex-1 text-center
+                                      px-4 py-2 rounded-lg
+                                      bg-slate-100
+                                      text-slate-700
+                                      hover:bg-slate-200
+                                      transition">
+
+                                <i class="fa-solid fa-pen mr-1"></i>
+
+                                Edit
+
+                            </a>
+
+
+                            <a href="{% url 'delete_animal' animal.id %}"
+                               class="flex-1 text-center
+                                      px-4 py-2 rounded-lg
+                                      bg-red-50 text-red-600
+                                      hover:bg-red-100
+                                      transition">
+
+                                <i class="fa-solid fa-trash mr-1"></i>
+
+                                Delete
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <!-- Empty State -->
+        <div class="bg-white rounded-2xl
+                    border border-slate-200
+                    shadow-sm p-10 text-center">
+
+            <div class="w-20 h-20 mx-auto
+                        rounded-full bg-pink-100
+                        flex items-center justify-center
+                        text-pink-500 text-3xl">
+
+                <i class="fa-solid fa-paw"></i>
+
+            </div>
+
+            <h2 class="text-xl font-bold text-slate-800 mt-5">
+                No Pets Added
+            </h2>
+
+            <p class="text-slate-500 mt-2">
+                You haven't added any pets yet.
+            </p>
+
+            <a href="{% url 'add_animal' %}"
+               class="inline-flex items-center gap-2
+                      mt-5 px-5 py-3 rounded-xl
+                      bg-pink-500 text-white
+                      hover:bg-pink-600">
+
+                Add Your First Pet
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
