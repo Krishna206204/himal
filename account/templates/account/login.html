@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Himal Vet Care</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+          rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background:
+                url("https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=1920")
+                no-repeat center center;
+
+            background-size: cover;
+            background-attachment: fixed;
+
+            position: relative;
+            padding: 20px;
+        }
+
+        /* Background Overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    to top,
+                    #2b1055,
+                    #7597de
+                );
+
+            opacity: 0.7;
+            z-index: 0;
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+
+            width: 100%;
+            max-width: 380px;
+
+            padding: 20px;
+        }
+
+        /* Login Box */
+        .login-box {
+            width: 100%;
+
+            padding: 40px 30px;
+
+            border-radius: 15px;
+
+            background: rgba(255, 255, 255, 0.15);
+
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+
+            border: 1px solid rgba(255, 255, 255, 0.3);
+
+            text-align: center;
+            color: white;
+
+            box-shadow:
+                0 0 30px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Heading */
+        .login-box h2 {
+            margin-bottom: 25px;
+
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        /* Messages */
+        .alert-messages {
+            list-style: none;
+
+            margin-bottom: 15px;
+            padding: 0;
+        }
+
+        .alert-messages li {
+            background: rgba(239, 68, 68, 0.3);
+
+            border: 1px solid rgba(239, 68, 68, 0.6);
+
+            color: #ffcaca;
+
+            padding: 8px;
+
+            border-radius: 6px;
+
+            font-size: 13px;
+        }
+
+        /* Input Box */
+        .input-box {
+            position: relative;
+            margin: 20px 0;
+        }
+
+        /* Input */
+        .input-box input {
+            width: 100%;
+
+            padding: 12px 40px 12px 15px;
+
+            border-radius: 30px;
+
+            border: 1px solid rgba(255, 255, 255, 0.3);
+
+            outline: none;
+
+            background: rgba(255, 255, 255, 0.1);
+
+            color: white;
+
+            font-size: 14px;
+
+            transition: 0.3s;
+        }
+
+        .input-box input:focus {
+            border-color: rgba(255, 255, 255, 0.8);
+
+            background: rgba(255, 255, 255, 0.15);
+
+            box-shadow:
+                0 0 10px rgba(255, 255, 255, 0.15);
+        }
+
+        /* Input Placeholder */
+        .input-box input::placeholder {
+            color: transparent;
+        }
+
+        /* Floating Label */
+        .input-box label {
+            position: absolute;
+
+            top: 50%;
+            left: 15px;
+
+            transform: translateY(-50%);
+
+            color: #ddd;
+
+            pointer-events: none;
+
+            transition: 0.3s;
+
+            font-size: 14px;
+        }
+
+        .input-box input:focus ~ label,
+        .input-box input:not(:placeholder-shown) ~ label {
+            top: -8px;
+            left: 10px;
+
+            font-size: 11px;
+
+            color: #fff;
+
+            background: rgba(43, 16, 85, 0.6);
+
+            padding: 2px 8px;
+
+            border-radius: 10px;
+        }
+
+        /* Input Icons */
+        .input-box i {
+            position: absolute;
+
+            right: 15px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #fff;
+
+            pointer-events: none;
+        }
+
+        /* Options */
+        .options {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            font-size: 13px;
+
+            margin: 10px 0 20px;
+        }
+
+        /* Remember Me */
+        .options label {
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            cursor: pointer;
+        }
+
+        .options input[type="checkbox"] {
+            accent-color: #ff6a00;
+
+            cursor: pointer;
+        }
+
+        /* Links */
+        .options a {
+            color: #fff;
+
+            text-decoration: none;
+        }
+
+        .options a:hover {
+            text-decoration: underline;
+        }
+
+        /* Login Button */
+        .btn {
+            width: 100%;
+
+            padding: 12px;
+
+            border-radius: 30px;
+
+            border: none;
+
+            background: white;
+
+            color: #333;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #ff6a00;
+
+            color: white;
+
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Register Text */
+        .register-text {
+            margin-top: 15px;
+
+            font-size: 14px;
+        }
+
+        .register-text a {
+            color: #ffd700;
+
+            text-decoration: none;
+
+            font-weight: 500;
+        }
+
+        .register-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .login-box {
+                padding: 35px 22px;
+            }
+
+            .login-box h2 {
+                font-size: 25px;
+
+                margin-bottom: 22px;
+            }
+
+            .input-box {
+                margin: 18px 0;
+            }
+
+            .options {
+                font-size: 12px;
+            }
+
+            .register-text {
+                font-size: 13px;
+            }
+        }
+
+        /* Very Small Screens */
+        @media (max-width: 350px) {
+
+            .login-box {
+                padding: 30px 18px;
+            }
+
+            .options {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <div class="login-box">
+
+        <h2>Login</h2>
+
+
+        <!-- Django Messages -->
+        {% if messages %}
+
+            <ul class="alert-messages">
+
+                {% for message in messages %}
+
+                    <li>
+                        {{ message }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        {% endif %}
+
+
+        <!-- Login Form -->
+        <form method="POST" action="{% url 'login' %}">
+
+            <!-- IMPORTANT: CSRF TOKEN -->
+            {% csrf_token %}
+
+
+            <!-- Username -->
+            <div class="input-box">
+
+                <input
+                    type="text"
+                    name="username"
+                    placeholder=" "
+                    required
+                    autocomplete="username"
+                >
+
+                <label>
+                    Username
+                </label>
+
+                <i class="fa-solid fa-user"></i>
+
+            </div>
+
+
+            <!-- Password -->
+            <div class="input-box">
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder=" "
+                    required
+                    autocomplete="current-password"
+                >
+
+                <label>
+                    Password
+                </label>
+
+                <i class="fa-solid fa-lock"></i>
+
+            </div>
+
+
+            <!-- Options -->
+            <div class="options">
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        name="remember_me"
+                    >
+
+                    <span>
+                        Remember me
+                    </span>
+
+                </label>
+
+
+                <a href="{% url 'forgot-password' %}">
+                    Forgot password?
+                </a>
+
+            </div>
+
+
+            <!-- Login Button -->
+            <button
+                type="submit"
+                class="btn"
+            >
+                Login
+            </button>
+
+
+            <!-- Register -->
+            <p class="register-text">
+
+                Don't have an account?
+
+                <a href="{% url 'register' %}">
+                    Register
+                </a>
+
+            </p>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

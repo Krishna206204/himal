@@ -1,0 +1,570 @@
+{% extends 'ownerbase.html' %}
+
+{% block title %}
+    Pet Owner Dashboard - Himal Vet Care
+{% endblock %}
+
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- =========================
+         Welcome Section
+    ========================== -->
+    <div class="bg-white rounded-2xl border border-slate-200
+                shadow-sm p-6">
+
+        <div class="flex flex-col sm:flex-row
+                    sm:items-center sm:justify-between gap-4">
+
+            <div>
+
+                <p class="text-sm font-medium text-pink-500">
+                    Pet Owner Dashboard
+                </p>
+
+                <h2 class="mt-1 text-2xl sm:text-3xl
+                           font-bold text-slate-900">
+
+                    Welcome,
+                    {{ request.user.get_full_name|default:request.user.username }}
+
+                </h2>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    Manage your pets and keep track of their veterinary care.
+                </p>
+
+            </div>
+
+
+            <!-- User Icon -->
+            <div class="w-14 h-14 rounded-2xl
+                        bg-pink-100 text-pink-500
+                        flex items-center justify-center
+                        text-xl shrink-0">
+
+                <i class="fa-solid fa-user"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         Statistics
+    ========================== -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <!-- Total Pets -->
+        <div class="bg-white rounded-2xl
+                    border border-slate-200
+                    shadow-sm p-5">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm text-slate-500">
+                        My Pets
+                    </p>
+
+                    <h3 class="mt-1 text-3xl font-bold text-slate-900">
+
+                        {{ my_animals|length }}
+
+                    </h3>
+
+                </div>
+
+
+                <div class="w-12 h-12 rounded-xl
+                            bg-pink-100 text-pink-500
+                            flex items-center justify-center">
+
+                    <i class="fa-solid fa-paw text-lg"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Account -->
+        <div class="bg-white rounded-2xl
+                    border border-slate-200
+                    shadow-sm p-5">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm text-slate-500">
+                        Account Status
+                    </p>
+
+                    <h3 class="mt-1 text-xl font-bold text-green-600">
+                        Active
+                    </h3>
+
+                </div>
+
+
+                <div class="w-12 h-12 rounded-xl
+                            bg-green-100 text-green-600
+                            flex items-center justify-center">
+
+                    <i class="fa-solid fa-circle-check text-lg"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Role -->
+        <div class="bg-white rounded-2xl
+                    border border-slate-200
+                    shadow-sm p-5">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm text-slate-500">
+                        Account Type
+                    </p>
+
+                    <h3 class="mt-1 text-lg font-bold text-slate-900">
+
+                        {{ request.user.get_role_display }}
+
+                    </h3>
+
+                </div>
+
+
+                <div class="w-12 h-12 rounded-xl
+                            bg-purple-100 text-purple-600
+                            flex items-center justify-center">
+
+                    <i class="fa-solid fa-user text-lg"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         My Pets
+    ========================== -->
+    <div class="bg-white rounded-2xl
+                border border-slate-200
+                shadow-sm overflow-hidden">
+
+        <!-- Section Header -->
+        <div class="p-5 sm:p-6
+                    border-b border-slate-200
+                    flex flex-col sm:flex-row
+                    sm:items-center
+                    sm:justify-between
+                    gap-3">
+
+            <div>
+
+                <h3 class="text-xl font-bold text-slate-900">
+
+                    <i class="fa-solid fa-paw text-pink-500 mr-2"></i>
+
+                    My Pets
+
+                </h3>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Pets registered under your account.
+                </p>
+
+            </div>
+
+
+            <!-- Optional Add Pet Button -->
+            {% if add_pet_url %}
+
+                <a href="{{ add_pet_url }}"
+                   class="inline-flex items-center justify-center
+                          gap-2 px-4 py-2.5
+                          rounded-xl
+                          bg-pink-500
+                          hover:bg-pink-600
+                          text-white
+                          text-sm font-semibold
+                          transition">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Add Pet
+
+                </a>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- Pets List -->
+        <div class="p-5 sm:p-6">
+
+            {% if my_animals %}
+
+                <div class="grid grid-cols-1
+                            md:grid-cols-2
+                            xl:grid-cols-3
+                            gap-5">
+
+                    {% for animal in my_animals %}
+
+                        <div class="rounded-2xl
+                                    border border-slate-200
+                                    bg-slate-50
+                                    p-5
+                                    hover:shadow-md
+                                    transition">
+
+                            <!-- Pet Header -->
+                            <div class="flex items-center
+                                        justify-between gap-3">
+
+                                <div class="flex items-center gap-3">
+
+                                    <div class="w-12 h-12
+                                                rounded-xl
+                                                bg-pink-100
+                                                text-pink-500
+                                                flex items-center
+                                                justify-center">
+
+                                        <i class="fa-solid fa-paw"></i>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <h4 class="font-bold
+                                                   text-slate-900">
+
+                                            {{ animal.name }}
+
+                                        </h4>
+
+                                        <p class="text-sm
+                                                  text-slate-500">
+
+                                            {{ animal.species|default:"Pet" }}
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Pet Information -->
+                            <div class="mt-5 space-y-3">
+
+                                {% if animal.breed %}
+
+                                    <div class="flex items-center
+                                                justify-between
+                                                text-sm">
+
+                                        <span class="text-slate-500">
+                                            Breed
+                                        </span>
+
+                                        <span class="font-medium
+                                                     text-slate-800">
+
+                                            {{ animal.breed }}
+
+                                        </span>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                {% if animal.age %}
+
+                                    <div class="flex items-center
+                                                justify-between
+                                                text-sm">
+
+                                        <span class="text-slate-500">
+                                            Age
+                                        </span>
+
+                                        <span class="font-medium
+                                                     text-slate-800">
+
+                                            {{ animal.age }}
+
+                                        </span>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                {% if animal.gender %}
+
+                                    <div class="flex items-center
+                                                justify-between
+                                                text-sm">
+
+                                        <span class="text-slate-500">
+                                            Gender
+                                        </span>
+
+                                        <span class="font-medium
+                                                     text-slate-800">
+
+                                            {{ animal.gender }}
+
+                                        </span>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- Pet Action -->
+                            {% if animal.id %}
+
+                                <div class="mt-5 pt-4
+                                            border-t border-slate-200">
+
+                                    {% if animal_detail_url %}
+
+                                        <a href="{{ animal_detail_url }}/{{ animal.id }}/"
+                                           class="w-full inline-flex
+                                                  items-center
+                                                  justify-center
+                                                  gap-2
+                                                  px-4 py-2.5
+                                                  rounded-xl
+                                                  bg-white
+                                                  border border-slate-200
+                                                  hover:bg-pink-50
+                                                  hover:border-pink-200
+                                                  hover:text-pink-600
+                                                  text-sm
+                                                  font-semibold
+                                                  text-slate-700
+                                                  transition">
+
+                                            <i class="fa-solid fa-eye"></i>
+
+                                            View Details
+
+                                        </a>
+
+                                    {% endif %}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% else %}
+
+                <!-- Empty State -->
+                <div class="text-center py-12">
+
+                    <div class="mx-auto w-16 h-16
+                                rounded-2xl
+                                bg-pink-100
+                                text-pink-500
+                                flex items-center
+                                justify-center
+                                text-2xl">
+
+                        <i class="fa-solid fa-paw"></i>
+
+                    </div>
+
+
+                    <h4 class="mt-5 text-lg
+                               font-bold text-slate-900">
+
+                        No Pets Registered
+
+                    </h4>
+
+
+                    <p class="mt-2 text-sm
+                              text-slate-500
+                              max-w-md mx-auto">
+
+                        You don't have any pets registered
+                        under your account yet.
+
+                    </p>
+
+
+                    {% if add_pet_url %}
+
+                        <a href="{{ add_pet_url }}"
+                           class="inline-flex
+                                  items-center
+                                  justify-center
+                                  gap-2
+                                  mt-5
+                                  px-5 py-2.5
+                                  rounded-xl
+                                  bg-pink-500
+                                  hover:bg-pink-600
+                                  text-white
+                                  text-sm
+                                  font-semibold
+                                  transition">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                            Register Your Pet
+
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         Quick Information
+    ========================== -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+        <!-- Veterinary Care -->
+        <div class="bg-pink-50
+                    border border-pink-100
+                    rounded-2xl
+                    p-6">
+
+            <div class="flex items-start gap-4">
+
+                <div class="w-12 h-12
+                            rounded-xl
+                            bg-pink-500
+                            text-white
+                            flex items-center
+                            justify-center
+                            shrink-0">
+
+                    <i class="fa-solid fa-user-doctor"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h3 class="font-bold
+                               text-slate-900">
+
+                        Veterinary Care
+
+                    </h3>
+
+                    <p class="mt-2 text-sm
+                              text-slate-600
+                              leading-relaxed">
+
+                        Keep your pets healthy by
+                        scheduling regular checkups
+                        and veterinary consultations.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Need Help -->
+        <div class="bg-slate-50
+                    border border-slate-200
+                    rounded-2xl
+                    p-6">
+
+            <div class="flex items-start gap-4">
+
+                <div class="w-12 h-12
+                            rounded-xl
+                            bg-slate-800
+                            text-white
+                            flex items-center
+                            justify-center
+                            shrink-0">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h3 class="font-bold
+                               text-slate-900">
+
+                        Need Help?
+
+                    </h3>
+
+                    <p class="mt-2 text-sm
+                              text-slate-600
+                              leading-relaxed">
+
+                        Contact Himal Vet Care if
+                        you need assistance with
+                        your pet's veterinary care.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

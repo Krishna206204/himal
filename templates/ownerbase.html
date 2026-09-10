@@ -10,11 +10,11 @@
 
     <title>
         {% block title %}
-            Veterinarian | Vet Care
+            Pet Owner | Vet Care
         {% endblock %}
     </title>
 
-    <!-- Tailwind -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <!-- Font Awesome -->
@@ -30,14 +30,14 @@
 
 <div class="min-h-screen flex">
 
-    {% include 'sidebar.html' %}
+    {% include 'ownersidebar.html' %}
 
 
     <div class="flex-1 flex flex-col min-w-0">
 
         <!-- Mobile Header -->
-        <header class="lg:hidden bg-white border-b
-                       border-slate-200
+        <header class="lg:hidden bg-white
+                       border-b border-slate-200
                        px-4 py-4
                        flex items-center justify-between
                        sticky top-0 z-30">
@@ -45,10 +45,10 @@
             <div class="flex items-center gap-3">
 
                 <div class="w-10 h-10 rounded-xl
-                            bg-emerald-600 text-white
+                            bg-pink-500 text-white
                             flex items-center justify-center">
 
-                    <i class="fa-solid fa-user-doctor"></i>
+                    <i class="fa-solid fa-paw"></i>
 
                 </div>
 
@@ -59,7 +59,7 @@
                     </h1>
 
                     <p class="text-xs text-slate-500">
-                        Veterinarian
+                        Pet Owner
                     </p>
 
                 </div>
@@ -67,7 +67,7 @@
             </div>
 
 
-            <button id="vet-menu-btn"
+            <button id="owner-menu-btn"
                     class="w-10 h-10 rounded-lg
                            bg-slate-100
                            flex items-center justify-center">
@@ -79,6 +79,7 @@
         </header>
 
 
+        <!-- Content -->
         <main class="flex-1 p-4 sm:p-6 lg:p-8">
 
             {% block content %}
@@ -114,34 +115,34 @@
 
 <script>
 
-    const vetMenuButton =
-        document.getElementById("vet-menu-btn");
+    const ownerMenuButton =
+        document.getElementById("owner-menu-btn");
 
-    const vetSidebar =
-        document.getElementById("vet-sidebar");
+    const ownerSidebar =
+        document.getElementById("owner-sidebar");
 
-    const vetOverlay =
-        document.getElementById("vet-overlay");
+    const ownerOverlay =
+        document.getElementById("owner-overlay");
 
 
-    if (vetMenuButton) {
+    if (ownerMenuButton) {
 
-        vetMenuButton.addEventListener("click", function () {
+        ownerMenuButton.addEventListener("click", function () {
 
-            vetSidebar.classList.toggle("-translate-x-full");
-            vetOverlay.classList.toggle("hidden");
+            ownerSidebar.classList.toggle("-translate-x-full");
+            ownerOverlay.classList.toggle("hidden");
 
         });
 
     }
 
 
-    if (vetOverlay) {
+    if (ownerOverlay) {
 
-        vetOverlay.addEventListener("click", function () {
+        ownerOverlay.addEventListener("click", function () {
 
-            vetSidebar.classList.add("-translate-x-full");
-            vetOverlay.classList.add("hidden");
+            ownerSidebar.classList.add("-translate-x-full");
+            ownerOverlay.classList.add("hidden");
 
         });
 

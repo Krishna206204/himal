@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+            Admin Dashboard | Vet Care
+        {% endblock %}
+    </title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+
+<body class="bg-slate-100 text-slate-800">
+
+<div class="min-h-screen flex">
+
+    <!-- Sidebar -->
+    {% include 'adminsidebar.html' %}
+
+
+    <!-- Main Area -->
+    <div class="flex-1 flex flex-col min-w-0">
+
+        <!-- Mobile Header -->
+        <header class="lg:hidden bg-white border-b border-slate-200
+                       px-4 py-4 flex items-center justify-between
+                       sticky top-0 z-30">
+
+            <div class="flex items-center gap-3">
+
+                <div class="w-10 h-10 rounded-xl bg-indigo-600
+                            text-white flex items-center justify-center">
+
+                    <i class="fa-solid fa-paw"></i>
+
+                </div>
+
+                <div>
+                    <h1 class="font-bold text-slate-900">
+                        Vet Care
+                    </h1>
+
+                    <p class="text-xs text-slate-500">
+                        Admin Panel
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- Mobile Menu Button -->
+            <button
+                id="admin-menu-btn"
+                class="w-10 h-10 rounded-lg
+                       bg-slate-100 hover:bg-slate-200
+                       flex items-center justify-center">
+
+                <i class="fa-solid fa-bars text-slate-700"></i>
+
+            </button>
+
+        </header>
+
+
+        <!-- Page Content -->
+        <main class="flex-1 p-4 sm:p-6 lg:p-8">
+
+            {% block content %}
+
+            <div class="max-w-7xl mx-auto">
+
+                <div class="bg-white rounded-2xl shadow-sm
+                            border border-slate-200 p-6">
+
+                    <h2 class="text-2xl font-bold text-slate-900">
+                        Welcome, {{ request.user.get_full_name|default:request.user.username }}
+                    </h2>
+
+                    <p class="mt-2 text-slate-500">
+                        Role:
+                        {{ request.user.get_role_display }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endblock %}
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<!-- Mobile Sidebar Script -->
+<script>
+
+    const menuButton = document.getElementById("admin-menu-btn");
+    const sidebar = document.getElementById("admin-sidebar");
+    const overlay = document.getElementById("admin-overlay");
+
+    if (menuButton) {
+
+        menuButton.addEventListener("click", function () {
+
+            sidebar.classList.toggle("-translate-x-full");
+            overlay.classList.toggle("hidden");
+
+        });
+
+    }
+
+    if (overlay) {
+
+        overlay.addEventListener("click", function () {
+
+            sidebar.classList.add("-translate-x-full");
+            overlay.classList.add("hidden");
+
+        });
+
+    }
+
+</script>
+
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

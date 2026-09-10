@@ -1,12 +1,12 @@
-<!-- Overlay -->
-<div id="vet-overlay"
+<!-- Mobile Overlay -->
+<div id="owner-overlay"
      class="hidden fixed inset-0
             bg-black/40 z-40 lg:hidden">
 </div>
 
 
 <!-- Sidebar -->
-<aside id="vet-sidebar"
+<aside id="owner-sidebar"
        class="fixed lg:sticky
               top-0 left-0 z-50
               w-72 h-screen
@@ -16,14 +16,12 @@
               lg:translate-x-0
               transition-transform duration-300">
 
-
-    <!-- Logo -->
     <div class="px-6 py-6 border-b border-white/10">
 
         <div class="flex items-center gap-3">
 
             <div class="w-11 h-11 rounded-xl
-                        bg-emerald-600
+                        bg-pink-500
                         flex items-center justify-center">
 
                 <i class="fa-solid fa-paw text-xl"></i>
@@ -37,7 +35,7 @@
                 </h2>
 
                 <p class="text-xs text-slate-400">
-                    Veterinarian Portal
+                    Pet Owner Portal
                 </p>
 
             </div>
@@ -47,16 +45,16 @@
     </div>
 
 
-    <!-- Veterinarian Profile -->
+    <!-- User -->
     <div class="px-5 py-5 border-b border-white/10">
 
         <div class="flex items-center gap-3">
 
             <div class="w-11 h-11 rounded-full
-                        bg-emerald-600
+                        bg-pink-500
                         flex items-center justify-center">
 
-                <i class="fa-solid fa-user-doctor"></i>
+                <i class="fa-solid fa-user"></i>
 
             </div>
 
@@ -64,13 +62,12 @@
 
                 <p class="font-semibold truncate">
 
-                    Dr.
                     {{ request.user.get_full_name|default:request.user.username }}
 
                 </p>
 
                 <p class="text-xs text-slate-400">
-                    Veterinarian
+                    Pet Owner
                 </p>
 
             </div>
@@ -88,7 +85,7 @@
                   uppercase tracking-wider
                   text-slate-500">
 
-            Veterinary Menu
+            Pet Care
 
         </p>
 
@@ -102,7 +99,7 @@
                    class="flex items-center gap-3
                           px-4 py-3 rounded-xl
                           text-slate-300
-                          hover:bg-emerald-600
+                          hover:bg-pink-500
                           hover:text-white
                           transition">
 
@@ -121,13 +118,13 @@
                    class="flex items-center gap-3
                           px-4 py-3 rounded-xl
                           text-slate-300
-                          hover:bg-emerald-600
+                          hover:bg-pink-500
                           hover:text-white
                           transition">
 
-                    <i class="fa-solid fa-calendar-check w-5"></i>
+                    <i class="fa-solid fa-dog w-5"></i>
 
-                    <span>Appointments</span>
+                    <span>My Pets</span>
 
                 </a>
 
@@ -140,7 +137,45 @@
                    class="flex items-center gap-3
                           px-4 py-3 rounded-xl
                           text-slate-300
-                          hover:bg-emerald-600
+                          hover:bg-pink-500
+                          hover:text-white
+                          transition">
+
+                    <i class="fa-solid fa-calendar-plus w-5"></i>
+
+                    <span>Book Appointment</span>
+
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="#"
+                   class="flex items-center gap-3
+                          px-4 py-3 rounded-xl
+                          text-slate-300
+                          hover:bg-pink-500
+                          hover:text-white
+                          transition">
+
+                    <i class="fa-solid fa-calendar-check w-5"></i>
+
+                    <span>My Appointments</span>
+
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="#"
+                   class="flex items-center gap-3
+                          px-4 py-3 rounded-xl
+                          text-slate-300
+                          hover:bg-pink-500
                           hover:text-white
                           transition">
 
@@ -159,32 +194,13 @@
                    class="flex items-center gap-3
                           px-4 py-3 rounded-xl
                           text-slate-300
-                          hover:bg-emerald-600
+                          hover:bg-pink-500
                           hover:text-white
                           transition">
 
-                    <i class="fa-solid fa-paw w-5"></i>
+                    <i class="fa-solid fa-user-gear w-5"></i>
 
-                    <span>My Patients</span>
-
-                </a>
-
-            </li>
-
-
-            <li>
-
-                <a href="#"
-                   class="flex items-center gap-3
-                          px-4 py-3 rounded-xl
-                          text-slate-300
-                          hover:bg-emerald-600
-                          hover:text-white
-                          transition">
-
-                    <i class="fa-solid fa-notes-medical w-5"></i>
-
-                    <span>Prescriptions</span>
+                    <span>My Profile</span>
 
                 </a>
 
