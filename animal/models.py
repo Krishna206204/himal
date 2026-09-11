@@ -25,11 +25,7 @@ class Animal(models.Model):
         blank=True,
         null=True
     )
-    symptoms = models.TextField(
-        blank=True,
-        null=True
-    )
-
+    
     created_at = models.DateTimeField(
         auto_now_add=True
     )
