@@ -1,91 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Login - Himal Vet Care</title>
+
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
 
     <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
           rel="stylesheet">
 
+
     <style>
+
         body {
             font-family: 'Poppins', sans-serif;
         }
+
     </style>
+
 </head>
+
 
 <body
     class="min-h-screen flex items-center justify-center
            bg-cover bg-center bg-fixed relative p-5"
-    style="background-image: url('https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=1920');"
+
+    style="
+        background-image:
+        url('https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=1920');
+    "
 >
 
-    <!-- Background Overlay -->
-    <div class="fixed inset-0 bg-gradient-to-t from-[#2b1055] to-[#7597de] opacity-70 z-0"></div>
 
-    <!-- Main Container -->
-    <div class="relative z-10 w-full max-w-[380px] p-2.5 sm:p-5">
+    <!-- ========================================= -->
+    <!-- BACKGROUND OVERLAY -->
+    <!-- ========================================= -->
 
-        <!-- Login Box -->
+    <div
+        class="fixed inset-0
+               bg-gradient-to-t
+               from-[#2b1055]
+               to-[#7597de]
+               opacity-70
+               z-0">
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- MAIN CONTAINER -->
+    <!-- ========================================= -->
+
+    <div
+        class="relative z-10
+               w-full
+               max-w-[380px]
+               p-2.5
+               sm:p-5"
+    >
+
+
+        <!-- ========================================= -->
+        <!-- LOGIN BOX -->
+        <!-- ========================================= -->
+
         <div
-            class="w-full px-6 py-10 sm:px-8
+            class="w-full
+                   px-6 py-10
+                   sm:px-8
                    rounded-2xl
                    bg-white/15
                    backdrop-blur-[15px]
                    border border-white/30
-                   text-center text-white
+                   text-center
+                   text-white
                    shadow-[0_0_30px_rgba(0,0,0,0.4)]"
         >
 
-            <!-- Heading -->
-            <h2 class="mb-7 text-3xl font-semibold">
+
+            <!-- ========================================= -->
+            <!-- HEADING -->
+            <!-- ========================================= -->
+
+            <h2
+                class="mb-7
+                       text-3xl
+                       font-semibold"
+            >
                 Login
             </h2>
 
-            <!-- Django Messages -->
+
+            <!-- ========================================= -->
+            <!-- DJANGO MESSAGES -->
+            <!-- ========================================= -->
+
             {% if messages %}
-            <ul class="mb-4 space-y-2">
-                {% for message in messages %}
-                <li
-                    class="bg-red-500/30
-                           border border-red-400/60
-                           text-red-100
-                           px-3 py-2
-                           rounded-lg
-                           text-xs"
-                >
-                    {{ message }}
-                </li>
-                {% endfor %}
-            </ul>
+
+                <ul class="mb-4 space-y-2">
+
+                    {% for message in messages %}
+
+                        <li
+                            class="bg-red-500/30
+                                   border border-red-400/60
+                                   text-red-100
+                                   px-3 py-2
+                                   rounded-lg
+                                   text-xs"
+                        >
+                            {{ message }}
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
             {% endif %}
 
-            <!-- Login Form -->
-            <form method="POST"
-                  action="{% url 'login' %}"
-                  class="space-y-5">
+
+            <!-- ========================================= -->
+            <!-- LOGIN FORM -->
+            <!-- ========================================= -->
+
+            <form
+                method="POST"
+                action="{% url 'login' %}"
+                class="space-y-5"
+            >
 
                 {% csrf_token %}
 
-                <!-- Username -->
+
+                <!-- ========================================= -->
+                <!-- EMAIL -->
+                <!-- ========================================= -->
+
                 <div class="relative">
+
                     <input
-                        type="text"
-                        name="username"
-                        placeholder="Username"
+                        type="email"
+                        name="email"
+                        placeholder="Email Address"
                         required
-                        autocomplete="username"
+                        autocomplete="email"
+
                         class="w-full
-                               px-4 pr-11 py-3
+                               px-4
+                               pr-11
+                               py-3
                                rounded-full
                                border border-white/30
                                bg-white/10
@@ -93,31 +169,47 @@
                                placeholder:text-slate-200
                                outline-none
                                transition
+
                                focus:border-white/80
                                focus:bg-white/15
                                focus:ring-2
                                focus:ring-white/10"
                     >
 
+
+                    <!-- Email Icon -->
+
                     <i
-                        class="fa-solid fa-user
-                               absolute right-4 top-1/2
+                        class="fa-solid fa-envelope
+                               absolute
+                               right-4
+                               top-1/2
                                -translate-y-1/2
                                text-white
                                pointer-events-none"
                     ></i>
+
                 </div>
 
-                <!-- Password -->
+
+                <!-- ========================================= -->
+                <!-- PASSWORD -->
+                <!-- ========================================= -->
+
                 <div class="relative">
+
                     <input
                         type="password"
                         name="password"
+                        id="password"
                         placeholder="Password"
                         required
                         autocomplete="current-password"
+
                         class="w-full
-                               px-4 pr-11 py-3
+                               px-4
+                               pr-11
+                               py-3
                                rounded-full
                                border border-white/30
                                bg-white/10
@@ -125,24 +217,33 @@
                                placeholder:text-slate-200
                                outline-none
                                transition
+
                                focus:border-white/80
                                focus:bg-white/15
                                focus:ring-2
                                focus:ring-white/10"
                     >
 
+
+                    <!-- Password Icon -->
+
                     <i
+                        id="password-icon"
+
                         class="fa-solid fa-lock
-                               absolute right-4 top-1/2
+                               absolute
+                               right-4
+                               top-1/2
                                -translate-y-1/2
                                text-white
                                pointer-events-none"
                     ></i>
+
                 </div>
 
-                <!-- Login Button -->
                 <button
                     type="submit"
+
                     class="w-full
                            py-3
                            rounded-full
@@ -152,6 +253,7 @@
                            transition-all
                            duration-300
                            cursor-pointer
+
                            hover:bg-[#ff6a00]
                            hover:text-white
                            hover:-translate-y-0.5"
@@ -159,39 +261,58 @@
                     Login
                 </button>
 
-                <!-- Register -->
-                <p class="mt-4 text-sm text-white">
+
+                <p
+                    class="mt-4
+                           text-sm
+                           text-white"
+                >
+
                     Don't have an account?
 
                     <a
                         href="{% url 'register' %}"
+
                         class="text-yellow-300
                                font-medium
                                hover:underline"
                     >
                         Register
                     </a>
+
                 </p>
 
-                <!-- Vet Login -->
+
                 <a
                     href="{% url 'vet-login' %}"
+
                     class="mt-4
-                           flex items-center justify-center gap-2
-                           w-full py-3
+                           flex
+                           items-center
+                           justify-center
+                           gap-2
+                           w-full
+                           py-3
                            rounded-full
                            border border-white/40
                            bg-white/10
                            text-white
-                           font-semibold text-sm
-                           transition-all duration-300
+                           font-semibold
+                           text-sm
+                           transition-all
+                           duration-300
+
                            hover:bg-[#ff6a00]
                            hover:border-[#ff6a00]
                            hover:-translate-y-0.5"
                 >
+
                     <i class="fa-solid fa-user-doctor"></i>
+
                     Vet Login
+
                 </a>
+
 
             </form>
 
@@ -199,5 +320,41 @@
 
     </div>
 
+
+    <script>
+
+        const passwordInput =
+            document.getElementById("password");
+
+        const passwordIcon =
+            document.getElementById("password-icon");
+
+
+        passwordIcon.addEventListener("click", function () {
+
+            if (passwordInput.type === "password") {
+
+                passwordInput.type = "text";
+
+                passwordIcon.classList.remove("fa-lock");
+
+                passwordIcon.classList.add("fa-eye");
+
+            } else {
+
+                passwordInput.type = "password";
+
+                passwordIcon.classList.remove("fa-eye");
+
+                passwordIcon.classList.add("fa-lock");
+
+            }
+
+        });
+
+    </script>
+
+
 </body>
+
 </html>

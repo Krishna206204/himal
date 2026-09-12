@@ -8,24 +8,28 @@ from animal.models import Animal
 from appointment.models import Appointment
 from medical.models import MedicalRecord
 
-# LOGI
+
+
 
 def login_view(request):
 
-    # Already logged in
-    if request.user.is_authenticated:
-        return redirect("dashboard")
-
+    
     if request.method == "POST":
 
-        username = request.POST.get("username", "").strip()
+        email = request.POST.get("email", "").strip()
         password = request.POST.get("password", "")
 
-        user = authenticate(
-            request,
-            username=username,
-            password=password
-        )
+        try:
+            user_obj = User.objects.get(email=email)
+
+            user = authenticate(
+                request,
+                username=user_obj.username,
+                password=password
+            )
+
+        except User.DoesNotExist:
+            user = None
 
         if user is not None:
 
@@ -47,11 +51,10 @@ def login_view(request):
 
         messages.error(
             request,
-            "Invalid username or password."
+            "Invalid email or password."
         )
 
     return render(request, "account/login.html")
-
 # LOGOU
 
 @login_required
