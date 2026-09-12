@@ -324,28 +324,182 @@ def owner_dashboard(request):
     )
     
 
-
 @login_required
 def owner_profile(request):
+
     # Only Pet Owners can access this page
-    if request.user.role != request.user.PET_OWNER:
-        messages.error(request, "You are not authorized to view this profile.")
+    if request.user.role != User.PET_OWNER:
+        messages.error(
+            request,
+            "You are not authorized to view this profile."
+        )
         return redirect("dashboard")
 
     user = request.user
 
     # Get Pet Owner profile if it exists
-    pet_owner_profile = getattr(user, "pet_owner_profile", None)
+    pet_owner_profile = getattr(
+        user,
+        "pet_owner_profile",
+        None
+    )
+
+    # Create profile automatically if it doesn't exist
+    if pet_owner_profile is None:
+        pet_owner_profile = PetOwnerProfile.objects.create(
+            user=user
+        )
 
     context = {
         "user": user,
         "pet_owner_profile": pet_owner_profile,
     }
 
-    return render(request, "account/owner_profile.html", context)
+    return render(
+        request,
+        "account/owner_profile.html",
+        context
+    )
 
 
+@login_required
+def edit_owner_profile(request):
 
+    # Only Pet Owners can access this page
+    if request.user.role != User.PET_OWNER:
+        messages.error(
+            request,
+            "You are not authorized to edit this profile."
+        )
+        return redirect("dashboard")
+
+    user = request.user
+
+    # Get Pet Owner profile
+    pet_owner_profile = getattr(
+        user,
+        "pet_owner_profile",
+        None
+    )
+
+    # Create profile if it doesn't exist
+    if pet_owner_profile is None:
+        pet_owner_profile = PetOwnerProfile.objects.create(
+            user=user
+        )
+
+    if request.method == "POST":
+
+       
+        first_name = request.POST.get(
+            "first_name",
+            ""
+        ).strip()
+
+        last_name = request.POST.get(
+            "last_name",
+            ""
+        ).strip()
+
+        email = request.POST.get(
+            "email",
+            ""
+        ).strip()
+
+        phone = request.POST.get(
+            "phone",
+            ""
+        ).strip()
+
+        address = request.POST.get(
+            "address",
+            ""
+        ).strip()
+
+
+        emergency_contact_phone = request.POST.get(
+            "emergency_contact_phone",
+            ""
+        ).strip()
+
+
+        
+        if not email:
+            messages.error(
+                request,
+                "Email address is required."
+            )
+
+            return render(
+                request,
+                "account/edit_owner_profile.html",
+                {
+                    "user": user,
+                    "pet_owner_profile": pet_owner_profile,
+                }
+            )
+
+
+        email_exists = User.objects.filter(
+            email__iexact=email
+        ).exclude(
+            pk=user.pk
+        ).exists()
+
+        if email_exists:
+
+            messages.error(
+                request,
+                "This email address is already being used."
+            )
+
+            return render(
+                request,
+                "account/edit_owner_profile.html",
+                {
+                    "user": user,
+                    "pet_owner_profile": pet_owner_profile,
+                }
+            )
+
+
+        
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.phone = phone
+        user.address = address
+
+        user.save()
+
+
+       
+        pet_owner_profile.emergency_contact_phone = (
+            emergency_contact_phone
+        )
+
+        pet_owner_profile.save()
+
+
+       
+        messages.success(
+            request,
+            "Your profile has been updated successfully."
+        )
+
+        return redirect("owner-profile")
+
+
+    context = {
+        "user": user,
+        "pet_owner_profile": pet_owner_profile,
+    }
+
+    return render(
+        request,
+        "account/edit_owner_profile.html",
+        context
+    )
 
 def vet_login(request):
 

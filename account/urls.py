@@ -33,9 +33,16 @@ urlpatterns = [
     ),
     
     path(
-    "owner-profile/",
+        "owner/profile/",
         views.owner_profile,
-        name="owner_profile"
+        name="owner-profile"
+    ),
+
+    # Edit owner profile
+    path(
+        "owner/profile/edit/",
+        views.edit_owner_profile,
+        name="edit-owner-profile"
     ),
     
     path(

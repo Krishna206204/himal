@@ -1,0 +1,597 @@
+{% extends "ownerbase.html" %}
+
+
+{% block title %}
+    Edit Profile
+{% endblock %}
+
+
+{% block content %}
+
+<div class="w-full max-w-5xl mx-auto">
+
+    <!-- ========================================================= -->
+    <!-- PAGE HEADER -->
+    <!-- ========================================================= -->
+
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        <div class="min-w-0">
+
+            <h1 class="text-2xl font-bold text-slate-800">
+                Edit Profile
+            </h1>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Update your pet owner account information
+            </p>
+
+        </div>
+
+
+        <!-- Back Button -->
+
+        <a
+            href="{% url 'owner-profile' %}"
+            class="inline-flex w-full items-center justify-center gap-2
+                   rounded-lg bg-[#0e1a3a] px-4 py-2.5
+                   text-sm font-medium text-white
+                   transition hover:bg-[#172654]
+                   sm:w-auto"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            <span>
+                Back to Profile
+            </span>
+
+        </a>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- PROFILE CARD -->
+    <!-- ========================================================= -->
+
+    <div
+        class="overflow-hidden rounded-2xl border border-slate-200
+               bg-white shadow-sm"
+    >
+
+
+        <!-- ===================================================== -->
+        <!-- PROFILE HEADER -->
+        <!-- ===================================================== -->
+
+        <div class="bg-[#0e1a3a] px-5 py-6 sm:px-7 sm:py-8">
+
+            <div class="flex items-center gap-4 sm:gap-5">
+
+                <!-- Avatar -->
+
+                <div
+                    class="flex h-16 w-16 shrink-0 items-center justify-center
+                           rounded-full bg-amber-400
+                           text-xl text-[#0e1a3a]
+                           sm:h-20 sm:w-20 sm:text-3xl"
+                >
+
+                    <i class="fa-solid fa-user"></i>
+
+                </div>
+
+
+                <!-- User Information -->
+
+                <div class="min-w-0">
+
+                    <h2
+                        class="break-words text-xl font-bold text-white
+                               sm:text-2xl"
+                    >
+
+                        {% if user.get_full_name %}
+
+                            {{ user.get_full_name }}
+
+                        {% else %}
+
+                            {{ user.username|title }}
+
+                        {% endif %}
+
+                    </h2>
+
+
+                    <p class="mt-1 text-sm text-slate-300">
+                        Pet Owner
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ===================================================== -->
+        <!-- FORM -->
+        <!-- ===================================================== -->
+
+        <form
+            method="POST"
+            class="p-5 sm:p-7"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- ================================================= -->
+            <!-- PERSONAL INFORMATION -->
+            <!-- ================================================= -->
+
+            <section>
+
+                <!-- Section Title -->
+
+                <div class="mb-5 flex items-center gap-2">
+
+                    <i class="fa-solid fa-user text-amber-500"></i>
+
+                    <h3 class="text-base font-semibold text-slate-800 sm:text-lg">
+                        Personal Information
+                    </h3>
+
+                </div>
+
+
+                <!-- Form Grid -->
+
+                <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+
+
+                    <!-- ================================================= -->
+                    <!-- FIRST NAME -->
+                    <!-- ================================================= -->
+
+                    <div>
+
+                        <label
+                            for="first_name"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            First Name
+                        </label>
+
+
+                        <div class="relative">
+
+                            <input
+                                type="text"
+                                id="first_name"
+                                name="first_name"
+                                value="{{ user.first_name }}"
+                                placeholder="Enter first name"
+
+                                class="h-12 w-full rounded-xl border border-slate-300
+                                       bg-white px-4 pr-11 text-sm text-slate-800
+                                       outline-none transition
+
+                                       placeholder:text-slate-400
+
+                                       focus:border-amber-500
+                                       focus:ring-4 focus:ring-amber-500/10"
+                            >
+
+
+                            <i
+                                class="fa-solid fa-user pointer-events-none
+                                       absolute right-4 top-1/2
+                                       -translate-y-1/2
+                                       text-sm text-slate-400"
+                            ></i>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ================================================= -->
+                    <!-- LAST NAME -->
+                    <!-- ================================================= -->
+
+                    <div>
+
+                        <label
+                            for="last_name"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Last Name
+                        </label>
+
+
+                        <div class="relative">
+
+                            <input
+                                type="text"
+                                id="last_name"
+                                name="last_name"
+                                value="{{ user.last_name }}"
+                                placeholder="Enter last name"
+
+                                class="h-12 w-full rounded-xl border border-slate-300
+                                       bg-white px-4 pr-11 text-sm text-slate-800
+                                       outline-none transition
+
+                                       placeholder:text-slate-400
+
+                                       focus:border-amber-500
+                                       focus:ring-4 focus:ring-amber-500/10"
+                            >
+
+
+                            <i
+                                class="fa-solid fa-user pointer-events-none
+                                       absolute right-4 top-1/2
+                                       -translate-y-1/2
+                                       text-sm text-slate-400"
+                            ></i>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ================================================= -->
+                    <!-- EMAIL -->
+                    <!-- ================================================= -->
+
+                    <div>
+
+                        <label
+                            for="email"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Email Address
+                        </label>
+
+
+                        <div class="relative">
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value="{{ user.email }}"
+                                placeholder="Enter email address"
+                                autocomplete="email"
+                                required
+
+                                class="h-12 w-full rounded-xl border border-slate-300
+                                       bg-white px-4 pr-11 text-sm text-slate-800
+                                       outline-none transition
+
+                                       placeholder:text-slate-400
+
+                                       focus:border-amber-500
+                                       focus:ring-4 focus:ring-amber-500/10"
+                            >
+
+
+                            <i
+                                class="fa-solid fa-envelope pointer-events-none
+                                       absolute right-4 top-1/2
+                                       -translate-y-1/2
+                                       text-sm text-slate-400"
+                            ></i>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ================================================= -->
+                    <!-- USERNAME -->
+                    <!-- ================================================= -->
+
+                    <div>
+
+                        <label
+                            for="username"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Username
+                        </label>
+
+
+                        <div class="relative">
+
+                            <input
+                                type="text"
+                                id="username"
+                                value="{{ user.username }}"
+                                readonly
+
+                                class="h-12 w-full cursor-not-allowed
+                                       rounded-xl border border-slate-200
+                                       bg-slate-100 px-4 pr-11
+                                       text-sm text-slate-500
+                                       outline-none"
+                            >
+
+
+                            <i
+                                class="fa-solid fa-at pointer-events-none
+                                       absolute right-4 top-1/2
+                                       -translate-y-1/2
+                                       text-sm text-slate-400"
+                            ></i>
+
+                        </div>
+
+
+                        <p class="mt-1.5 text-xs text-slate-400">
+                            Username cannot be changed here.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- ================================================= -->
+                    <!-- PHONE -->
+                    <!-- ================================================= -->
+
+                    <div>
+
+                        <label
+                            for="phone"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Phone Number
+                        </label>
+
+
+                        <div class="relative">
+
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+
+                                value="{{ user.phone|default:'' }}"
+
+                                placeholder="98XXXXXXXX"
+
+                                inputmode="numeric"
+                                autocomplete="tel"
+
+                                maxlength="15"
+
+                                class="h-12 w-full rounded-xl border border-slate-300
+                                       bg-white px-4 pr-11 text-sm text-slate-800
+                                       tracking-wide outline-none transition
+
+                                       placeholder:text-slate-400
+
+                                       focus:border-amber-500
+                                       focus:ring-4 focus:ring-amber-500/10"
+                            >
+
+
+                            <i
+                                class="fa-solid fa-phone pointer-events-none
+                                       absolute right-4 top-1/2
+                                       -translate-y-1/2
+                                       text-sm text-slate-400"
+                            ></i>
+
+                        </div>
+
+
+                        <p class="mt-1.5 text-xs text-slate-400">
+                            Enter your primary contact number.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- ================================================= -->
+                    <!-- EMERGENCY PHONE -->
+                    <!-- ================================================= -->
+
+                    <div>
+
+                        <label
+                            for="emergency_contact_phone"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Emergency Contact Phone
+                        </label>
+
+
+                        <div class="relative">
+
+                            <input
+                                type="tel"
+                                id="emergency_contact_phone"
+                                name="emergency_contact_phone"
+
+                                value="{{ pet_owner_profile.emergency_contact_phone|default:'' }}"
+
+                                placeholder="98XXXXXXXX"
+
+                                inputmode="numeric"
+                                autocomplete="tel"
+
+                                maxlength="15"
+
+                                class="h-12 w-full rounded-xl border border-slate-300
+                                       bg-white px-4 pr-11 text-sm text-slate-800
+                                       tracking-wide outline-none transition
+
+                                       placeholder:text-slate-400
+
+                                       focus:border-amber-500
+                                       focus:ring-4 focus:ring-amber-500/10"
+                            >
+
+
+                            <i
+                                class="fa-solid fa-phone-volume pointer-events-none
+                                       absolute right-4 top-1/2
+                                       -translate-y-1/2
+                                       text-sm text-slate-400"
+                            ></i>
+
+                        </div>
+
+
+                        <p class="mt-1.5 text-xs text-slate-400">
+                            Used for urgent pet-related communication.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- ================================================= -->
+                    <!-- ADDRESS -->
+                    <!-- ================================================= -->
+
+                    <div class="md:col-span-2">
+
+                        <label
+                            for="address"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Address
+                        </label>
+
+
+                        <div class="relative">
+
+                            <textarea
+                                id="address"
+                                name="address"
+
+                                placeholder="Enter your complete residential address"
+
+                                autocomplete="street-address"
+
+                                class="min-h-[125px] w-full resize-y
+                                       rounded-xl border border-slate-300
+                                       bg-white px-4 py-3 pr-11
+                                       text-sm leading-6 text-slate-800
+                                       outline-none transition
+
+                                       placeholder:text-slate-400
+
+                                       focus:border-amber-500
+                                       focus:ring-4 focus:ring-amber-500/10"
+                            >{{ user.address|default:'' }}</textarea>
+
+
+                            <i
+                                class="fa-solid fa-location-dot pointer-events-none
+                                       absolute right-4 top-4
+                                       text-sm text-slate-400"
+                            ></i>
+
+                        </div>
+
+
+                        <p class="mt-1.5 text-xs text-slate-400">
+                            Enter your complete residential address.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ===================================================== -->
+            <!-- FORM ACTIONS -->
+            <!-- ===================================================== -->
+
+            <div
+                class="mt-7 flex flex-col-reverse gap-3
+                       border-t border-slate-200 pt-6
+                       sm:flex-row sm:justify-end"
+            >
+
+                <!-- Cancel -->
+
+                <a
+                    href="{% url 'owner-profile' %}"
+
+                    class="inline-flex min-h-11 w-full
+                           items-center justify-center gap-2
+                           rounded-xl border border-slate-300
+                           bg-white px-5
+                           text-sm font-semibold text-slate-700
+
+                           transition hover:bg-slate-50
+
+                           sm:w-auto"
+                >
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                    <span>
+                        Cancel
+                    </span>
+
+                </a>
+
+
+
+                <!-- Save -->
+
+                <button
+                    type="submit"
+
+                    class="inline-flex min-h-11 w-full
+                           items-center justify-center gap-2
+                           rounded-xl border border-[#0e1a3a]
+                           bg-[#0e1a3a] px-5
+                           text-sm font-semibold text-white
+
+                           transition
+                           hover:bg-[#172654]
+                           hover:border-[#172654]
+
+                           focus:outline-none
+                           focus:ring-4
+                           focus:ring-[#0e1a3a]/20
+
+                           sm:w-auto"
+                >
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    <span>
+                        Save Changes
+                    </span>
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
