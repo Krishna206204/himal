@@ -45,6 +45,13 @@ path(
     views.create_medical_record,
     name="create-medical-record"
 ),
+
+
+path(
+    "vet/medical-record/<int:pk>/delete/",
+    views.delete_medical_record,
+    name="delete-medical-record",
+),
     
     
     

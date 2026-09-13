@@ -4,21 +4,66 @@
 
 <div class="max-w-7xl mx-auto p-6">
 
-    <h1 class="text-2xl font-bold mb-6">
-        My Medical Records
-    </h1>
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
 
-    <div class="bg-white rounded-xl shadow overflow-hidden">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-800">
+                My Medical Records
+            </h1>
+            <p class="text-slate-500 mt-1">
+                View and manage all medical records.
+            </p>
+        </div>
+
+        <div class="mt-4 md:mt-0">
+
+            <a href="{% url 'create-medical-record' %}"
+               class="inline-flex items-center px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-md transition duration-200">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="h-5 w-5 mr-2"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 4v16m8-8H4" />
+                </svg>
+
+                Create Medical Record
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Records Table -->
+    <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
 
         <table class="w-full">
 
-            <thead class="bg-slate-100">
+            <thead class="bg-slate-100 border-b border-slate-200">
 
                 <tr>
-                    <th class="p-4 text-left">Animal</th>
-                    <th class="p-4 text-left">Diagnosis</th>
-                    <th class="p-4 text-left">Date</th>
-                    <th class="p-4 text-left">Action</th>
+                    <th class="p-4 text-left font-semibold text-slate-700">
+                        Animal
+                    </th>
+
+                    <th class="p-4 text-left font-semibold text-slate-700">
+                        Diagnosis
+                    </th>
+
+                    <th class="p-4 text-left font-semibold text-slate-700">
+                        Date
+                    </th>
+
+                    <th class="p-4 text-center font-semibold text-slate-700">
+                        Actions
+                    </th>
                 </tr>
 
             </thead>
@@ -27,28 +72,49 @@
 
                 {% for record in records %}
 
-                <tr class="border-t">
+                <tr class="border-t border-slate-200 hover:bg-slate-50 transition">
 
-                    <td class="p-4">
+                    <td class="p-4 font-medium text-slate-800">
                         {{ record.animal.name }}
                     </td>
 
-                    <td class="p-4">
+                    <td class="p-4 text-slate-600">
                         {{ record.diagnosis }}
                     </td>
 
-                    <td class="p-4">
+                    <td class="p-4 text-slate-600">
                         {{ record.record_date }}
                     </td>
 
                     <td class="p-4">
 
-                        <a href="{% url 'vet-medical-record-detail' record.id %}"
-                           class="text-emerald-600 font-medium">
+                        <div class="flex items-center gap-2">
 
-                            View
+                            <!-- View Button -->
+                            <a href="{% url 'vet-medical-record-detail' record.id %}"
+                               class="inline-flex items-center px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-medium transition">
 
-                        </a>
+                                View
+
+                            </a>
+
+                            <!-- Delete Button -->
+                            <form method="post"
+                                  action="{% url 'delete-medical-record' record.id %}"
+                                  onsubmit="return confirm('Are you sure you want to delete this medical record?');">
+
+                                {% csrf_token %}
+
+                                <button type="submit"
+                                        class="inline-flex items-center px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 font-medium transition">
+
+                                    Delete
+
+                                </button>
+
+                            </form>
+
+                        </div>
 
                     </td>
 
@@ -57,9 +123,26 @@
                 {% empty %}
 
                 <tr>
-                    <td colspan="4" class="p-4 text-center">
-                        No medical records found.
+
+                    <td colspan="4" class="p-10 text-center">
+
+                        <div class="flex flex-col items-center">
+
+                            <p class="text-slate-500 mb-4">
+                                No medical records found.
+                            </p>
+
+                            <a href="{% url 'create-medical-record' %}"
+                               class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium">
+
+                                Create First Medical Record
+
+                            </a>
+
+                        </div>
+
                     </td>
+
                 </tr>
 
                 {% endfor %}

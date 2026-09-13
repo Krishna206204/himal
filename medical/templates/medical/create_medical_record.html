@@ -2,96 +2,146 @@
 
 {% block content %}
 
-<div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
+<div class="max-w-6xl mx-auto py-8">
 
-    <h2 class="text-2xl font-bold mb-6">
-        Generate Medical Report
-    </h2>
+    <div class="bg-white rounded-2xl shadow-xl border border-gray-200">
 
-    <form method="post">
-
-        {% csrf_token %}
-
-        <div class="mb-4">
-
-            <label class="block mb-2">
-                Select Appointment
-            </label>
-
-            <select
-                name="appointment"
-                class="w-full border rounded p-2"
-                required>
-
-                <option value="">
-                    Choose Appointment
-                </option>
-
-                {% for appointment in appointments %}
-
-                <option value="{{ appointment.id }}">
-
-                    {{ appointment.animal.name }}
-                    -
-                    {{ appointment.appointment_date }}
-                    -
-                    {{ appointment.appointment_time }}
-
-                </option>
-
-                {% endfor %}
-
-            </select>
-
+        <!-- Header -->
+        <div class="bg-emerald-600 text-white px-8 py-5 rounded-t-2xl">
+            <h2 class="text-3xl font-bold">
+                Medical Report & Prescription
+            </h2>
+            <p class="text-emerald-100 mt-1">
+                Create medical record and prescription together.
+            </p>
         </div>
 
-        <div class="mb-4">
-            <label>Diagnosis</label>
-            <textarea
-                name="diagnosis"
-                class="w-full border rounded p-2"
-                required></textarea>
-        </div>
+        <form method="post" class="p-8">
 
-        <div class="mb-4">
-            <label>Symptoms</label>
-            <textarea
-                name="symptoms"
-                class="w-full border rounded p-2"></textarea>
-        </div>
+            {% csrf_token %}
 
-        <div class="mb-4">
-            <label>Treatment</label>
-            <textarea
-                name="treatment"
-                class="w-full border rounded p-2"></textarea>
-        </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-        <div class="mb-4">
-            <label>Notes</label>
-            <textarea
-                name="notes"
-                class="w-full border rounded p-2"></textarea>
-        </div>
+                <!-- Medical Report Card -->
+                <div class="border-2 border-gray-300 rounded-xl p-6 bg-gray-50">
 
-        <div class="mb-4">
-            <label>Record Date</label>
-            <input
-                type="date"
-                name="record_date"
-                class="w-full border rounded p-2"
-                required>
-        </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6 border-b pb-3">
+                        Medical Report
+                    </h3>
 
-        <button
-            type="submit"
-            class="bg-emerald-600 text-white px-4 py-2 rounded">
+                    <div class="space-y-5">
 
-            Save Medical Report
+                        <div>
+                            <label class="block mb-2 font-medium text-gray-700">
+                                Appointment
+                            </label>
+                            {{ record_form.appointment }}
+                        </div>
 
-        </button>
+                        <div>
+                            <label class="block mb-2 font-medium text-gray-700">
+                                Record Date
+                            </label>
+                            {{ record_form.record_date }}
+                        </div>
 
-    </form>
+                        <div>
+                            <label class="block mb-2 font-medium text-gray-700">
+                                Symptoms
+                            </label>
+                            {{ record_form.symptoms }}
+                        </div>
+
+                        <div>
+                            <label class="block mb-2 font-medium text-gray-700">
+                                Diagnosis
+                            </label>
+                            {{ record_form.diagnosis }}
+                        </div>
+
+                        <div>
+                            <label class="block mb-2 font-medium text-gray-700">
+                                Treatment
+                            </label>
+                            {{ record_form.treatment }}
+                        </div>
+
+                        <div>
+                            <label class="block mb-2 font-medium text-gray-700">
+                                Notes
+                            </label>
+                            {{ record_form.notes }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Prescription Card -->
+                <div class="border-2 border-gray-300 rounded-xl p-6 bg-gray-50">
+
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6 border-b pb-3">
+                        Prescription
+                    </h3>
+
+                    <div class="space-y-5">
+
+                        <div>
+                            <label class="block mb-2 font-medium text-gray-700">
+                                Medicine Name
+                            </label>
+                            {{ prescription_form.medicine_name }}
+                        </div>
+
+                        <div>
+                            <label class="block mb-2 font-medium text-gray-700">
+                                Dosage
+                            </label>
+                            {{ prescription_form.dosage }}
+                        </div>
+
+                        <div>
+                            <label class="block mb-2 font-medium text-gray-700">
+                                Frequency
+                            </label>
+                            {{ prescription_form.frequency }}
+                        </div>
+
+                        <div>
+                            <label class="block mb-2 font-medium text-gray-700">
+                                Duration
+                            </label>
+                            {{ prescription_form.duration }}
+                        </div>
+
+                        <div>
+                            <label class="block mb-2 font-medium text-gray-700">
+                                Instructions
+                            </label>
+                            {{ prescription_form.instructions }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="mt-8 border-t pt-6">
+
+                <button
+                    type="submit"
+                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg font-semibold shadow-md transition">
+
+                    Save Medical Report & Prescription
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 

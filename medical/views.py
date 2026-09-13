@@ -648,14 +648,21 @@ def vet_medical_record_detail(request, pk):
         }
     )
     
-    
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib import messages
 
-from appointment.models import Appointment
+
+
+
+
+from .forms import (
+    MedicalRecordForm,
+    PrescriptionForm
+)
+
+from .models import (
+    MedicalRecord,
+    Prescription
+)
 from account.models import User
-from .models import MedicalRecord
 
 
 @login_required
@@ -668,56 +675,93 @@ def create_medical_record(request):
         )
         return redirect("dashboard")
 
-    appointments = (
-        Appointment.objects
-        .filter(
-            veterinarian=request.user,
-            status="CONFIRMED"  # or COMPLETED
-        )
-        .select_related(
-            "animal",
-            "animal__owner"
-        )
-        .order_by(
-            "-appointment_date",
-            "-appointment_time"
-        )
-    )
-
     if request.method == "POST":
 
-        appointment_id = request.POST.get("appointment")
-
-        appointment = Appointment.objects.get(
-            id=appointment_id,
+        record_form = MedicalRecordForm(
+            request.POST,
             veterinarian=request.user
         )
 
-        record = MedicalRecord.objects.create(
-            animal=appointment.animal,
-            veterinarian=request.user.veterinarian_profile,
-            appointment=appointment,
-            diagnosis=request.POST.get("diagnosis"),
-            symptoms=request.POST.get("symptoms"),
-            treatment=request.POST.get("treatment"),
-            notes=request.POST.get("notes"),
-            record_date=request.POST.get("record_date")
+        prescription_form = PrescriptionForm(
+            request.POST
         )
 
-        messages.success(
-            request,
-            "Medical record created successfully."
+        if (
+            record_form.is_valid()
+            and prescription_form.is_valid()
+        ):
+
+            appointment = (
+                record_form.cleaned_data["appointment"]
+            )
+
+            record = record_form.save(commit=False)
+
+            record.animal = appointment.animal
+
+            record.veterinarian = (
+                request.user.veterinarian_profile
+            )
+
+            record.appointment = appointment
+
+            record.save()
+
+            prescription = (
+                prescription_form.save(commit=False)
+            )
+
+            prescription.medical_record = record
+
+            prescription.save()
+
+            messages.success(
+                request,
+                "Medical report and prescription created successfully."
+            )
+
+            return redirect(
+                "vet-medical-records"
+            )
+
+    else:
+
+        record_form = MedicalRecordForm(
+            veterinarian=request.user
         )
 
-        return redirect(
-            "add-prescription",
-            record_id=record.id
-        )
+        prescription_form = PrescriptionForm()
 
     return render(
         request,
         "medical/create_medical_record.html",
         {
-            "appointments": appointments
+            "record_form": record_form,
+            "prescription_form": prescription_form,
         }
     )
+    
+
+
+@login_required
+def delete_medical_record(request, pk):
+
+    if request.user.role != User.VETERINARIAN:
+        messages.error(request, "You are not authorized.")
+        return redirect("dashboard")
+
+    record = get_object_or_404(
+        MedicalRecord,
+        pk=pk,
+        veterinarian=request.user.veterinarian_profile
+    )
+
+    if request.method == "POST":
+        record.delete()
+
+        messages.success(
+            request,
+            "Medical record deleted successfully."
+        )
+
+    return redirect("vet-medical-records")
