@@ -65,6 +65,16 @@ def logout_view(request):
 
 # REGISTE
 
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.db import transaction
+from django.shortcuts import render, redirect
+
+from .models import PetOwnerProfile
+
+User = get_user_model()
+
+
 def register_view(request):
 
     if request.user.is_authenticated:
@@ -74,135 +84,40 @@ def register_view(request):
 
         username = request.POST.get("username", "").strip()
         email = request.POST.get("email", "").strip()
-
-        role = request.POST.get(
-            "role",
-            User.PET_OWNER
-        )
-
         phone = request.POST.get("phone", "").strip()
-        address = request.POST.get("address", "").strip()
 
         password = request.POST.get("password", "")
-        confirm_password = request.POST.get(
-            "confirm_password",
-            ""
-        )
+        confirm_password = request.POST.get("confirm_password", "")
 
         # Password validation
-
         if password != confirm_password:
-
-            messages.error(
-                request,
-                "Passwords do not match."
-            )
-
-            return render(
-                request,
-                "register.html"
-            )
+            messages.error(request, "Passwords do not match.")
+            return render(request, "account/register.html")
 
         # Username validation
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists.")
+            return render(request, "account/register.html")
 
-        if User.objects.filter(
-            username=username
-        ).exists():
-
-            messages.error(
-                request,
-                "Username already exists."
-            )
-
-            return render(
-                request,
-                "register.html"
-            )
-
-        # Validate role
-
-        valid_roles = [
-            User.ADMIN,
-            User.VETERINARIAN,
-            User.PET_OWNER,
-        ]
-
-        if role not in valid_roles:
-
-            messages.error(
-                request,
-                "Invalid user role."
-            )
-
-            return render(
-                request,
-                "register.html"
-            )
+        # Email validation
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email already exists.")
+            return render(request, "account/register.html")
 
         try:
-
             with transaction.atomic():
-
-                # Create user
 
                 user = User.objects.create_user(
                     username=username,
                     email=email,
                     password=password,
-                    role=role,
+                    role=User.PET_OWNER,
                     phone=phone,
-                    address=address
                 )
 
-                # Veterinarian profile
-
-                if role == User.VETERINARIAN:
-
-                    VeterinarianProfile.objects.create(
-                        user=user,
-
-                        license_number=request.POST.get(
-                            "license_number",
-                            ""
-                        ),
-
-                        specialization=request.POST.get(
-                            "specialization",
-                            ""
-                        ),
-
-                        qualification=request.POST.get(
-                            "qualification",
-                            ""
-                        ),
-
-                        experience_years=(
-                            request.POST.get(
-                                "experience_years"
-                            ) or 0
-                        ),
-
-                        joined_date=request.POST.get(
-                            "joined_date"
-                        ) or None
-                    )
-
-                # Pet owner profile
-
-                elif role == User.PET_OWNER:
-
-                    PetOwnerProfile.objects.create(
-                        user=user,
-
-                        emergency_contact_phone=request.POST.get(
-                            "emergency_contact_phone",
-                            ""
-                        )
-                    )
-
-                # Admin
-
-                # Admin does not require an additional profile.
+                PetOwnerProfile.objects.create(
+                    user=user
+                )
 
             messages.success(
                 request,
@@ -212,17 +127,12 @@ def register_view(request):
             return redirect("login")
 
         except Exception as e:
-
             messages.error(
                 request,
                 f"Error creating account: {str(e)}"
             )
 
-    return render(
-        request,
-        "account/register.html"
-    )
-
+    return render(request, "account/register.html")
 
 
 @login_required
