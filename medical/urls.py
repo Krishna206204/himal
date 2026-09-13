@@ -24,6 +24,28 @@ urlpatterns = [
     ),
 
 
-    
+    path(
+        "vet/my-records/",
+        views.vet_medical_records,
+        name="vet-medical-records"
+    ),
 
+    
+    path(
+        "vet/my-records/<int:pk>/",
+        views.vet_medical_record_detail,
+        name="vet-medical-record-detail"
+    ),
+    
+    
+   # medical/urls.py
+
+path(
+    "vet/medical-record/create/",
+    views.create_medical_record,
+    name="create-medical-record"
+),
+    
+    
+    
 ]

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-4xl mx-auto p-6">
+
+    <div class="bg-white rounded-xl shadow p-6">
+
+        <h2 class="text-2xl font-bold mb-4">
+            Medical Report
+        </h2>
+
+        <p><strong>Animal:</strong> {{ record.animal.name }}</p>
+
+        <p><strong>Date:</strong> {{ record.record_date }}</p>
+
+        <p><strong>Diagnosis:</strong></p>
+        <p>{{ record.diagnosis }}</p>
+
+        <p class="mt-4"><strong>Symptoms:</strong></p>
+        <p>{{ record.symptoms }}</p>
+
+        <p class="mt-4"><strong>Treatment:</strong></p>
+        <p>{{ record.treatment }}</p>
+
+        <p class="mt-4"><strong>Notes:</strong></p>
+        <p>{{ record.notes }}</p>
+
+        <hr class="my-6">
+
+        <h3 class="text-xl font-semibold mb-3">
+            Prescriptions
+        </h3>
+
+        {% for prescription in record.prescriptions.all %}
+
+            <div class="border rounded-lg p-3 mb-3">
+
+                <p><strong>Medicine:</strong> {{ prescription.medicine_name }}</p>
+
+                <p><strong>Dosage:</strong> {{ prescription.dosage }}</p>
+
+                <p><strong>Frequency:</strong> {{ prescription.frequency }}</p>
+
+                <p><strong>Duration:</strong> {{ prescription.duration }}</p>
+
+                <p><strong>Instructions:</strong> {{ prescription.instructions }}</p>
+
+            </div>
+
+        {% empty %}
+
+            <p>No prescriptions.</p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

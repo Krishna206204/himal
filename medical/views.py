@@ -602,3 +602,122 @@ def download_medical_report(request, id):
 
     return response
 
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
+from .models import MedicalRecord
+
+
+@login_required
+def vet_medical_records(request):
+
+    vet = request.user.veterinarian_profile
+
+    records = MedicalRecord.objects.filter(
+        veterinarian=vet
+    ).select_related(
+        "animal",
+        "appointment"
+    )
+
+    return render(
+        request,
+        "medical/vet_medical_records.html",
+        {
+            "records": records
+        }
+    )
+
+
+@login_required
+def vet_medical_record_detail(request, pk):
+
+    vet = request.user.veterinarian_profile
+
+    record = get_object_or_404(
+        MedicalRecord,
+        pk=pk,
+        veterinarian=vet
+    )
+
+    return render(
+        request,
+        "medical/vet_medical_record_detail.html",
+        {
+            "record": record
+        }
+    )
+    
+    
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+from appointment.models import Appointment
+from account.models import User
+from .models import MedicalRecord
+
+
+@login_required
+def create_medical_record(request):
+
+    if request.user.role != User.VETERINARIAN:
+        messages.error(
+            request,
+            "You are not authorized."
+        )
+        return redirect("dashboard")
+
+    appointments = (
+        Appointment.objects
+        .filter(
+            veterinarian=request.user,
+            status="CONFIRMED"  # or COMPLETED
+        )
+        .select_related(
+            "animal",
+            "animal__owner"
+        )
+        .order_by(
+            "-appointment_date",
+            "-appointment_time"
+        )
+    )
+
+    if request.method == "POST":
+
+        appointment_id = request.POST.get("appointment")
+
+        appointment = Appointment.objects.get(
+            id=appointment_id,
+            veterinarian=request.user
+        )
+
+        record = MedicalRecord.objects.create(
+            animal=appointment.animal,
+            veterinarian=request.user.veterinarian_profile,
+            appointment=appointment,
+            diagnosis=request.POST.get("diagnosis"),
+            symptoms=request.POST.get("symptoms"),
+            treatment=request.POST.get("treatment"),
+            notes=request.POST.get("notes"),
+            record_date=request.POST.get("record_date")
+        )
+
+        messages.success(
+            request,
+            "Medical record created successfully."
+        )
+
+        return redirect(
+            "add-prescription",
+            record_id=record.id
+        )
+
+    return render(
+        request,
+        "medical/create_medical_record.html",
+        {
+            "appointments": appointments
+        }
+    )

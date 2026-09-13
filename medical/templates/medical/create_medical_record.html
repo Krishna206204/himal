@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
+
+    <h2 class="text-2xl font-bold mb-6">
+        Generate Medical Report
+    </h2>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <div class="mb-4">
+
+            <label class="block mb-2">
+                Select Appointment
+            </label>
+
+            <select
+                name="appointment"
+                class="w-full border rounded p-2"
+                required>
+
+                <option value="">
+                    Choose Appointment
+                </option>
+
+                {% for appointment in appointments %}
+
+                <option value="{{ appointment.id }}">
+
+                    {{ appointment.animal.name }}
+                    -
+                    {{ appointment.appointment_date }}
+                    -
+                    {{ appointment.appointment_time }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div class="mb-4">
+            <label>Diagnosis</label>
+            <textarea
+                name="diagnosis"
+                class="w-full border rounded p-2"
+                required></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label>Symptoms</label>
+            <textarea
+                name="symptoms"
+                class="w-full border rounded p-2"></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label>Treatment</label>
+            <textarea
+                name="treatment"
+                class="w-full border rounded p-2"></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label>Notes</label>
+            <textarea
+                name="notes"
+                class="w-full border rounded p-2"></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label>Record Date</label>
+            <input
+                type="date"
+                name="record_date"
+                class="w-full border rounded p-2"
+                required>
+        </div>
+
+        <button
+            type="submit"
+            class="bg-emerald-600 text-white px-4 py-2 rounded">
+
+            Save Medical Report
+
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}
