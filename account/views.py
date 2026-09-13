@@ -694,3 +694,76 @@ def vet_dashboard(request):
         "account/vet_dashboard.html",
         context
     )
+    
+
+
+
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+from .forms import VeterinarianProfileUpdateForm
+from .models import User
+
+
+@login_required
+def vet_profile(request):
+
+    if request.user.role != User.VETERINARIAN:
+        return redirect("dashboard")
+
+    profile = request.user.veterinarian_profile
+
+    return render(
+        request,
+        "account/vet_profile.html",
+        {
+            "profile": profile,
+        }
+    )
+
+
+@login_required
+def edit_veterinarian_profile(request):
+
+    if request.user.role != User.VETERINARIAN:
+        return redirect("dashboard")
+
+    profile = request.user.veterinarian_profile
+
+    if request.method == "POST":
+
+        form = VeterinarianProfileUpdateForm(
+            request.POST,
+            instance=profile,
+            user=request.user
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(
+                request,
+                "Profile updated successfully."
+            )
+
+            return redirect(
+                "vet-profile"
+            )
+
+    else:
+
+        form = VeterinarianProfileUpdateForm(
+            instance=profile,
+            user=request.user
+        )
+
+    return render(
+        request,
+        "account/edit_veterinarian_profile.html",
+        {
+            "form": form
+        }
+    )

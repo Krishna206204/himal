@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto p-6">
+
+    <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+
+        <div class="bg-emerald-600 p-8 text-white">
+
+            <div class="flex justify-between items-center">
+
+                <div>
+
+                    <h1 class="text-3xl font-bold">
+                        Dr. {{ request.user.get_full_name|default:request.user.username }}
+                    </h1>
+
+                    <p class="mt-2 opacity-90">
+                        Veterinarian Profile
+                    </p>
+
+                </div>
+
+                <a href="{% url 'edit-veterinarian-profile' %}"
+                   class="bg-white text-emerald-600 px-5 py-2 rounded-lg font-semibold hover:bg-slate-100">
+
+                    Edit Profile
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="p-8">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold text-slate-700 mb-2">
+                        Username
+                    </h3>
+                    <p>{{ request.user.username }}</p>
+                </div>
+
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold text-slate-700 mb-2">
+                        Email
+                    </h3>
+                    <p>{{ request.user.email }}</p>
+                </div>
+
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold text-slate-700 mb-2">
+                        Phone
+                    </h3>
+                    <p>{{ request.user.phone|default:"Not provided" }}</p>
+                </div>
+
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold text-slate-700 mb-2">
+                        Address
+                    </h3>
+                    <p>{{ request.user.address|default:"Not provided" }}</p>
+                </div>
+
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold text-slate-700 mb-2">
+                        License Number
+                    </h3>
+                    <p>{{ profile.license_number }}</p>
+                </div>
+
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold text-slate-700 mb-2">
+                        Experience
+                    </h3>
+                    <p>{{ profile.experience_years }} Years</p>
+                </div>
+
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold text-slate-700 mb-2">
+                        Qualification
+                    </h3>
+                    <p>{{ profile.qualification }}</p>
+                </div>
+
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold text-slate-700 mb-2">
+                        Specialization
+                    </h3>
+                    <p>{{ profile.specialization }}</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

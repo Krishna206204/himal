@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto p-6">
+
+    <div class="bg-white rounded-xl shadow-lg border border-slate-200 p-8">
+
+        <h2 class="text-3xl font-bold text-slate-800 mb-8">
+            Edit Profile
+        </h2>
+
+        <form method="post" class="space-y-6">
+
+            {% csrf_token %}
+
+            <div>
+                <label class="block mb-2 font-medium">
+                    Phone Number
+                </label>
+                {{ form.phone }}
+            </div>
+
+            <div>
+                <label class="block mb-2 font-medium">
+                    Address
+                </label>
+                {{ form.address }}
+            </div>
+
+            <div>
+                <label class="block mb-2 font-medium">
+                    Experience Years
+                </label>
+                {{ form.experience_years }}
+            </div>
+
+            <div class="flex gap-3">
+
+                <button type="submit"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg">
+
+                    Save Changes
+
+                </button>
+
+                <a href="{% url 'vet-profile' %}"
+                   class="bg-slate-300 hover:bg-slate-400 text-slate-800 px-6 py-3 rounded-lg">
+
+                    Cancel
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

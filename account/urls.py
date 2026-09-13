@@ -58,5 +58,17 @@ urlpatterns = [
         name="vet-dashboard"
     ),
    
+    path(
+        "vet/profile/",
+        views.vet_profile,
+        name="vet-profile"
+    ),
 
+    
+    
+    path(
+        "vet/profile/edit/",
+        views.edit_veterinarian_profile,
+        name="edit-veterinarian-profile"
+    ),
 ]
