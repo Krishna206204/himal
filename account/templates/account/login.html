@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta name="viewport"
@@ -46,6 +47,8 @@
 >
 
 
+    <!-- Background Overlay -->
+
     <div
         class="fixed inset-0
                bg-gradient-to-t
@@ -56,6 +59,8 @@
     </div>
 
 
+    <!-- Login Container -->
+
     <div
         class="relative z-10
                w-full
@@ -64,10 +69,13 @@
                sm:p-5"
     >
 
+
+        <!-- Login Card -->
+
         <div
             class="w-full
-                   px-6 py-10
-                   sm:px-8
+                   px-6 py-8
+                   sm:px-8 sm:py-10
                    rounded-2xl
                    bg-white/15
                    backdrop-blur-[15px]
@@ -78,6 +86,49 @@
         >
 
 
+            <!-- =========================================
+                 BACK TO HOME BUTTON
+            ========================================== -->
+
+            <div class="flex justify-start mb-5">
+
+                <a
+                    href="{% url 'home' %}"
+
+                    class="inline-flex
+                           items-center
+                           gap-2
+                           rounded-full
+                           border border-white/30
+                           bg-amber-400
+                           px-4
+                           py-2
+                           text-sm
+                           font-medium
+                           text-white
+                           backdrop-blur-sm
+                           transition-all
+                           duration-300
+
+                           hover:bg-white
+                           hover:text-slate-800
+                           hover:-translate-y-0.5
+                           hover:shadow-lg"
+                >
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+                    <span>
+                        Home
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- Login Heading -->
+
             <h2
                 class="mb-7
                        text-3xl
@@ -85,6 +136,9 @@
             >
                 Login
             </h2>
+
+
+            <!-- Login Form -->
 
             <form
                 method="POST"
@@ -94,6 +148,8 @@
 
                 {% csrf_token %}
 
+
+                <!-- Email -->
 
                 <div class="relative">
 
@@ -138,6 +194,8 @@
                 </div>
 
 
+                <!-- Password -->
+
                 <div class="relative">
 
                     <input
@@ -178,10 +236,15 @@
                                top-1/2
                                -translate-y-1/2
                                text-white
-                               pointer-events-none"
+                               cursor-pointer
+                               transition
+                               hover:text-yellow-300"
                     ></i>
 
                 </div>
+
+
+                <!-- Login Button -->
 
                 <button
                     type="submit"
@@ -198,11 +261,16 @@
 
                            hover:bg-[#ff6a00]
                            hover:text-white
-                           hover:-translate-y-0.5"
+                           hover:-translate-y-0.5
+                           hover:shadow-lg"
                 >
+
                     Login
+
                 </button>
 
+
+                <!-- Register -->
 
                 <p
                     class="mt-4
@@ -219,41 +287,12 @@
                                font-medium
                                hover:underline"
                     >
+
                         Register
+
                     </a>
 
                 </p>
-
-
-                {% comment %} <a
-                    href="{% url 'vet-login' %}"
-
-                    class="mt-4
-                           flex
-                           items-center
-                           justify-center
-                           gap-2
-                           w-full
-                           py-3
-                           rounded-full
-                           border border-white/40
-                           bg-white/10
-                           text-white
-                           font-semibold
-                           text-sm
-                           transition-all
-                           duration-300
-
-                           hover:bg-[#ff6a00]
-                           hover:border-[#ff6a00]
-                           hover:-translate-y-0.5"
-                >
-
-                    <i class="fa-solid fa-user-doctor"></i>
-
-                    Vet Login
-
-                </a> {% endcomment %}
 
 
             </form>
@@ -262,6 +301,10 @@
 
     </div>
 
+
+    <!-- =========================================
+         PASSWORD SHOW / HIDE
+    ========================================== -->
 
     <script>
 
