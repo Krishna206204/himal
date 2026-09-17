@@ -8,6 +8,8 @@ from animal.models import Animal
 from appointment.models import Appointment
 from medical.models import MedicalRecord
 
+def home(request):
+    return render(request,"account/home.html")
 
 
 
