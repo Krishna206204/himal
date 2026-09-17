@@ -67,13 +67,8 @@ def logout_view(request):
     return redirect("login")
 # REGISTE
 
-from django.contrib import messages
+
 from django.contrib.auth import get_user_model
-from django.db import transaction
-from django.shortcuts import render, redirect
-
-from .models import PetOwnerProfile
-
 User = get_user_model()
 
 
