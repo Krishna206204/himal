@@ -145,7 +145,7 @@ def dashboard(request):
         or user.is_staff
     ):
 
-        return redirect("admin-dashboard")
+        return redirect("admin:index")
 
     # VETERINARIAN
 
