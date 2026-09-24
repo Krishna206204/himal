@@ -1,156 +1,117 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>
-        {% block title %}
-            Veterinarian | Vet Care
-        {% endblock %}
-    </title>
+    <title>{% block title %} Veterinarian | Vet Care {% endblock %}</title>
 
     <!-- Tailwind -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
     {% block extra_css %}{% endblock %}
+  </head>
 
-</head>
+  <body class="bg-slate-100 text-slate-800">
+    <div class="min-h-screen flex">
+      {% include 'sidebar.html' %}
 
-
-<body class="bg-slate-100 text-slate-800">
-
-<div class="min-h-screen flex">
-
-    {% include 'sidebar.html' %}
-
-
-    <div class="flex-1 flex flex-col min-w-0">
-
+      <div class="flex-1 flex flex-col min-w-0">
         <!-- Mobile Header -->
-        <header class="lg:hidden bg-white border-b
-                       border-slate-200
-                       px-4 py-4
-                       flex items-center justify-between
-                       sticky top-0 z-30">
-
-            <div class="flex items-center gap-3">
-
-                <div class="w-10 h-10 rounded-xl
-                            bg-emerald-600 text-white
-                            flex items-center justify-center">
-
-                    <i class="fa-solid fa-user-doctor"></i>
-
-                </div>
-
-                <div>
-
-                    <h1 class="font-bold text-slate-900">
-                        Vet Care
-                    </h1>
-
-                    <p class="text-xs text-slate-500">
-                        Veterinarian
-                    </p>
-
-                </div>
-
+        <header
+          class="lg:hidden bg-white border-b border-slate-200 px-4 py-4 flex items-center justify-between sticky top-0 z-30"
+        >
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center"
+            >
+              <i class="fa-solid fa-user-doctor"></i>
             </div>
 
+            <div>
+              <h1 class="font-bold text-slate-900">Vet Care</h1>
 
-            <button id="vet-menu-btn"
-                    class="w-10 h-10 rounded-lg
-                           bg-slate-100
-                           flex items-center justify-center">
+              <p class="text-xs text-slate-500">Veterinarian</p>
+            </div>
+          </div>
 
-                <i class="fa-solid fa-bars"></i>
-
-            </button>
-
+          <button
+            id="vet-menu-btn"
+            class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center"
+          >
+            <i class="fa-solid fa-bars"></i>
+          </button>
         </header>
 
-
         <main class="flex-1 p-4 sm:p-6 lg:p-8">
+          {% block content %}
 
-            {% block content %}
+          <div class="max-w-7xl mx-auto">
+            <div
+              class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6"
+            >
+              <h2 class="text-2xl font-bold">
+                Welcome, {{
+                request.user.get_full_name|default:request.user.username }}
+              </h2>
 
-            <div class="max-w-7xl mx-auto">
-
-                <div class="bg-white rounded-2xl
-                            border border-slate-200
-                            shadow-sm p-6">
-
-                    <h2 class="text-2xl font-bold">
-                        Welcome,
-                        {{ request.user.get_full_name|default:request.user.username }}
-                    </h2>
-
-                    <p class="mt-2 text-slate-500">
-                        Role:
-                        {{ request.user.get_role_display }}
-                    </p>
-
-                </div>
-
+              <p class="mt-2 text-slate-500">
+                Role: {{ request.user.get_role_display }}
+              </p>
             </div>
+          </div>
 
-            {% endblock %}
-
+          {% endblock %}
         </main>
-
+      </div>
     </div>
 
-</div>
+    <!-- Django Messages -->
+    {% if messages %} {% for message in messages %}
 
+    <script>
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        title: "{{ message.tag | title }}",
+        text: "{{ message }}",
+        icon: "{{ message.tag }}",
+        timer: 2500,
+        timerProgressBar: true,
+      });
+    </script>
 
-<script>
+    {% endfor %} {% endif %}
 
-    const vetMenuButton =
-        document.getElementById("vet-menu-btn");
+    <script>
+      const vetMenuButton = document.getElementById("vet-menu-btn");
 
-    const vetSidebar =
-        document.getElementById("vet-sidebar");
+      const vetSidebar = document.getElementById("vet-sidebar");
 
-    const vetOverlay =
-        document.getElementById("vet-overlay");
+      const vetOverlay = document.getElementById("vet-overlay");
 
-
-    if (vetMenuButton) {
-
+      if (vetMenuButton) {
         vetMenuButton.addEventListener("click", function () {
-
-            vetSidebar.classList.toggle("-translate-x-full");
-            vetOverlay.classList.toggle("hidden");
-
+          vetSidebar.classList.toggle("-translate-x-full");
+          vetOverlay.classList.toggle("hidden");
         });
+      }
 
-    }
-
-
-    if (vetOverlay) {
-
+      if (vetOverlay) {
         vetOverlay.addEventListener("click", function () {
-
-            vetSidebar.classList.add("-translate-x-full");
-            vetOverlay.classList.add("hidden");
-
+          vetSidebar.classList.add("-translate-x-full");
+          vetOverlay.classList.add("hidden");
         });
+      }
+    </script>
 
-    }
-
-</script>
-
-
-{% block extra_js %}{% endblock %}
-
-</body>
+    {% block extra_js %}{% endblock %}
+  </body>
 </html>

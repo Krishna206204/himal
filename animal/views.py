@@ -68,7 +68,6 @@ def add_animal(request):
             species=species,
             breed=breed if breed else None,
             age=int(age) if age else None,
-            symptoms=symptoms if symptoms else None
         )
 
         messages.success(
