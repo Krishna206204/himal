@@ -15,28 +15,20 @@ def home(request):
 
 def login_view(request):
 
-    
     if request.method == "POST":
-
         email = request.POST.get("email", "").strip()
         password = request.POST.get("password", "")
-
         try:
             user_obj = User.objects.get(email=email)
-
             user = authenticate(
                 request,
                 username=user_obj.username,
                 password=password
             )
-
         except User.DoesNotExist:
             user = None
-
         if user is not None:
-
             login(request, user)
-
             # Remember me
             if request.POST.get("remember_me"):
 
@@ -48,7 +40,7 @@ def login_view(request):
 
                 # Session expires when browser is closed.
                 request.session.set_expiry(0)
-
+            messages.success(request,"Lgoin Successfully")
             return redirect("dashboard")
 
         messages.error(
@@ -64,6 +56,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     request.session.flush()
+    messages.success(request,"Successfully Logout")
     return redirect("login")
 # REGISTE
 
