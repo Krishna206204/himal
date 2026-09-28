@@ -5,6 +5,14 @@ from .models import PetOwnerProfile, User, VeterinarianProfile
 
 
 class RegistrationTests(TestCase):
+    def test_public_home_page_has_login_and_registration_links(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Healthy pets.")
+        self.assertContains(response, reverse("login"))
+        self.assertContains(response, reverse("register"))
+
     def test_registering_owner_creates_profile_and_hashes_password(self):
         response = self.client.post(reverse("register"), {
             "username": "new-owner",
@@ -96,7 +104,7 @@ class RegistrationTests(TestCase):
         response = self.client.get(reverse("dashboard"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Your clinic")
+        self.assertContains(response, "Doctor dashboard")
 
     def test_admin_dashboard_renders(self):
         administrator = User.objects.create_user(

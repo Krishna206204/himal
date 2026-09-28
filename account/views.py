@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.password_validation import validate_password
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.shortcuts import redirect, render
@@ -13,6 +14,18 @@ from animal.models import Animal
 from appointment.models import Appointment
 from medical.models import MedicalRecord
 from .models import PetOwnerProfile, User, VeterinarianProfile
+
+
+def public_home(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+    return render(request, "public_home.html", {
+        "veterinarian_count": User.objects.filter(
+            role=User.VETERINARIAN,
+            is_active=True,
+        ).count(),
+        "patient_count": Animal.objects.count(),
+    })
 
 
 class RegistrationForm(forms.Form):
@@ -74,6 +87,13 @@ def login_view(request):
             login(request, user)
             if not request.POST.get("remember_me"):
                 request.session.set_expiry(0)
+            next_url = request.POST.get("next")
+            if next_url and url_has_allowed_host_and_scheme(
+                next_url,
+                allowed_hosts={request.get_host()},
+                require_https=request.is_secure(),
+            ):
+                return redirect(next_url)
             return redirect("dashboard")
         messages.error(request, "Invalid username or password.")
     return render(request, "login.html")
@@ -121,12 +141,17 @@ def dashboard(request):
     user = request.user
     is_admin = user.is_staff or user.is_superuser or user.role == User.ADMIN
     if is_admin:
+        today_appointments = Appointment.objects.filter(
+            appointment_date__date=timezone.localdate()
+        )
         context = {
             "total_users": User.objects.count(),
             "total_vets": User.objects.filter(role=User.VETERINARIAN).count(),
             "total_owners": User.objects.filter(role=User.PET_OWNER).count(),
             "total_animals": Animal.objects.count(),
             "total_appointments": Appointment.objects.count(),
+            "pending_appointments": Appointment.objects.filter(status="PENDING").count(),
+            "today_appointments": today_appointments.count(),
             "recent_appointments": Appointment.objects.select_related(
                 "animal", "pet_owner", "veterinarian"
             ).order_by("-appointment_date")[:5],
@@ -153,6 +178,14 @@ def dashboard(request):
             "vet_profile": profile,
             "appointments": appointments,
             "recent_records": records,
+            "today_appointment_count": Appointment.objects.filter(
+                veterinarian=user,
+                appointment_date__date=timezone.localdate(),
+            ).exclude(status="CANCELLED").count(),
+            "pending_appointment_count": Appointment.objects.filter(
+                veterinarian=user,
+                status="PENDING",
+            ).count(),
         })
 
     animals = Animal.objects.filter(owner=user).order_by("name")

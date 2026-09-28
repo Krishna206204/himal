@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page-header">
     <div><h1>Clinic overview</h1><p class="muted">Welcome back, {{ request.user.get_full_name|default:request.user.username }}.</p></div>
-    <a class="button" href="{% url 'pet_list' %}">Patient register</a>
+    <div class="actions"><a class="button secondary" href="/admin/">Manage clinic</a><a class="button" href="{% url 'pet_list' %}">Patient register</a></div>
 </div>
 <section class="grid">
     <div class="stat"><strong>{{ total_users }}</strong>Total users</div>
@@ -11,6 +11,8 @@
     <div class="stat"><strong>{{ total_owners }}</strong>Pet owners</div>
     <div class="stat"><strong>{{ total_animals }}</strong>Patients</div>
     <div class="stat"><strong>{{ total_appointments }}</strong>Appointments</div>
+    <div class="stat"><strong>{{ pending_appointments }}</strong>Awaiting confirmation</div>
+    <div class="stat"><strong>{{ today_appointments }}</strong>Today's visits</div>
 </section>
 <section class="card">
     <div class="page-header"><h2>Recent appointments</h2><a href="{% url 'appointment_list' %}">View all</a></div>

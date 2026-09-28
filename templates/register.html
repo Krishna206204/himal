@@ -6,37 +6,49 @@
     <title>Create account | Himal Vet Care</title>
     <style>
         * { box-sizing: border-box; }
-        body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; background: #eff6f3; color: #18302e; font: 15px/1.5 system-ui, sans-serif; }
-        main { width: min(540px, 100%); padding: 30px; border: 1px solid #dfe9e6; border-radius: 16px; background: white; box-shadow: 0 12px 40px #163d3512; }
-        h1 { margin-top: 0; }
-        p { margin: 0 0 14px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; }
-        input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #cbd9d5; border-radius: 7px; font: inherit; }
-        button { padding: 11px 16px; border: 0; border-radius: 7px; background: #087f70; color: white; font: inherit; font-weight: 600; cursor: pointer; }
-        .errors, .errorlist { color: #a43939; }
+        body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; background: radial-gradient(circle at 85% 15%, #d7f0e5 0, transparent 30%), #eff6f3; color: #18302e; font: 15px/1.5 system-ui, sans-serif; }
+        main { width: min(680px, 100%); padding: clamp(24px, 5vw, 38px); border: 1px solid #dfe9e6; border-radius: 18px; background: white; box-shadow: 0 20px 60px #163d3512; }
+        .brand { color: #123c38; text-decoration: none; font-size: 19px; font-weight: 800; letter-spacing: -.04em; }
+        .brand span { color: #087f70; }
+        h1 { margin: 24px 0 4px; font-size: 30px; letter-spacing: -.04em; }
+        .muted { color: #687b79; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+        .form-grid p { margin: 9px 0; }
+        label { display: block; margin-bottom: 5px; font-weight: 650; }
+        input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #cbd9d5; border-radius: 8px; background: white; font: inherit; }
+        textarea { min-height: 82px; }
+        .full { grid-column: 1 / -1; }
+        .vet-fields { grid-column: 1 / -1; padding: 15px; margin: 5px 0 15px; border-radius: 10px; background: #f2f8f5; }
         .vet-fields[hidden] { display: none; }
+        .button { padding: 12px 17px; border: 0; border-radius: 8px; background: #087f70; color: white; font: inherit; font-weight: 700; cursor: pointer; }
+        .errorlist { color: #a43939; padding-left: 18px; }
         a { color: #087f70; }
+        @media(max-width:560px) { .form-grid { grid-template-columns: 1fr; } .full, .vet-fields { grid-column: auto; } }
     </style>
 </head>
 <body>
 <main>
+    <a class="brand" href="{% url 'home' %}">Himal <span>Vet Care</span></a>
     <h1>Create your account</h1>
-    <p>Join Himal Vet Care to manage pets, appointments, and treatment history.</p>
+    <p class="muted">Join the clinic community and keep pet care organized.</p>
     <form method="post" novalidate>
         {% csrf_token %}
         {{ form.non_field_errors }}
+        <div class="form-grid">
         {% for field in form %}
-            {% if field.name == "license_number" or field.name == "specialization" or field.name == "qualification" %}
-                {% if field.name == "license_number" %}<div class="vet-fields" id="vetFields">{% endif %}
+            {% if field.name == "license_number" %}
+                <div class="vet-fields" id="vetFields"><p>{{ field.label_tag }}{{ field }}{{ field.errors }}</p>
+            {% elif field.name == "specialization" or field.name == "qualification" %}
                 <p>{{ field.label_tag }}{{ field }}{{ field.errors }}</p>
                 {% if field.name == "qualification" %}</div>{% endif %}
             {% else %}
-                <p>{{ field.label_tag }}{{ field }}{{ field.errors }}</p>
+                <p class="{% if field.name == 'address' or field.name == 'role' %}full{% endif %}">{{ field.label_tag }}{{ field }}{{ field.errors }}</p>
             {% endif %}
         {% endfor %}
-        <button type="submit">Create account</button>
+        </div>
+        <button class="button" type="submit">Create account</button>
     </form>
-    <p>Already registered? <a href="{% url 'login' %}">Sign in</a></p>
+    <p class="muted">Already registered? <a href="{% url 'login' %}">Sign in</a></p>
 </main>
 <script>
     const roleSelect = document.getElementById("id_role");

@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Book an appointment | Himal Vet Care{% endblock %}
 {% block content %}
-<div class="page-header"><div><h1>Book an appointment</h1><p class="muted">Choose one of your pets and a veterinarian.</p></div></div>
+<div class="page-header"><div><h1>Book an appointment</h1><p class="muted">Choose a veterinarian and one of your pets to see available appointment times. Visits are {{ APPOINTMENT_SLOT_MINUTES }} minutes, {{ APPOINTMENT_OPEN_TIME }}–{{ APPOINTMENT_CLOSE_TIME }}.</p></div></div>
 <section class="card">
     {% if form.fields.animal.queryset.exists %}
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
+        <p id="slot-help" class="muted" aria-live="polite">Select a date, veterinarian, and pet to load open appointment times.</p>
         <button class="button" type="submit">Request appointment</button>
         <a class="button secondary" href="{% url 'appointment_list' %}">Cancel</a>
     </form>
@@ -15,4 +16,42 @@
         <a class="button" href="{% url 'add_pet' %}">Add a pet</a>
     {% endif %}
 </section>
+<script>
+    const dateField = document.getElementById("id_date");
+    const veterinarianField = document.getElementById("id_veterinarian");
+    const animalField = document.getElementById("id_animal");
+    const slotField = document.getElementById("id_time_slot");
+    const slotHelp = document.getElementById("slot-help");
+    async function loadSlots() {
+        const date = dateField.value;
+        const veterinarian = veterinarianField.value;
+        const animal = animalField.value;
+        slotField.replaceChildren(new Option("Loading available times…", ""));
+        if (!date || !veterinarian || !animal) {
+            slotField.replaceChildren(new Option("Select a date, veterinarian, and pet first", ""));
+            slotHelp.textContent = "Select a date, veterinarian, and pet to load open appointment times.";
+            return;
+        }
+        const params = new URLSearchParams({date, veterinarian, animal});
+        try {
+            const response = await fetch("{% url 'available_appointment_slots' %}?" + params);
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || "Could not load appointment times.");
+            slotField.replaceChildren(new Option("Choose an available time", ""));
+            for (const slot of result.slots) {
+                slotField.add(new Option(slot.label, slot.value));
+            }
+            slotHelp.textContent = result.slots.length
+                ? `${result.slots.length} open time(s) available.`
+                : "No appointment times are available for that date. Try another date or veterinarian.";
+        } catch (error) {
+            slotField.replaceChildren(new Option("Appointment times unavailable", ""));
+            slotHelp.textContent = error.message;
+        }
+    }
+    for (const field of [dateField, veterinarianField, animalField]) {
+        field.addEventListener("change", loadSlots);
+    }
+    if (dateField.value && veterinarianField.value && animalField.value) loadSlots();
+</script>
 {% endblock %}

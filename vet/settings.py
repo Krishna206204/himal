@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'vet.context_processors.clinic_settings',
             ],
         },
     },
@@ -124,6 +125,9 @@ TIME_ZONE = 'Asia/Kathmandu'
 USE_I18N = True
 
 USE_TZ = True
+APPOINTMENT_SLOT_MINUTES = int(os.environ.get("APPOINTMENT_SLOT_MINUTES", "30"))
+APPOINTMENT_OPEN_TIME = os.environ.get("APPOINTMENT_OPEN_TIME", "08:00")
+APPOINTMENT_CLOSE_TIME = os.environ.get("APPOINTMENT_CLOSE_TIME", "18:00")
 
 
 # Static & Media files (CSS, JavaScript, Images)

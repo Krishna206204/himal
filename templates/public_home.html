@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Himal Vet Care | Veterinary care made simple{% endblock %}
+{% block extra_css %}
+<style>
+    body { display: block; background: #f5f8f6; }
+    .main-content { max-width: none; padding: 0; }
+    .public-nav { width: min(1180px, calc(100% - 44px)); margin: auto; min-height: 82px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .public-brand { color: #123c38; text-decoration: none; font-size: 20px; font-weight: 800; letter-spacing: -.04em; }
+    .public-brand span { color: #087f70; }
+    .public-nav-links { display: flex; align-items: center; gap: 22px; }
+    .public-nav-links a { color: #526562; text-decoration: none; font-weight: 600; }
+    .public-nav-links .button { color: white; }
+    .hero { position: relative; overflow: hidden; background: linear-gradient(120deg, #123c38, #17685b); color: white; }
+    .hero-inner { width: min(1180px, calc(100% - 44px)); min-height: 490px; margin: auto; display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: 50px; padding: 65px 0; }
+    .eyebrow { color: #a4e0ce; text-transform: uppercase; letter-spacing: .14em; font-weight: 700; font-size: 12px; }
+    .hero h1 { max-width: 680px; margin: 16px 0; font-size: clamp(40px, 6vw, 68px); line-height: 1.02; letter-spacing: -.055em; }
+    .hero-copy { max-width: 580px; color: #d6e9e4; font-size: 18px; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+    .hero .button { background: #8ee0be; color: #123c38; padding: 13px 18px; }
+    .hero .button.secondary { background: transparent; color: white; border: 1px solid #ffffff75; }
+    .hero-art { min-height: 290px; display: grid; place-items: center; position: relative; }
+    .pet-orbit { width: min(320px, 70vw); aspect-ratio: 1; border-radius: 48% 52% 58% 42%; background: linear-gradient(145deg, #a4e0ce, #66b99f); display: grid; place-items: center; transform: rotate(-8deg); box-shadow: 0 28px 70px #071f1c55; }
+    .pet-orbit span { font-size: clamp(100px, 15vw, 170px); transform: rotate(8deg); }
+    .hero-note { position: absolute; bottom: 5px; right: -4px; color: #123c38; background: #fff; padding: 15px 18px; border-radius: 12px; box-shadow: 0 12px 30px #071f1c33; font-weight: 700; }
+    .home-section { width: min(1180px, calc(100% - 44px)); margin: 70px auto; }
+    .section-heading { max-width: 660px; margin-bottom: 26px; }
+    .section-heading h2 { margin: 7px 0; font-size: clamp(28px, 4vw, 40px); letter-spacing: -.04em; }
+    .service-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .service-card { padding: 25px; background: white; border: 1px solid #dfe9e6; border-radius: 15px; }
+    .service-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; background: #e5f4ef; color: #087f70; font-size: 23px; }
+    .service-card h3 { margin: 18px 0 7px; }
+    .stats-band { padding: 32px; border-radius: 18px; background: #e5f4ef; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    .stats-band strong { display: block; color: #087f70; font-size: 30px; }
+    .home-footer { padding: 28px 22px; background: #123c38; color: #d6e9e4; text-align: center; }
+    @media(max-width:760px) { .public-nav { width: calc(100% - 32px); } .public-nav-links { gap: 12px; } .public-nav-links a:not(.button) { display:none; } .hero-inner { width: calc(100% - 36px); grid-template-columns: 1fr; gap: 25px; padding: 55px 0; } .hero-art { min-height: 220px; } .pet-orbit { width: 220px; } .hero-note { right: 8%; } .home-section { width: calc(100% - 36px); margin: 50px auto; } .service-grid { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+{% block content %}
+<header class="public-nav">
+    <a class="public-brand" href="{% url 'home' %}">Himal <span>Vet Care</span></a>
+    <nav class="public-nav-links" aria-label="Public navigation">
+        <a href="#services">Our care</a>
+        <a href="#about">About us</a>
+        <a href="{% url 'login' %}">Sign in</a>
+        <a class="button" href="{% url 'register' %}">Create account</a>
+    </nav>
+</header>
+<section class="hero">
+    <div class="hero-inner">
+        <div>
+            <span class="eyebrow">Thoughtful care for every companion</span>
+            <h1>Healthy pets.<br>Happier days.</h1>
+            <p class="hero-copy">A trusted place to find veterinary care, keep your pet's health history organized, and book your next visit with confidence.</p>
+            <div class="hero-actions">
+                <a class="button" href="{% url 'register' %}">Get started</a>
+                <a class="button secondary" href="{% url 'login' %}">Sign in to your account</a>
+            </div>
+        </div>
+        <div class="hero-art" aria-hidden="true"><div class="pet-orbit"><span>🐾</span></div><div class="hero-note">Care that stays with them</div></div>
+    </div>
+</section>
+<section class="home-section" id="services">
+    <div class="section-heading"><span class="eyebrow" style="color:#087f70">Everything in one place</span><h2>Care that works for your whole clinic</h2><p class="muted">From the first appointment to the follow-up, keep owners, veterinarians, and patient records connected.</p></div>
+    <div class="service-grid">
+        <article class="service-card"><div class="service-icon">♡</div><h3>Personal pet profiles</h3><p class="muted">Keep each pet's profile, appointments, and care history together.</p></article>
+        <article class="service-card"><div class="service-icon">◷</div><h3>Simple appointment booking</h3><p class="muted">Request a visit with a veterinarian and track it from pending to complete.</p></article>
+        <article class="service-card"><div class="service-icon">✚</div><h3>Connected medical records</h3><p class="muted">Keep diagnoses, treatments, and prescriptions easy to find when care continues.</p></article>
+    </div>
+</section>
+<section class="home-section" id="about">
+    <div class="stats-band">
+        <div><strong>{{ veterinarian_count }}</strong><span>Veterinarians on the team</span></div>
+        <div><strong>{{ patient_count }}</strong><span>Patients in our care</span></div>
+    </div>
+</section>
+<footer class="home-footer">Himal Vet Care · Better care for the pets who make a house a home.</footer>
+{% endblock %}

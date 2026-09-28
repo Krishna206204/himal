@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Veterinarian dashboard | Himal Vet Care{% endblock %}
 {% block content %}
-<div class="page-header"><div><h1>Your clinic</h1><p class="muted">Welcome, Dr. {{ request.user.get_full_name|default:request.user.username }}.</p></div><a class="button" href="{% url 'add_medical_record' %}">Write a record</a></div>
+<div class="page-header"><div><h1>Doctor dashboard</h1><p class="muted">Welcome, Dr. {{ request.user.get_full_name|default:request.user.username }}.</p></div><div class="actions"><a class="button secondary" href="{% url 'appointment_list' %}?status=PENDING">Review requests</a><a class="button" href="{% url 'add_medical_record' %}">Write a record</a></div></div>
+<section class="grid">
+    <div class="stat"><strong>{{ today_appointment_count }}</strong>Visits today</div>
+    <div class="stat"><strong>{{ pending_appointment_count }}</strong>Requests to review</div>
+    <div class="stat"><strong>{{ recent_records|length }}</strong>Recent records</div>
+</section>
 <section class="card">
     <h2>Professional profile</h2>
     {% if vet_profile %}

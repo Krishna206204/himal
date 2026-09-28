@@ -5,6 +5,12 @@
     <div><h1>Appointments</h1><p class="muted">View and manage clinic visits.</p></div>
     {% if request.user.role == "PET_OWNER" %}<a class="button" href="{% url 'create_appointment' %}">Book an appointment</a>{% endif %}
 </div>
+<form class="card actions" method="get" style="align-items:end">
+    <p><label for="filter-status">Status</label><select id="filter-status" name="status"><option value="">All statuses</option>{% for value,label in status_choices %}<option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></p>
+    <p><label for="filter-date">Date</label><input id="filter-date" type="date" name="date" value="{{ selected_date|date:'Y-m-d'|default:'' }}"></p>
+    <button class="button" type="submit">Filter appointments</button>
+    <a class="button secondary" href="{% url 'appointment_list' %}">Clear filters</a>
+</form>
 <div class="table-wrap">
     <table>
         <thead><tr><th>Date</th><th>Pet</th><th>Owner</th><th>Veterinarian</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
