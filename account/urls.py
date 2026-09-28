@@ -77,3 +77,11 @@ urlpatterns = [
         name="edit-veterinarian-profile"
     ),
 ]
+
+
+# admin himal2@gmail.com
+# nepal@123
+# vet  shyam@gmail.com
+# nepal@123
+# owner himal@gmail.com
+# nepal@123
