@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}{{ animal.name }} | Himal Vet Care{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>{{ animal.name }}</h1><p class="muted">{{ animal.species }}{% if animal.breed %} · {{ animal.breed }}{% endif %}</p></div>
+    {% if can_manage %}<div class="actions"><a class="button secondary" href="{% url 'edit_pet' animal.pk %}">Edit details</a><form method="post" action="{% url 'delete_pet' animal.pk %}" onsubmit="return confirm('Delete this pet and its care history?')">{% csrf_token %}<button class="button danger" type="submit">Delete pet</button></form></div>{% endif %}
+</div>
+<section class="card"><h2>Patient details</h2><p><strong>Species:</strong> {{ animal.species }}</p><p><strong>Breed:</strong> {{ animal.breed|default:"Not recorded" }}</p><p><strong>Age:</strong> {% if animal.age != None %}{{ animal.age }} years{% else %}Not recorded{% endif %}</p><p><strong>Owner:</strong> {{ animal.owner.get_full_name|default:animal.owner.username|default:"Unassigned" }}</p></section>
+<section class="card"><div class="page-header"><h2>Medical history</h2><a href="{% url 'medical_record_list' %}">All records</a></div>{% include "partials/record_table.html" with records=animal.medical_records.all %}</section>
+{% endblock %}

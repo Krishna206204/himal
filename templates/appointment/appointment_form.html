@@ -1,16 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Book Appointment</title>
-</head>
-<body>
-    <h2>Book an Appointment</h2>
+{% extends "base.html" %}
+{% block title %}Book an appointment | Himal Vet Care{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Book an appointment</h1><p class="muted">Choose one of your pets and a veterinarian.</p></div></div>
+<section class="card">
+    {% if form.fields.animal.queryset.exists %}
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Confirm Booking</button>
+        <button class="button" type="submit">Request appointment</button>
+        <a class="button secondary" href="{% url 'appointment_list' %}">Cancel</a>
     </form>
-    <a href="{% url 'appointment_list' %}">Back to Appointments</a>
-</body>
-</html>
+    {% else %}
+        <p>You need to add a pet before booking an appointment.</p>
+        <a class="button" href="{% url 'add_pet' %}">Add a pet</a>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Patients | Himal Vet Care{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>{% if request.user.role == "PET_OWNER" %}My pets{% else %}Patient register{% endif %}</h1><p class="muted">Pet profiles and care history.</p></div>{% if request.user.role == "PET_OWNER" or request.user.is_staff or request.user.role == "ADMIN" %}<a class="button" href="{% url 'add_pet' %}">Add a pet</a>{% endif %}</div>
+<div class="table-wrap"><table>
+    <thead><tr><th>Name</th><th>Species</th><th>Breed</th><th>Age</th>{% if request.user.role != "PET_OWNER" %}<th>Owner</th>{% endif %}<th></th></tr></thead>
+    <tbody>{% for animal in animals %}
+        <tr><td><a href="{% url 'pet_detail' animal.pk %}"><strong>{{ animal.name }}</strong></a></td><td>{{ animal.species }}</td><td>{{ animal.breed|default:"—" }}</td><td>{% if animal.age != None %}{{ animal.age }} years{% else %}—{% endif %}</td>{% if request.user.role != "PET_OWNER" %}<td>{{ animal.owner.get_full_name|default:animal.owner.username|default:"Unassigned" }}</td>{% endif %}<td><a href="{% url 'pet_detail' animal.pk %}">View</a></td></tr>
+    {% empty %}<tr><td colspan="6" class="muted">No pets have been registered yet.</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

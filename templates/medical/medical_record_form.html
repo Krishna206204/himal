@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}New medical record | Himal Vet Care{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Write a medical record</h1><p class="muted">Record the clinical visit and care plan.</p></div></div>
+<section class="card"><form method="post">{% csrf_token %}{{ form.as_p }}<button class="button" type="submit">Save medical record</button> <a class="button secondary" href="{% url 'medical_record_list' %}">Cancel</a></form></section>
+{% endblock %}

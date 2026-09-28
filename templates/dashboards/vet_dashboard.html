@@ -1,34 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Vet Dashboard - Himal Vet Care</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: sans-serif; background: #1e1e2d; color: #fff; padding: 20px; }
-        .info-card { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-        a.btn-logout { color: #ff6a00; text-decoration: none; float: right; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <a href="{% url 'logout' %}" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
-    <h2><i class="fa-solid fa-stethoscope"></i> Veterinarian Dashboard</h2>
-    <p>Welcome, Dr. {{ request.user.username }}</p>
-    <hr style="border-color: #3f3f5a; margin: 15px 0;">
-
-    <div class="info-card">
-        <h4>Profile Details</h4>
-        <p><strong>License No:</strong> {{ vet_profile.license_number|default:"N/A" }}</p>
-        <p><strong>Specialization:</strong> {{ vet_profile.specialization|default:"General Practice" }}</p>
-    </div>
-
-    <h3>Upcoming Appointments</h3>
-    <ul>
-        {% for appt in appointments %}
-            <li>{{ appt.appointment_date }} - {{ appt.animal }}</li>
-        {% empty %}
-            <li>No upcoming appointments.</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Veterinarian dashboard | Himal Vet Care{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Your clinic</h1><p class="muted">Welcome, Dr. {{ request.user.get_full_name|default:request.user.username }}.</p></div><a class="button" href="{% url 'add_medical_record' %}">Write a record</a></div>
+<section class="card">
+    <h2>Professional profile</h2>
+    {% if vet_profile %}
+        <p><strong>License:</strong> {{ vet_profile.license_number }}</p>
+        <p><strong>Specialization:</strong> {{ vet_profile.specialization|default:"General practice" }}</p>
+    {% else %}
+        <p class="muted">A clinic administrator needs to complete your veterinarian profile before you can write records.</p>
+    {% endif %}
+</section>
+<section class="card">
+    <div class="page-header"><h2>Upcoming appointments</h2><a href="{% url 'appointment_list' %}">View schedule</a></div>
+    {% include "partials/appointment_table.html" with appointments=appointments %}
+</section>
+<section class="card">
+    <div class="page-header"><h2>Your recent records</h2><a href="{% url 'medical_record_list' %}">View all</a></div>
+    {% include "partials/record_table.html" with records=recent_records %}
+</section>
+{% endblock %}

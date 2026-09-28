@@ -1,62 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Appointments</title>
-</head>
-<body>
-    <h2>Appointment Schedule</h2>
-
-    {% if messages %}
-        {% for message in messages %}
-            <p style="color: green;">{{ message }}</p>
-        {% endfor %}
-    {% endif %}
-
-    {% if request.user.role == 'PET_OWNER' %}
-        <a href="{% url 'create_appointment' %}">+ Book New Appointment</a>
-    {% endif %}
-
-    <table border="1" cellpadding="8" style="margin-top: 15px; border-collapse: collapse;">
-        <thead>
-            <tr>
-                <th>Date & Time</th>
-                <th>Animal</th>
-                <th>Pet Owner</th>
-                <th>Veterinarian</th>
-                <th>Reason</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
+{% extends "base.html" %}
+{% block title %}Appointments | Himal Vet Care{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div><h1>Appointments</h1><p class="muted">View and manage clinic visits.</p></div>
+    {% if request.user.role == "PET_OWNER" %}<a class="button" href="{% url 'create_appointment' %}">Book an appointment</a>{% endif %}
+</div>
+<div class="table-wrap">
+    <table>
+        <thead><tr><th>Date</th><th>Pet</th><th>Owner</th><th>Veterinarian</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody>
-            {% for appt in appointments %}
-                <tr>
-                    <td>{{ appt.appointment_date|date:"Y-m-d H:i" }}</td>
-                    <td>{{ appt.animal.name }}</td>
-                    <td>{{ appt.pet_owner.username }}</td>
-                    <td>Dr. {{ appt.veterinarian.username }}</td>
-                    <td>{{ appt.reason }}</td>
-                    <td><strong>{{ appt.get_status_display }}</strong></td>
-                    <td>
-                        {% if request.user == appt.veterinarian or request.user.is_superuser %}
-                            {% if appt.status == 'PENDING' %}
-                                <a href="{% url 'update_appointment_status' appt.pk 'CONFIRMED' %}">Confirm</a> |
-                                <a href="{% url 'update_appointment_status' appt.pk 'CANCELLED' %}">Cancel</a>
-                            {% elif appt.status == 'CONFIRMED' %}
-                                <a href="{% url 'update_appointment_status' appt.pk 'COMPLETED' %}">Mark Completed</a>
-                            {% endif %}
-                        {% else %}
-                            N/A
+        {% for appt in appointments %}
+            <tr>
+                <td>{{ appt.appointment_date|date:"M j, Y · H:i" }}</td>
+                <td><a href="{% url 'pet_detail' appt.animal_id %}">{{ appt.animal.name }}</a></td>
+                <td>{{ appt.pet_owner.get_full_name|default:appt.pet_owner.username }}</td>
+                <td>Dr. {{ appt.veterinarian.get_full_name|default:appt.veterinarian.username }}</td>
+                <td>{{ appt.reason|truncatewords:12 }}</td>
+                <td><span class="status">{{ appt.get_status_display }}</span></td>
+                <td>
+                    <div class="actions">
+                    {% if request.user == appt.veterinarian or request.user.is_staff or request.user.is_superuser or request.user.role == "ADMIN" %}
+                        {% if appt.status == "PENDING" %}
+                            <form class="inline-form" method="post" action="{% url 'update_appointment_status' appt.pk 'CONFIRMED' %}">{% csrf_token %}<button class="button secondary" type="submit">Confirm</button></form>
+                            <form class="inline-form" method="post" action="{% url 'update_appointment_status' appt.pk 'CANCELLED' %}">{% csrf_token %}<button class="button danger" type="submit">Cancel</button></form>
+                        {% elif appt.status == "CONFIRMED" %}
+                            <form class="inline-form" method="post" action="{% url 'update_appointment_status' appt.pk 'COMPLETED' %}">{% csrf_token %}<button class="button secondary" type="submit">Complete</button></form>
+                            <form class="inline-form" method="post" action="{% url 'update_appointment_status' appt.pk 'CANCELLED' %}">{% csrf_token %}<button class="button danger" type="submit">Cancel</button></form>
                         {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="7">No appointments found.</td>
-                </tr>
-            {% endfor %}
+                    {% elif request.user == appt.pet_owner and appt.status == "PENDING" %}
+                        <form class="inline-form" method="post" action="{% url 'update_appointment_status' appt.pk 'CANCELLED' %}">{% csrf_token %}<button class="button danger" type="submit">Cancel request</button></form>
+                    {% else %}<span class="muted">—</span>{% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% empty %}<tr><td colspan="7" class="muted">No appointments found.</td></tr>{% endfor %}
         </tbody>
     </table>
-</body>
-</html>
+</div>
+{% endblock %}

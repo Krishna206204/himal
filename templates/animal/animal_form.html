@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} | Himal Vet Care{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>{{ title }}</h1><p class="muted">Keep patient details accurate for safe care.</p></div></div>
+<section class="card"><form method="post">{% csrf_token %}{{ form.as_p }}<button class="button" type="submit">Save pet</button> <a class="button secondary" href="{% url 'pet_list' %}">Cancel</a></form></section>
+{% endblock %}

@@ -3,27 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Vet Management System{% endblock %}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>{% block title %}Himal Vet Care{% endblock %}</title>
     <style>
-        body { font-family: 'Poppins', sans-serif; display: flex; margin: 0; background-color: #f4f6f9; }
-        .main-content { flex: 1; padding: 20px; }
+        :root { color-scheme: light; --ink: #18302e; --muted: #687b79; --brand: #087f70; --line: #dfe9e6; --surface: #fff; --canvas: #f2f7f5; }
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; display: flex; color: var(--ink); background: var(--canvas); font: 15px/1.5 system-ui, sans-serif; }
+        .sidebar { width: 245px; flex: 0 0 245px; background: #123c38; color: #fff; padding: 26px 18px; display: flex; flex-direction: column; justify-content: space-between; }
+        .brand { margin: 0 0 28px; font-size: 20px; }
+        .brand span { display: block; color: #a7d8cc; font-size: 12px; font-weight: 400; }
+        .nav-links { display: grid; gap: 6px; }
+        .nav-links a, .logout-form button { display: block; width: 100%; padding: 11px 12px; border: 0; border-radius: 8px; color: #d6e9e4; background: transparent; text-align: left; text-decoration: none; font: inherit; cursor: pointer; }
+        .nav-links a:hover, .logout-form button:hover { background: #20524b; color: #fff; }
+        .logout-form { border-top: 1px solid #38645d; padding-top: 14px; }
+        .main-content { flex: 1; min-width: 0; max-width: 1350px; padding: 34px clamp(18px, 4vw, 54px); margin: 0 auto; }
+        h1 { margin: 0 0 8px; font-size: clamp(26px, 3vw, 34px); }
+        h2, h3 { margin-top: 0; }
+        .page-header { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 24px; }
+        .muted, .helptext { color: var(--muted); }
+        .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin: 0 0 18px; box-shadow: 0 5px 18px #163d3510; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin: 20px 0; }
+        .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+        .stat strong { display: block; color: var(--brand); font-size: 28px; }
+        .button, button.button { display: inline-block; padding: 10px 15px; border: 0; border-radius: 8px; background: var(--brand); color: white; text-decoration: none; font: inherit; font-weight: 600; cursor: pointer; }
+        .button.secondary { background: #e8f3f0; color: #14564c; }
+        .button.danger { background: #a43939; }
+        .inline-form { display: inline; }
+        .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+        th { color: var(--muted); background: #f8fbfa; font-size: 13px; }
+        .status { display: inline-block; padding: 3px 9px; background: #e8f3f0; border-radius: 99px; font-size: 12px; font-weight: 700; }
+        .messages { padding: 0; list-style: none; }
+        .messages li { padding: 11px 14px; margin-bottom: 10px; border-radius: 8px; background: #e2f4eb; color: #205b3c; }
+        .messages li.error { background: #ffeded; color: #8a3030; }
+        form p { margin: 0 0 15px; }
+        form label { display: block; margin-bottom: 5px; font-weight: 600; }
+        input, select, textarea { width: 100%; max-width: 620px; padding: 10px 12px; border: 1px solid #cbd9d5; border-radius: 7px; background: white; color: var(--ink); font: inherit; }
+        input[type=checkbox] { width: auto; }
+        .errorlist { color: #a43939; padding-left: 20px; }
+        .actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        @media (max-width: 760px) { body { display: block; } .sidebar { width: 100%; min-height: 0; } .nav-links { grid-template-columns: repeat(2, minmax(0, 1fr)); } .logout-form { margin-top: 15px; } .main-content { padding: 24px 16px; } }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-
-    <!-- Include root sidebar template -->
     {% if user.is_authenticated %}
         {% include 'sidebar.html' %}
     {% endif %}
-
-    <div class="main-content">
-        {% block content %}
-            <h2>Welcome, {{ request.user.get_full_name|default:request.user.username }}</h2>
-            <p>Role: {{ request.user.get_role_display }}</p>
-        {% endblock %}
-    </div>
-
+    <main class="main-content">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
 </body>
 </html>

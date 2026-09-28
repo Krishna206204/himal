@@ -10,5 +10,8 @@ class AnimalAdmin(admin.ModelAdmin):
         'species',
         'breed',
         'age',
+        'owner',
         'created_at'
     )
+    list_filter = ('species',)
+    search_fields = ('name', 'species', 'breed', 'owner__username')

@@ -1,28 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Pet Owner Dashboard - Himal Vet Care</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: sans-serif; background: #1e1e2d; color: #fff; padding: 20px; }
-        .pet-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-bottom: 10px; }
-        a.btn-logout { color: #ff6a00; text-decoration: none; float: right; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <a href="{% url 'logout' %}" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
-    <h2><i class="fa-solid fa-paw"></i> Pet Owner Dashboard</h2>
-    <p>Welcome, {{ request.user.username }}</p>
-    <hr style="border-color: #3f3f5a; margin: 15px 0;">
-
-    <h3>My Pets</h3>
-    {% for animal in my_animals %}
-        <div class="pet-card">
-            <strong>{{ animal.name }}</strong> - {{ animal.species|default:"Pet" }}
-        </div>
-    {% empty %}
-        <p>No pets registered yet.</p>
-    {% endfor %}
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}My dashboard | Himal Vet Care{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Your pets</h1><p class="muted">Welcome, {{ request.user.get_full_name|default:request.user.username }}. Keep your pets' care in one place.</p></div><a class="button" href="{% url 'add_pet' %}">Add a pet</a></div>
+<section class="grid">
+    <div class="stat"><strong>{{ my_animals|length }}</strong>Pets registered</div>
+    <div class="stat"><strong>{{ appointments|length }}</strong>Recent appointments</div>
+    <div class="stat"><strong>{{ medical_records|length }}</strong>Recent medical records</div>
+</section>
+<section class="card"><div class="page-header"><h2>My pets</h2><a href="{% url 'pet_list' %}">Manage pets</a></div>
+    <div class="grid">
+        {% for animal in my_animals %}
+            <article class="stat"><h3><a href="{% url 'pet_detail' animal.pk %}">{{ animal.name }}</a></h3><p>{{ animal.species }}{% if animal.breed %} · {{ animal.breed }}{% endif %}</p></article>
+        {% empty %}<p class="muted">No pets yet. Add a pet to start booking care.</p>{% endfor %}
+    </div>
+</section>
+<section class="card"><div class="page-header"><h2>Recent appointments</h2><a href="{% url 'create_appointment' %}">Book an appointment</a></div>{% include "partials/appointment_table.html" with appointments=appointments %}</section>
+<section class="card"><div class="page-header"><h2>Medical history</h2><a href="{% url 'medical_record_list' %}">View all</a></div>{% include "partials/record_table.html" with records=medical_records %}</section>
+{% endblock %}

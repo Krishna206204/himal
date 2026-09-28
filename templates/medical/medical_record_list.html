@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Medical records | Himal Vet Care{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Medical records</h1><p class="muted">Diagnoses, treatments, and prescriptions.</p></div>{% if can_manage %}<a class="button" href="{% url 'add_medical_record' %}">Write a record</a>{% endif %}</div>
+{% include "partials/record_table.html" with records=records %}
+{% endblock %}

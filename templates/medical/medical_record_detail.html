@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Medical record | Himal Vet Care{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>{{ record.animal.name }} · medical record</h1><p class="muted">{{ record.record_date|date:"F j, Y" }} · {% if record.veterinarian %}Dr. {{ record.veterinarian.user.get_full_name|default:record.veterinarian.user.username }}{% else %}Veterinarian not recorded{% endif %}</p></div><a class="button secondary" href="{% url 'medical_record_list' %}">All records</a></div>
+<section class="card"><h2>Clinical notes</h2><p><strong>Diagnosis</strong><br>{{ record.diagnosis|linebreaksbr }}</p>{% if record.symptoms %}<p><strong>Symptoms</strong><br>{{ record.symptoms|linebreaksbr }}</p>{% endif %}{% if record.treatment %}<p><strong>Treatment</strong><br>{{ record.treatment|linebreaksbr }}</p>{% endif %}{% if record.notes %}<p><strong>Additional notes</strong><br>{{ record.notes|linebreaksbr }}</p>{% endif %}</section>
+<section class="card"><h2>Prescriptions</h2>
+    <div class="table-wrap"><table><thead><tr><th>Medicine</th><th>Dosage</th><th>Frequency</th><th>Duration</th><th>Instructions</th></tr></thead><tbody>
+    {% for prescription in record.prescriptions.all %}<tr><td>{{ prescription.medicine_name }}</td><td>{{ prescription.dosage }}</td><td>{{ prescription.frequency }}</td><td>{{ prescription.duration }}</td><td>{{ prescription.instructions|default:"—" }}</td></tr>{% empty %}<tr><td colspan="5" class="muted">No prescriptions for this visit.</td></tr>{% endfor %}
+    </tbody></table></div>
+    {% if can_manage %}<h3 style="margin-top:22px">Add prescription</h3><form method="post" action="{% url 'add_prescription' record.pk %}">{% csrf_token %}{{ prescription_form.as_p }}<button class="button" type="submit">Add prescription</button></form>{% endif %}
+</section>
+{% endblock %}
