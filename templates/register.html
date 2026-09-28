@@ -3,52 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#176b58">
     <title>Create account | Himal Vet Care</title>
     <style>
-        * { box-sizing: border-box; }
-        body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; background: radial-gradient(circle at 85% 15%, #d7f0e5 0, transparent 30%), #eff6f3; color: #18302e; font: 15px/1.5 system-ui, sans-serif; }
-        main { width: min(680px, 100%); padding: clamp(24px, 5vw, 38px); border: 1px solid #dfe9e6; border-radius: 18px; background: white; box-shadow: 0 20px 60px #163d3512; }
-        .brand { color: #123c38; text-decoration: none; font-size: 19px; font-weight: 800; letter-spacing: -.04em; }
-        .brand span { color: #087f70; }
-        h1 { margin: 24px 0 4px; font-size: 30px; letter-spacing: -.04em; }
-        .muted { color: #687b79; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
-        .form-grid p { margin: 9px 0; }
-        label { display: block; margin-bottom: 5px; font-weight: 650; }
-        input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #cbd9d5; border-radius: 8px; background: white; font: inherit; }
-        textarea { min-height: 82px; }
-        .full { grid-column: 1 / -1; }
-        .vet-fields { grid-column: 1 / -1; padding: 15px; margin: 5px 0 15px; border-radius: 10px; background: #f2f8f5; }
-        .vet-fields[hidden] { display: none; }
-        .button { padding: 12px 17px; border: 0; border-radius: 8px; background: #087f70; color: white; font: inherit; font-weight: 700; cursor: pointer; }
-        .errorlist { color: #a43939; padding-left: 18px; }
-        a { color: #087f70; }
-        @media(max-width:560px) { .form-grid { grid-template-columns: 1fr; } .full, .vet-fields { grid-column: auto; } }
+        :root { --forest:#194d3d; --green:#318667; --ink:#20382f; --muted:#748178; --line:#e5ebe4; }
+        * { box-sizing:border-box; }
+        body { min-height:100vh; margin:0; display:grid; place-items:center; padding:28px; color:var(--ink); background:#f5f4ee; font:15px/1.5 Inter,ui-sans-serif,system-ui,sans-serif; }
+        .auth-layout { width:min(1120px,100%); min-height:700px; display:grid; grid-template-columns:.78fr 1.22fr; overflow:hidden; border-radius:24px; background:#fff; box-shadow:0 30px 90px #24473720; }
+        .visual-panel { position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; padding:38px; color:#fff; background:linear-gradient(150deg,#236b51,#174838 74%); }
+        .visual-panel:before,.visual-panel:after { position:absolute; content:""; border:1px solid #ffffff26; border-radius:50%; }
+        .visual-panel:before { width:410px; height:410px; right:-190px; top:130px; }
+        .visual-panel:after { width:300px; height:300px; right:-135px; top:185px; }
+        .brand { position:relative; z-index:1; display:inline-flex; align-items:center; gap:10px; width:max-content; color:#fff; text-decoration:none; font-size:18px; font-weight:800; letter-spacing:-.04em; }
+        .brand-mark { width:38px; height:38px; display:grid; place-items:center; border-radius:12px; background:#ffffff20; color:#c7f2d5; font-size:20px; }
+        .visual-copy { position:relative; z-index:1; max-width:350px; margin:auto 0; padding:50px 0; }
+        .eyebrow { color:#bde7cb; text-transform:uppercase; letter-spacing:.16em; font-size:11px; font-weight:800; }
+        .visual-copy h1 { margin:15px 0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(37px,4.2vw,52px); line-height:1.05; font-weight:500; letter-spacing:-.04em; }
+        .visual-copy p { color:#d5e8dc; line-height:1.8; }
+        .feature-list { display:grid; gap:13px; margin-top:28px; padding:0; list-style:none; color:#e2eee4; font-size:13px; }
+        .feature-list li:before { content:"✓"; display:inline-grid; width:21px; height:21px; margin-right:9px; place-items:center; border-radius:50%; background:#ffffff20; color:#bde7cb; font-weight:800; }
+        .paw-illustration { position:absolute; right:16px; bottom:100px; color:#ffffff14; font-size:150px; transform:rotate(-18deg); }
+        .panel-footer { position:relative; z-index:1; color:#c1d9cc; font-size:12px; }
+        .form-panel { display:flex; flex-direction:column; justify-content:center; padding:clamp(30px,5vw,60px); }
+        .mobile-brand { display:none; }
+        .welcome-tag { width:max-content; padding:6px 11px; border-radius:50px; background:#eaf5eb; color:#347856; font-size:12px; font-weight:750; }
+        h2 { margin:14px 0 4px; color:#20382f; font-size:30px; line-height:1.2; letter-spacing:-.04em; }
+        .intro { margin:0 0 18px; color:var(--muted); }
+        .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 15px; }
+        .form-grid p { min-width:0; margin:8px 0; }
+        label { display:block; margin:0 0 5px; color:#33493e; font-size:12px; font-weight:750; }
+        input,select,textarea { width:100%; min-height:43px; padding:9px 11px; border:1px solid #dce5dc; border-radius:9px; outline:none; background:#fcfdfb; color:var(--ink); font:inherit; font-size:13px; transition:border-color .18s,box-shadow .18s; }
+        textarea { min-height:65px; resize:vertical; }
+        input:focus,select:focus,textarea:focus { border-color:#58a17a; box-shadow:0 0 0 4px #3186671c; }
+        .full { grid-column:1/-1; }
+        .vet-fields { grid-column:1/-1; display:grid; grid-template-columns:1fr 1fr; gap:0 14px; padding:12px 14px; margin:10px 0 12px; border:1px solid #dcece0; border-radius:11px; background:#f3f8f2; }
+        .vet-fields:before { grid-column:1/-1; margin:0 0 5px; color:#397b5c; content:"VETERINARY CREDENTIALS"; font-size:10px; font-weight:800; letter-spacing:.13em; }
+        .vet-fields[hidden] { display:none; }
+        .vet-fields p:first-of-type { grid-column:1/-1; }
+        .button { min-height:46px; padding:0 18px; border:0; border-radius:9px; background:linear-gradient(100deg,#318667,#267652); color:#fff; font:inherit; font-weight:750; cursor:pointer; box-shadow:0 9px 20px #3186672b; }
+        .button:hover { background:#267652; }
+        .errorlist { margin:4px 0 0; padding-left:17px; color:#a43e34; font-size:11px; }
+        .non-field-errors { color:#a43e34; }
+        .form-foot { margin:17px 0 0; color:#7b877f; font-size:13px; }
+        a { color:#327d5c; font-weight:700; text-decoration:none; }
+        a:hover { text-decoration:underline; }
+        .secure-note { margin-top:18px; color:#87938a; font-size:11px; }
+        @media(max-width:820px) { body { padding:16px; } .auth-layout { width:min(680px,100%); min-height:0; grid-template-columns:1fr; border-radius:19px; } .visual-panel { display:none; } .form-panel { padding:clamp(25px,6vw,40px); } .mobile-brand { display:inline-flex; margin-bottom:25px; color:var(--forest); } .mobile-brand .brand-mark { background:#eaf5eb; color:#347856; } }
+        @media(max-width:540px) { .form-grid,.vet-fields { grid-template-columns:1fr; } .full,.vet-fields,.vet-fields p:first-of-type { grid-column:auto; } .vet-fields:before { grid-column:auto; } h2 { font-size:27px; } }
+        @media(prefers-reduced-motion:reduce) { *,*:before,*:after { scroll-behavior:auto!important; transition:none!important; } }
     </style>
 </head>
 <body>
-<main>
-    <a class="brand" href="{% url 'home' %}">Himal <span>Vet Care</span></a>
-    <h1>Create your account</h1>
-    <p class="muted">Join the clinic community and keep pet care organized.</p>
-    <form method="post" novalidate>
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <div class="form-grid">
-        {% for field in form %}
-            {% if field.name == "license_number" %}
-                <div class="vet-fields" id="vetFields"><p>{{ field.label_tag }}{{ field }}{{ field.errors }}</p>
-            {% elif field.name == "specialization" or field.name == "qualification" %}
-                <p>{{ field.label_tag }}{{ field }}{{ field.errors }}</p>
-                {% if field.name == "qualification" %}</div>{% endif %}
-            {% else %}
-                <p class="{% if field.name == 'address' or field.name == 'role' %}full{% endif %}">{{ field.label_tag }}{{ field }}{{ field.errors }}</p>
-            {% endif %}
-        {% endfor %}
+<main class="auth-layout">
+    <aside class="visual-panel">
+        <a class="brand" href="{% url 'home' %}"><span class="brand-mark" aria-hidden="true">✚</span>Himal Vet Care</a>
+        <div class="visual-copy">
+            <span class="eyebrow">A healthier life together</span>
+            <h1>Care begins with connection.</h1>
+            <p>Create your account to bring your pet’s people, appointments, and health details together.</p>
+            <ul class="feature-list"><li>One profile for every pet</li><li>Simple online appointment requests</li><li>Health history when you need it</li></ul>
         </div>
-        <button class="button" type="submit">Create account</button>
-    </form>
-    <p class="muted">Already registered? <a href="{% url 'login' %}">Sign in</a></p>
+        <span class="paw-illustration" aria-hidden="true">🐾</span>
+        <div class="panel-footer">A little more care in every day.</div>
+    </aside>
+    <section class="form-panel">
+        <a class="brand mobile-brand" href="{% url 'home' %}"><span class="brand-mark" aria-hidden="true">✚</span>Himal Vet Care</a>
+        <span class="welcome-tag">Join our care community</span>
+        <h2>Create your account</h2>
+        <p class="intro">A few details to get you and your companion started.</p>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% if form.non_field_errors %}<div class="non-field-errors">{{ form.non_field_errors }}</div>{% endif %}
+            <div class="form-grid">
+            {% for field in form %}
+                {% if field.name == "license_number" %}
+                    <div class="vet-fields" id="vetFields"><p>{{ field.label_tag }}{{ field }}{{ field.errors }}</p>
+                {% elif field.name == "specialization" or field.name == "qualification" %}
+                    <p>{{ field.label_tag }}{{ field }}{{ field.errors }}</p>
+                    {% if field.name == "qualification" %}</div>{% endif %}
+                {% else %}
+                    <p class="{% if field.name == 'address' or field.name == 'role' %}full{% endif %}">{{ field.label_tag }}{{ field }}{{ field.errors }}</p>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <button class="button" type="submit">Create account&nbsp; →</button>
+        </form>
+        <p class="form-foot">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+        <div class="secure-note">Your account and pet information stay private.</div>
+    </section>
 </main>
 <script>
     const roleSelect = document.getElementById("id_role");
