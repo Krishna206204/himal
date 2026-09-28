@@ -10,7 +10,7 @@ class RegistrationTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Here for every")
-        self.assertContains(response, ".public-nav { position: static;")
+        self.assertContains(response, ".public-nav { position: sticky; top: 0;")
         self.assertContains(response, reverse("login"))
         self.assertContains(response, reverse("register"))
 
