@@ -1,5 +1,9 @@
+import re
+
 from django.test import TestCase
+from django.core import mail
 from django.urls import reverse
+from django.test import override_settings
 
 from .models import PetOwnerProfile, User, VeterinarianProfile
 
@@ -75,7 +79,43 @@ class RegistrationTests(TestCase):
         response = self.client.get(reverse("forgot_password"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Reset your password")
+        self.assertContains(response, "Forgot your password?")
+        self.assertContains(response, "Secure account recovery")
+        self.assertContains(response, ".auth-layout")
+
+    @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+    def test_password_reset_flow_sends_link_and_updates_password(self):
+        user = User.objects.create_user(
+            username="reset-owner",
+            email="reset@example.com",
+            password="Old!Password472",
+        )
+        response = self.client.post(reverse("forgot_password"), {
+            "email": "reset@example.com",
+        })
+
+        self.assertRedirects(response, reverse("password_reset_done"))
+        self.assertEqual(len(mail.outbox), 1)
+        reset_link = re.search(
+            r"http://testserver(/reset/[^\s]+)",
+            mail.outbox[0].body,
+        )
+        self.assertIsNotNone(reset_link)
+        response = self.client.get(reset_link.group(1), follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Choose a new password")
+        reset_form_url = response.request["PATH_INFO"]
+
+        response = self.client.post(reset_form_url, {
+            "new_password1": "Fresh!Password882",
+            "new_password2": "Fresh!Password882",
+        })
+
+        self.assertRedirects(response, reverse("password_reset_complete"))
+        user.refresh_from_db()
+        self.assertTrue(user.check_password("Fresh!Password882"))
+        response = self.client.get(reverse("password_reset_complete"))
+        self.assertContains(response, "Your password is updated")
 
     def test_owner_dashboard_renders(self):
         user = User.objects.create_user(

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#176b58">
+    <title>{% block title %}Account help | Himal Vet Care{% endblock %}</title>
+    <style>
+        :root { --forest:#194d3d; --green:#318667; --ink:#20382f; --muted:#748178; --line:#e5ebe4; }
+        * { box-sizing:border-box; }
+        body { min-height:100vh; margin:0; display:grid; place-items:center; padding:28px; color:var(--ink); background:#f5f4ee; font:15px/1.55 Inter,ui-sans-serif,system-ui,sans-serif; }
+        .auth-layout { width:min(1000px,100%); min-height:570px; display:grid; grid-template-columns:.9fr 1.1fr; overflow:hidden; border-radius:24px; background:#fff; box-shadow:0 30px 90px #24473720; }
+        .visual-panel { position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; padding:38px; color:#fff; background:linear-gradient(150deg,#236b51,#174838 74%); }
+        .visual-panel:before,.visual-panel:after { position:absolute; content:""; border:1px solid #ffffff26; border-radius:50%; }
+        .visual-panel:before { width:410px; height:410px; right:-175px; top:80px; }
+        .visual-panel:after { width:300px; height:300px; right:-120px; top:135px; }
+        .brand { position:relative; z-index:1; display:inline-flex; align-items:center; gap:10px; width:max-content; color:#fff; text-decoration:none; font-size:18px; font-weight:800; letter-spacing:-.04em; }
+        .brand-mark { width:38px; height:38px; display:grid; place-items:center; border-radius:12px; background:#ffffff20; color:#c7f2d5; font-size:20px; }
+        .visual-copy { position:relative; z-index:1; max-width:355px; margin:auto 0; padding:45px 0; }
+        .eyebrow { color:#bde7cb; text-transform:uppercase; letter-spacing:.16em; font-size:11px; font-weight:800; }
+        .visual-copy h1 { margin:15px 0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(37px,4.5vw,53px); line-height:1.05; font-weight:500; letter-spacing:-.04em; }
+        .visual-copy p { color:#d5e8dc; line-height:1.8; }
+        .paw { position:absolute; right:12px; bottom:80px; color:#ffffff14; font-size:155px; transform:rotate(-18deg); }
+        .panel-footer { position:relative; z-index:1; color:#c1d9cc; font-size:12px; }
+        .form-panel { display:flex; flex-direction:column; justify-content:center; padding:clamp(32px,6vw,66px); }
+        .mobile-brand { display:none; }
+        .tag { width:max-content; padding:6px 11px; border-radius:50px; background:#eaf5eb; color:#347856; font-size:12px; font-weight:750; }
+        h2 { margin:17px 0 5px; color:#20382f; font-size:31px; line-height:1.2; letter-spacing:-.04em; }
+        .intro { margin:0 0 22px; color:var(--muted); }
+        .form-panel form p { margin:14px 0; }
+        label { display:block; margin:0 0 7px; color:#33493e; font-size:13px; font-weight:700; }
+        input { width:100%; min-height:48px; padding:10px 13px; border:1px solid #dce5dc; border-radius:9px; outline:none; background:#fcfdfb; color:var(--ink); font:inherit; }
+        input:focus { border-color:#58a17a; box-shadow:0 0 0 4px #3186671c; }
+        ul.errorlist { padding-left:18px; color:#a43e34; font-size:12px; }
+        .button { display:inline-flex; min-height:48px; align-items:center; justify-content:center; padding:0 18px; border:0; border-radius:9px; background:linear-gradient(100deg,#318667,#267652); color:#fff; font:inherit; font-weight:750; text-decoration:none; cursor:pointer; box-shadow:0 9px 20px #3186672b; }
+        button.button { width:100%; }
+        .button.alt { margin-top:9px; background:#edf4eb; color:#326b4d; box-shadow:none; }
+        a.text-link { color:#327d5c; font-weight:700; text-decoration:none; }
+        a.text-link:hover { text-decoration:underline; }
+        .form-foot { margin:21px 0 0; color:#7b877f; text-align:center; font-size:13px; }
+        .info-box { margin:19px 0; padding:13px 15px; border:1px solid #dcece0; border-radius:9px; background:#f3f8f2; color:#526b59; font-size:13px; }
+        .invalid-box { padding:18px; border:1px solid #f0d2cc; border-radius:10px; background:#fff2ef; color:#823e35; }
+        .invalid-box p { margin:0 0 13px; }
+        @media(max-width:740px) { body { padding:16px; } .auth-layout { width:min(520px,100%); min-height:0; grid-template-columns:1fr; border-radius:19px; } .visual-panel { display:none; } .form-panel { padding:clamp(26px,7vw,42px); } .mobile-brand { display:inline-flex; margin-bottom:30px; color:var(--forest); } .mobile-brand .brand-mark { background:#eaf5eb; color:#347856; } h2 { font-size:28px; } }
+        @media(prefers-reduced-motion:reduce) { *,*:before,*:after { scroll-behavior:auto!important; transition:none!important; } }
+    </style>
+</head>
+<body>
+<main class="auth-layout">
+    <aside class="visual-panel">
+        <a class="brand" href="{% url 'home' %}"><span class="brand-mark" aria-hidden="true">✚</span>Himal Vet Care</a>
+        <div class="visual-copy"><span class="eyebrow">Here for every paw and purr</span><h1>A helping hand for you and your pet.</h1><p>Your pet’s care information is important. We’ll help you get safely back into your account.</p></div>
+        <span class="paw" aria-hidden="true">🐾</span>
+        <div class="panel-footer">A little more care in every day.</div>
+    </aside>
+    <section class="form-panel">
+        <a class="brand mobile-brand" href="{% url 'home' %}"><span class="brand-mark" aria-hidden="true">✚</span>Himal Vet Care</a>
+        <span class="tag">{% block tag %}Account assistance{% endblock %}</span>
+        {% block auth_content %}{% endblock %}
+    </section>
+</main>
+</body>
+</html>

@@ -1,19 +1,47 @@
 {% extends "base.html" %}
-{% block title %}My dashboard | Himal Vet Care{% endblock %}
+{% block title %}My pets | Himal Vet Care{% endblock %}
 {% block content %}
-<div class="page-header"><div><h1>Your pets</h1><p class="muted">Welcome, {{ request.user.get_full_name|default:request.user.username }}. Keep your pets' care in one place.</p></div><a class="button" href="{% url 'add_pet' %}">Add a pet</a></div>
-<section class="grid">
-    <div class="stat"><strong>{{ my_animals|length }}</strong>Pets registered</div>
-    <div class="stat"><strong>{{ appointments|length }}</strong>Recent appointments</div>
-    <div class="stat"><strong>{{ medical_records|length }}</strong>Recent medical records</div>
+<header class="dashboard-header">
+    <div><span class="dashboard-kicker">Your family’s care</span><h1>Welcome, {{ request.user.first_name|default:request.user.username }}</h1><p class="muted">A happy, healthy life starts with thoughtful care.</p></div>
+    <div class="actions"><a class="button secondary" href="{% url 'pet_list' %}">Manage pets</a><a class="button" href="{% url 'add_pet' %}">＋&nbsp; Add a pet</a></div>
+</header>
+<section class="metric-grid" aria-label="Your account statistics">
+    <article class="metric-card"><span class="metric-icon">♡</span><span class="metric-label">Your pets</span><strong>{{ my_animals|length }}</strong></article>
+    <article class="metric-card"><span class="metric-icon">◷</span><span class="metric-label">Appointments</span><strong>{{ total_appointment_count }}</strong></article>
+    <article class="metric-card"><span class="metric-icon">⌛</span><span class="metric-label">Requests pending</span><strong>{{ pending_appointment_count }}</strong></article>
+    <article class="metric-card"><span class="metric-icon">✚</span><span class="metric-label">Medical records</span><strong>{{ medical_records|length }}</strong></article>
 </section>
-<section class="card"><div class="page-header"><h2>My pets</h2><a href="{% url 'pet_list' %}">Manage pets</a></div>
-    <div class="grid">
-        {% for animal in my_animals %}
-            <article class="stat"><h3><a href="{% url 'pet_detail' animal.pk %}">{{ animal.name }}</a></h3><p>{{ animal.species }}{% if animal.breed %} · {{ animal.breed }}{% endif %}</p></article>
-        {% empty %}<p class="muted">No pets yet. Add a pet to start booking care.</p>{% endfor %}
+<div class="dashboard-columns">
+    <div>
+        <section class="dashboard-panel" style="margin-bottom:18px">
+            <div class="panel-heading"><h2>Your pets</h2><a href="{% url 'pet_list' %}">All pets&nbsp; →</a></div>
+            {% if my_animals %}
+                <div class="grid" style="margin:0">
+                    {% for animal in my_animals %}
+                        <article class="stat"><div class="actions" style="justify-content:space-between"><span class="avatar">{{ animal.name|slice:":1"|upper }}</span><a href="{% url 'pet_detail' animal.pk %}">View profile&nbsp; →</a></div><h3 style="margin:13px 0 3px"><a href="{% url 'pet_detail' animal.pk %}" style="color:#264e39;text-decoration:none">{{ animal.name }}</a></h3><p class="muted" style="margin:0">{{ animal.species }}{% if animal.breed %} · {{ animal.breed }}{% endif %}</p></article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">Your pet profiles will appear here.<br><a href="{% url 'add_pet' %}">Add your first pet&nbsp; →</a></div>
+            {% endif %}
+        </section>
+        <section class="dashboard-panel">
+            <div class="panel-heading"><h2>Recent appointments</h2><a href="{% url 'appointment_list' %}">Appointment history&nbsp; →</a></div>
+            {% include "partials/appointment_table.html" with appointments=appointments %}
+        </section>
     </div>
-</section>
-<section class="card"><div class="page-header"><h2>Recent appointments</h2><a href="{% url 'create_appointment' %}">Book an appointment</a></div>{% include "partials/appointment_table.html" with appointments=appointments %}</section>
-<section class="card"><div class="page-header"><h2>Medical history</h2><a href="{% url 'medical_record_list' %}">View all</a></div>{% include "partials/record_table.html" with records=medical_records %}</section>
+    <div>
+        <section class="dashboard-panel" style="margin-bottom:18px">
+            <div class="panel-heading"><h2>Coming up</h2></div>
+            {% for appt in upcoming_appointments %}
+                <div class="profile-detail"><span>{{ appt.appointment_date|date:"M j · H:i" }}<br><small>{{ appt.animal.name }} · Dr. {{ appt.veterinarian.get_full_name|default:appt.veterinarian.username }}</small></span><strong class="status">{{ appt.get_status_display }}</strong></div>
+            {% empty %}<div class="empty-state">No upcoming visits.<br><a href="{% url 'create_appointment' %}">Book a visit&nbsp; →</a></div>{% endfor %}
+            {% if upcoming_appointments %}<a class="button secondary" style="width:100%;text-align:center;margin-top:14px" href="{% url 'create_appointment' %}">＋&nbsp; Book another visit</a>{% endif %}
+        </section>
+        <section class="dashboard-panel">
+            <div class="panel-heading"><h2>Latest health records</h2><a href="{% url 'medical_record_list' %}">View all</a></div>
+            {% include "partials/record_table.html" with records=medical_records %}
+        </section>
+    </div>
+</div>
 {% endblock %}

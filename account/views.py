@@ -163,6 +163,7 @@ def dashboard(request):
 
     if user.role == User.VETERINARIAN:
         profile = getattr(user, "veterinarian_profile", None)
+        all_vet_appointments = Appointment.objects.filter(veterinarian=user)
         appointments = Appointment.objects.filter(
             veterinarian=user,
             appointment_date__gte=timezone.now(),
@@ -186,14 +187,30 @@ def dashboard(request):
                 veterinarian=user,
                 status="PENDING",
             ).count(),
+            "patient_count": Animal.objects.filter(
+                appointments__veterinarian=user
+            ).distinct().count(),
+            "completed_appointment_count": all_vet_appointments.filter(
+                status="COMPLETED"
+            ).count(),
         })
 
     animals = Animal.objects.filter(owner=user).order_by("name")
+    owner_appointments = Appointment.objects.filter(pet_owner=user)
     return render(request, "dashboards/owner_dashboard.html", {
         "my_animals": animals,
-        "appointments": Appointment.objects.filter(
-            pet_owner=user
-        ).select_related("animal", "veterinarian").order_by("-appointment_date")[:5],
+        "appointments": owner_appointments.select_related(
+            "animal", "veterinarian"
+        ).order_by("-appointment_date")[:5],
+        "upcoming_appointments": owner_appointments.filter(
+            appointment_date__gte=timezone.now(),
+        ).exclude(status__in=("CANCELLED", "COMPLETED")).select_related(
+            "animal", "veterinarian"
+        ).order_by("appointment_date")[:3],
+        "total_appointment_count": owner_appointments.count(),
+        "pending_appointment_count": owner_appointments.filter(
+            status="PENDING"
+        ).count(),
         "medical_records": MedicalRecord.objects.filter(
             animal__owner=user
         ).select_related("animal", "veterinarian__user").order_by("-record_date")[:5],

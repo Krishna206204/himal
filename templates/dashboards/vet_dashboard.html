@@ -1,27 +1,34 @@
 {% extends "base.html" %}
-{% block title %}Veterinarian dashboard | Himal Vet Care{% endblock %}
+{% block title %}Doctor dashboard | Himal Vet Care{% endblock %}
 {% block content %}
-<div class="page-header"><div><h1>Doctor dashboard</h1><p class="muted">Welcome, Dr. {{ request.user.get_full_name|default:request.user.username }}.</p></div><div class="actions"><a class="button secondary" href="{% url 'appointment_list' %}?status=PENDING">Review requests</a><a class="button" href="{% url 'add_medical_record' %}">Write a record</a></div></div>
-<section class="grid">
-    <div class="stat"><strong>{{ today_appointment_count }}</strong>Visits today</div>
-    <div class="stat"><strong>{{ pending_appointment_count }}</strong>Requests to review</div>
-    <div class="stat"><strong>{{ recent_records|length }}</strong>Recent records</div>
+<header class="dashboard-header">
+    <div><span class="dashboard-kicker">Your clinical workspace</span><h1>Welcome, Dr. {{ request.user.first_name|default:request.user.username }}</h1><p class="muted">Your schedule and patient care, all in one place.</p></div>
+    <div class="actions"><a class="button secondary" href="{% url 'appointment_list' %}?status=PENDING">Review requests</a><a class="button" href="{% url 'add_medical_record' %}">＋&nbsp; Write a record</a></div>
+</header>
+<section class="metric-grid" aria-label="Doctor statistics">
+    <article class="metric-card"><span class="metric-icon">◷</span><span class="metric-label">Visits today</span><strong>{{ today_appointment_count }}</strong></article>
+    <article class="metric-card"><span class="metric-icon">⌛</span><span class="metric-label">Requests to review</span><strong>{{ pending_appointment_count }}</strong></article>
+    <article class="metric-card"><span class="metric-icon">♡</span><span class="metric-label">Patients seen</span><strong>{{ patient_count }}</strong></article>
+    <article class="metric-card"><span class="metric-icon">✓</span><span class="metric-label">Visits completed</span><strong>{{ completed_appointment_count }}</strong></article>
 </section>
-<section class="card">
-    <h2>Professional profile</h2>
-    {% if vet_profile %}
-        <p><strong>License:</strong> {{ vet_profile.license_number }}</p>
-        <p><strong>Specialization:</strong> {{ vet_profile.specialization|default:"General practice" }}</p>
-    {% else %}
-        <p class="muted">A clinic administrator needs to complete your veterinarian profile before you can write records.</p>
-    {% endif %}
-</section>
-<section class="card">
-    <div class="page-header"><h2>Upcoming appointments</h2><a href="{% url 'appointment_list' %}">View schedule</a></div>
-    {% include "partials/appointment_table.html" with appointments=appointments %}
-</section>
-<section class="card">
-    <div class="page-header"><h2>Your recent records</h2><a href="{% url 'medical_record_list' %}">View all</a></div>
-    {% include "partials/record_table.html" with records=recent_records %}
-</section>
+<div class="dashboard-columns">
+    <section class="dashboard-panel">
+        <div class="panel-heading"><h2>Your upcoming appointments</h2><a href="{% url 'appointment_list' %}">Full schedule&nbsp; →</a></div>
+        {% include "partials/appointment_table.html" with appointments=appointments %}
+    </section>
+    <div>
+        <section class="profile-card" style="margin-bottom:18px">
+            <h2>Professional profile</h2>
+            {% if vet_profile %}
+                <div class="profile-detail"><span>License number</span><strong>{{ vet_profile.license_number }}</strong></div>
+                <div class="profile-detail"><span>Specialty</span><strong>{{ vet_profile.specialization|default:"General practice" }}</strong></div>
+                <div class="profile-detail"><span>Experience</span><strong>{{ vet_profile.experience_years }} years</strong></div>
+            {% else %}<p class="muted">An administrator needs to complete your veterinarian profile before you can write records.</p>{% endif %}
+        </section>
+        <section class="dashboard-panel">
+            <div class="panel-heading"><h2>Recent patient notes</h2><a href="{% url 'medical_record_list' %}">All records</a></div>
+            {% include "partials/record_table.html" with records=recent_records %}
+        </section>
+    </div>
+</div>
 {% endblock %}

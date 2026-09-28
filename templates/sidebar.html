@@ -1,13 +1,18 @@
 <aside class="sidebar">
     <div>
-        <h2 class="brand">Himal Vet Care<span>Patient management</span></h2>
+        <h2 class="brand"><span class="brand-mark" aria-hidden="true">✚</span><span>Himal Vet Care<span>Patient management</span></span></h2>
+        <div class="sidebar-profile">
+            <span class="avatar">{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
+            <span><strong>{{ user.get_full_name|default:user.username }}</strong><small>{{ user.get_role_display }}</small></span>
+        </div>
+        <p class="nav-caption">Workspace</p>
         <nav class="nav-links" aria-label="Main navigation">
-            <a href="{% url 'dashboard' %}">Dashboard</a>
-            <a href="{% url 'pet_list' %}">{% if user.role == 'PET_OWNER' %}My pets{% else %}Patients{% endif %}</a>
-            <a href="{% url 'appointment_list' %}">Appointments</a>
-            <a href="{% url 'medical_record_list' %}">Medical records</a>
+            <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"><span class="nav-icon">⌂</span>Dashboard</a>
+            <a href="{% url 'pet_list' %}" class="{% if request.resolver_match.url_name == 'pet_list' or request.resolver_match.url_name == 'pet_detail' %}active{% endif %}"><span class="nav-icon">♡</span>{% if user.role == 'PET_OWNER' %}My pets{% else %}Patients{% endif %}</a>
+            <a href="{% url 'appointment_list' %}" class="{% if request.resolver_match.url_name == 'appointment_list' or request.resolver_match.url_name == 'create_appointment' %}active{% endif %}"><span class="nav-icon">◷</span>Appointments</a>
+            <a href="{% url 'medical_record_list' %}" class="{% if request.resolver_match.url_name == 'medical_record_list' or request.resolver_match.url_name == 'medical_record_detail' %}active{% endif %}"><span class="nav-icon">✚</span>Medical records</a>
             {% if user.is_staff or user.is_superuser %}
-                <a href="/admin/">Administration</a>
+                <a href="/admin/"><span class="nav-icon">⚙</span>Administration</a>
             {% endif %}
         </nav>
     </div>
